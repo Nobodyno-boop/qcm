@@ -1,0 +1,25 @@
+{
+  "name": "nobody/cul-cm",
+  "description": "description",
+  "type": "private",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "poulp",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "src",
+      "Vroom\\": "bin"
+    }
+  },
+  "require-dev": {
+    "symfony/var-dumper": "v6.0.3"
+  },
+  "require": {
+    "ext-pdo": "*"
+  }
+}
