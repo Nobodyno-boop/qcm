@@ -5,7 +5,6 @@ namespace App\Model;
 
 use Vroom\Orm\decorator\Column;
 use Vroom\Orm\decorator\Entity;
-use Vroom\Orm\decorator\Type;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Types;
 
@@ -14,7 +13,7 @@ class UserModel extends Model
 {
 
     #[
-        Column('id', Types::int),
+        Column('id', Types::id),
     ]
     private int $id;
 
@@ -22,10 +21,6 @@ class UserModel extends Model
         Column('name', Types::varchar),
     ]
     private string $name;
-
-    public function __construct()
-    {
-    }
 
 
     /**

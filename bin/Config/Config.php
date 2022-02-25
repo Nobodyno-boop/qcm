@@ -16,10 +16,11 @@ class Config {
         $this->config = $config;
     }
 
-
-    public function __get(string $name)
+    /**
+     * @return array
+     */
+    public function getConfig(): array
     {
-        return $this->config[$name] ?? null;
+        return $this->config;
     }
-
 }

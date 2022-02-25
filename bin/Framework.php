@@ -3,6 +3,8 @@
 namespace Vroom;
 
 use Vroom\Config\Config;
+use Vroom\Orm\Sql\Sql;
+use Vroom\Utils\Container;
 
 class Framework {
     private Config $config;
@@ -14,6 +16,8 @@ class Framework {
     {
         $this->config = $config;
 
+        Container::set("_config", $this->config);
+        Container::set("_db", new Sql());
     }
 
 

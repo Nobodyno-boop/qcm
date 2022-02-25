@@ -1,0 +1,161 @@
+<?php
+
+namespace Vroom\Orm\Sql;
+
+use Vroom\Orm\Model\Model;
+use Vroom\Orm\Model\Models;
+use Vroom\Orm\Model\Types;
+use Vroom\Utils\Container;
+
+class QueryBuilder
+{
+    private $model;
+    private $fields = [];
+    private $cond = [];
+    private $from = [];
+    private $word = "";
+    private $values = [];
+
+    /**
+     * @param string|null $model
+     */
+    public function __construct(string $model = null)
+    {
+        if($model != null){
+            $models = Models::readModel($model);
+            if(!empty($models)){
+                $this->model = $models;
+            }
+        }
+    }
+
+    public static function newInstance(string $model = null): QueryBuilder
+    {
+        return new QueryBuilder($model);
+    }
+
+    public static function fromModel(Model $model): QueryBuilder
+    {
+        return new QueryBuilder(get_class($model));
+    }
+
+    public function select(string ...$select): QueryBuilder
+    {
+        if(empty($select)){
+            foreach ($this->model['properties'] as $k){
+                $this->fields[] = $k->getName();
+            }
+        }else {
+            $this->fields = $select;
+        }
+        $this->word = "SELECT";
+        return $this;
+    }
+
+    public function where(array $where): QueryBuilder
+    {
+        foreach ($where as $k => $v){
+            $this->cond[] = $k." = '".$v."'";
+        }
+        return $this;
+    }
+
+    public function from(?string $table = "", ?string $alias = null): QueryBuilder
+    {
+        $name = $table == "" ? strtolower($this->model['entity']->getName()) : "";
+
+        if($alias === null){
+            $this->from[] = $name;
+        } else {
+            $this->from[] = "${$name} AS ${alias}";
+        }
+
+        return $this;
+    }
+
+
+    public function delete(): QueryBuilder {
+        $this->word = "DELETE";
+        return $this;
+    }
+
+
+    public function update(array|Model $update): QueryBuilder {
+        $this->word = "UPDATE";
+
+        if(is_array($update)){
+            foreach ($update as $k => $v){
+                $this->fields[] = $k." = '".$v."'";
+            }
+        } else { // when is the object
+            foreach ($this->model['properties'] as $item){
+                if(!($item->getType() == Types::id)){
+                    $value = call_user_func(array($update, 'get'.ucfirst($item->getName())));
+
+                    $this->fields[] = $item->getName()." = '".$value."'";
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    public function insert(array|Model $insert): QueryBuilder
+    {
+        $this->word = "INSERT";
+        if(is_array($insert)){
+            foreach ($insert as $k => $v){
+                $this->values['keys'][] = $k;
+                $this->values['values'][] = "'".$v."'";
+            }
+        } else { //model
+            foreach ($this->model['properties'] as $item){
+                if(!($item->getType() === Types::id)){
+                    $value = call_user_func(array($insert, 'get'.ucfirst($item->getName())));
+                    $this->values['keys'][] = $item->getName();
+                    $this->values['values'][] = "'".$value."'";
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        $query = "";
+        $table = empty($this->from) ? strtolower($this->model['entity']->getName()) : implode(", ", $this->from);
+        if(!empty($table)){
+            $w = empty($this->cond) ? '' : ' WHERE '.implode(" AND ", $this->cond);
+            $selector = empty($this->fields) ? " *" : implode(", ", $this->fields);
+
+            switch (strtolower($this->word)){
+                case "insert":
+                    $keys = "(".implode(", ", $this->values['keys']).")";
+                    $values = "(".implode(", ", $this->values['values']).")";
+                    $query = "INSERT INTO ".$table." "
+                    .$keys." VALUES".
+                        $values;
+                    break;
+                case "update":
+                    $query = $this->word." ".$table.
+                        " SET ".implode(", ", $this->fields)
+                        .$w;
+                    break;
+                case "delete":
+                    $query = $this->word." "
+                        .$table." "
+                        .$w;
+                    break;
+                default:
+                case "select":
+                    $query = "SELECT".$selector." FROM "
+                        .$table
+                        .$w;
+                    break;
+            }
+        }
+
+
+        return $query;
+    }
+}

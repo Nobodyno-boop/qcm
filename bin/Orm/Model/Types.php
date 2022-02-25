@@ -4,9 +4,10 @@ namespace Vroom\Orm\Model;
 
 class Types
 {
+    // Custom
+    const id = 1;
 
-    const varchar = 1;
-    const int = 2;
-
+    const varchar = 101;
+    const int = 102;
 
 }
