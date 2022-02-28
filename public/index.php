@@ -5,9 +5,9 @@ use Spatie\Ignition\Ignition;
 require '../vendor/autoload.php';
 Ignition::make()->register();
 
-\Vroom\Framework::newInstance('../config.php');
+\Vroom\Framework::newInstance('../config.php', new \App\App());
 
-$models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
+//$models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
 
 //$sql = new \Vroom\Orm\Sql\Sql();
 //
@@ -40,7 +40,7 @@ $models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
 //
 //dump($q2->__toString());
 //
-//$q3 = \Vroom\Orm\Sql\QueryBuilder::newInstance(\App\Model\UserModel::class)->delete()->where(['id' => 3]);
+//$q3 = \Vroom\Orm\Sql\QueryBuilder::newInstance(\Ap p\Model\UserModel::class)->delete()->where(['id' => 3]);
 //
 //dump($q3->__toString());
 //
@@ -55,6 +55,6 @@ $models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
 //$user->setName("Noboda");
 //$user->save();
 
-$user = \Vroom\Orm\Model\Models::findBy(\App\Model\UserModel::class, ['id' => 2]);
-
-dump($user);
+//$user = \Vroom\Orm\Model\Models::findBy(\App\Model\UserModel::class, ['id' => 2]);
+//
+//dump($user);

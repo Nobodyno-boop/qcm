@@ -7,5 +7,8 @@ return [
         "user" => "root",
         "password" => "",
         "database" => "qcm"
+    ],
+    "debug" => [
+        "checkModels" => "true"
     ]
 ];

@@ -14,6 +14,11 @@ class Container
 
     public static function get(string $name)
     {
-        return self::$containers[$name];
+        return self::$containers[$name] ?? [];
+    }
+
+    public static function isEmpty(string $name): bool
+    {
+        return empty(self::get($name));
     }
 }

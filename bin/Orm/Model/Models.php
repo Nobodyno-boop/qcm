@@ -13,6 +13,8 @@ use Vroom\Utils\Container;
 
 class Models
 {
+    const CONTAINER_NAMESPACE = "_models";
+
     public static function readModel($model)
     {
         try {
@@ -42,16 +44,34 @@ class Models
                     "entity" => $entityClass,
                     "properties" => $properties
                 ];
-
-                Container::set('model.'.$entityClass->getName(), $m);
+                if(Container::isEmpty(Models::CONTAINER_NAMESPACE)){
+                    Container::set(Models::CONTAINER_NAMESPACE, [
+                        $entityClass->getName() => [$m]
+                    ]);
+                } else {
+                    $models = Container::get(Models::CONTAINER_NAMESPACE);
+                    $models = array_merge([ $entityClass->getName() => [$m]], $models);
+                    Container::set(self::CONTAINER_NAMESPACE, $models);
+                }
                 return $m;
 
             } // can't load
         } catch (\ReflectionException $e) {
             die($e->getMessage());
         }
-
         return [];
+    }
+
+    public static function get($model)
+    {
+        if(is_object($model)){
+            $model = get_class($model);
+        }
+
+        if(is_string($model)){
+            $models = Container::get(self::CONTAINER_NAMESPACE);
+            return $models[$models] ?? [];
+        } else return [];
     }
 
     public static function findBy($model, array $array): ?object
