@@ -1,2 +1,66 @@
+site_name: QCM DOC
+site_author: Me
+
+docs_dir: docs
+use_directory_urls: false
+
 theme:
-  name: material
+  name: 'material'
+  palette:
+    primary: 'white'
+  logo: 'img/dog.png'
+  favicon: 'img/dog.png'
+  features:
+    - navigation.tabs
+
+repo_name: 'Secret'
+repo_url: 'https://github.com/Nobodyno-boop/qcm'
+
+# enabled extensions
+markdown_extensions:
+  - admonition
+  - def_list
+  - footnotes
+  - meta
+  - smarty
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      # fixes copy paste support
+      css_class: codehilite
+      # disables use of <?php
+      extend_pygments_lang:
+        - name: php
+          lang: php
+          options:
+            startinline: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+copyright: 'Copyright &copy; clownerie.space / Me lul'
+
+plugins:
+  - search
+  - awesome-pages
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/klitsche/dog
