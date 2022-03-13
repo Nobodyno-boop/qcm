@@ -7,7 +7,8 @@ use_directory_urls: false
 theme:
   name: 'material'
   palette:
-    primary: 'white'
+    scheme: slate
+    primary: 'teal'
   logo: 'img/dog.png'
   favicon: 'img/dog.png'
   features:
