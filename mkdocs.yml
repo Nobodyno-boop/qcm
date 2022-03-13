@@ -58,9 +58,8 @@ copyright: 'Copyright &copy; clownerie.space / Me lul'
 
 plugins:
   - search
-  - awesome-pages
 
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/klitsche/dog
+      link: https://github.com/Nobodyno-boop/qcm
