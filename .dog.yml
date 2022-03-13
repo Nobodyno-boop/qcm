@@ -1,0 +1,24 @@
+# Title of index page
+title: 'Overview'
+# Relative or absolute paths to source files - plus patterns to include or exclude path pr files
+srcPaths:
+  'src':
+    '/.*\.php$/': true
+# Add new or change validation rules - omit completely to use default set
+rules:
+  PublicFileDocBlockMissingRule:
+    class: 'Klitsche\Dog\Analyzer\Rules\DocBlockMissingRule'
+    issueLevel: 'ignore'
+    match:
+      getElementType: 'File'
+# Configure enrichers to add extra data to project or element items
+enrichers:
+  phploc:
+    class: \Klitsche\Dog\Enrichers\PHPLOC\PHPLOCEnricher
+    file: phploc.json
+# FQCN for template printer class
+printerClass: 'Klitsche\Dog\Printer\Markdown\Printer'
+# Relative or absolute path to output directory
+outputDir: 'docs/api'
+# Enable or disable debug mode - helps when tweaking templates
+debug: false

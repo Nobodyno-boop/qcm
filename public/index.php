@@ -4,7 +4,6 @@ use Spatie\Ignition\Ignition;
 
 require '../vendor/autoload.php';
 Ignition::make()->register();
-
 \Vroom\Framework::newInstance('../config.php', new \App\App());
 
 //$models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
@@ -44,17 +43,16 @@ Ignition::make()->register();
 //
 //dump($q3->__toString());
 //
-//$q4 = \Vroom\Orm\Sql\QueryBuilder::newInstance(\App\Model\UserModel::class)->insert([
+// $q4 = \Vroom\Orm\Sql\QueryBuilder::newInstance(\App\Model\UserModel::class)->insert([
 //    "name" => "Nobody"
-//]);
+// ]);
 //
-//dump($q4->__toString());
+// dump($q4->__toString());
 
 //$user = new \App\Model\UserModel();
 //
 //$user->setName("Noboda");
 //$user->save();
-
+// select * from user where id = 2
 //$user = \Vroom\Orm\Model\Models::findBy(\App\Model\UserModel::class, ['id' => 2]);
 //
-//dump($user);

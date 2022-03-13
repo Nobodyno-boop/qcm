@@ -31,7 +31,6 @@ class Framework {
         if($this->getConfig()->getConfig()['debug']['checkModels']){
             foreach ($app->models() as $model){
                 Models::readModel($model);
-
             }
         }
 
@@ -40,15 +39,14 @@ class Framework {
 
         foreach ($controllers as $controller){
             Controllers::read($controller);
-
-            dump(Controllers::get($controller));
+            $data = Controllers::get($controller);
+            if(!empty($data)){
+                foreach ($data as $route){
+                    $router->addRoute($route, $controller);
+                }
+            }
 
         }
-
-
-        $router->get("/posts", "login");
-        $router->get("/posts/:id", "loginlogu");
-        $router->get("/posts/:id/:slug", "loginlogu");
 
         $router->handle();
     }

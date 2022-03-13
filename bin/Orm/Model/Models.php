@@ -102,6 +102,5 @@ class Models
     private static function getSQL() :Sql
     {
         return Container::get("_db");
-
     }
 }

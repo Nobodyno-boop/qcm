@@ -11,18 +11,18 @@ class Router
     /**
      * @var Route[] $routes
      */
-    private array $routes;
+    private array $routes = [];
     const CONTAINER_NAMESPACE = "_router";
 
-    public function get(string $url, string $controller): Route
-    {
-        return $this->addRoute($url, $controller, "GET");
-    }
 
-    public function addRoute(string $url, string $controller, string $method): Route
+    public function addRoute(array $data, $controller): Route
     {
-        $route = new Route($url, $controller);
-        $this->routes[$method][] = $route;
+
+        $route = new Route($data, $controller);
+        foreach ($data['methods'] as $method){
+            $this->routes[$method][] = $route;
+        }
+
         return $route;
     }
 
@@ -30,21 +30,46 @@ class Router
     {
        $url = $_GET['url'];
         $r = null;
-        foreach ($this->routes[$_SERVER['REQUEST_METHOD']] as $route){
+        $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
+        foreach ($routes as $route){
             if($route->match($url)){
                 $r = $route;
             }
         }
 
-
         if($r != null){
-
+            $this->callController($r);
         } else {
 //            throw new \Error("Cannot find route");
         }
     }
 
 
-
+    private function callController(Route $route)
+    {
+        try {
+            $class = new \ReflectionClass($route->getController());
+            $obj = $class->newInstance();
+            $method = $class->getMethod($route->getMethod());
+            $params = [];
+            if($method->getNumberOfRequiredParameters() >= 1){
+                $parameters = $method->getParameters();
+                foreach ($parameters as $parameter){
+                    switch ($parameter->getType()){
+                        case Request::class:
+                                $request = new Request($route);
+                                $params[] = $request;
+                            break;
+                        default:
+                            $name = $parameter->getName();
+                            $params[] = $route->getParams()[$name] ?? null;
+                            break;
+                    }
+                }
+            }
+            $method->invokeArgs($obj, $params);
+        } catch (\ReflectionException $e) {
+        }
+    }
 
 }

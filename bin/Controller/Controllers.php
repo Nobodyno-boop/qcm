@@ -44,7 +44,7 @@ class Controllers
                 Container::set(self::CONTAINER_NAMESPACE, $controllers);
             }
         }catch (\Exception $e){
-
+            die($e);
         }
     }
 
