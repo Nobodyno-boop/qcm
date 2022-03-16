@@ -3,7 +3,7 @@
 namespace Vroom\Controller;
 
 use Vroom\Framework;
-use Vroom\Router\decorator\Route;
+use Vroom\Router\Decorator\Route;
 use Vroom\Utils\Container;
 
 class Controllers

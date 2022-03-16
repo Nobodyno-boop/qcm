@@ -8,6 +8,9 @@ return [
         "password" => "",
         "database" => "qcm"
     ],
+    "site" => [
+      "url" => "https://cul-cm.dev"
+    ],
     "debug" => [
         "checkModels" => "true"
     ]

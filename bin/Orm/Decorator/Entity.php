@@ -1,6 +1,6 @@
 <?php
 
-namespace Vroom\Orm\decorator;
+namespace Vroom\Orm\Decorator;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Entity

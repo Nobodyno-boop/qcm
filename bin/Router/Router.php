@@ -2,7 +2,6 @@
 
 namespace Vroom\Router;
 
-
 /**
  *  Router take always the last better
  */
@@ -15,15 +14,12 @@ class Router
     const CONTAINER_NAMESPACE = "_router";
 
 
-    public function addRoute(array $data, $controller): Route
+    public function addRoute(array $data, $controller)
     {
-
-        $route = new Route($data, $controller);
         foreach ($data['methods'] as $method){
+            $route = new Route($data, $controller, $method);
             $this->routes[$method][] = $route;
         }
-
-        return $route;
     }
 
     public function handle()
@@ -31,17 +27,26 @@ class Router
        $url = $_GET['url'];
         $r = null;
         $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
-        foreach ($routes as $route){
-            if($route->match($url)){
-                $r = $route;
+        if(!empty($routes)){
+            usort($routes, function ($a, $b){
+                if($a == $b) return 0;
+                return (strlen($b->getUrl()) > strlen($a->getUrl()) ? -1 : 1);
+            });
+
+            foreach ($routes as $route){
+                if($route->match($url)){
+                    $r = $route;
+                }
             }
+            if($r != null){
+                $this->callController($r);
+            } else {
+//            throw new \Error("Cannot find route");
+            }
+        } else {
+            // No route so 404
         }
 
-        if($r != null){
-            $this->callController($r);
-        } else {
-//            throw new \Error("Cannot find route");
-        }
     }
 
 
@@ -49,7 +54,8 @@ class Router
     {
         try {
             $class = new \ReflectionClass($route->getController());
-            $obj = $class->newInstance();
+            $request = new Request($route);
+            $obj = $class->newInstance($request);
             $method = $class->getMethod($route->getMethod());
             $params = [];
             if($method->getNumberOfRequiredParameters() >= 1){
@@ -57,7 +63,7 @@ class Router
                 foreach ($parameters as $parameter){
                     switch ($parameter->getType()){
                         case Request::class:
-                                $request = new Request($route);
+
                                 $params[] = $request;
                             break;
                         default:

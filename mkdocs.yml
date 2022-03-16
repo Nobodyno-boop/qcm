@@ -9,8 +9,8 @@ theme:
   palette:
     scheme: slate
     primary: 'teal'
-  logo: 'img/dog.png'
-  favicon: 'img/dog.png'
+  logo: 'img/logo.png'
+  favicon: 'img/logo.png'
   features:
     - navigation.tabs
 

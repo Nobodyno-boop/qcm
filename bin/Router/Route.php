@@ -7,6 +7,7 @@ class Route
 {
     private string $url;
     private string $controller;
+    private string $controllerMethod;
     private string $method;
     private $matches = [];
     private array $params = [];
@@ -16,12 +17,13 @@ class Route
     /**
      * @param array $data
      */
-    public function __construct(array $data, string $controller)
+    public function __construct(array $data, string $controller, string $method)
     {
         $this->url = trim($data['url'], "/");
         $this->prefix = $data['prefix'];
-        $this->method = $data['name'];
+        $this->controllerMethod = $data['name'];
         $this->controller = $controller;
+        $this->method = $method;
     }
 
 
@@ -64,7 +66,7 @@ class Route
         return '([^/]+)';
     }
 
-    public function getUrl($params)
+    public function getUrlWith($params)
     {
         $url = $this->url;
         foreach ($params as $k => $v) {
@@ -72,6 +74,15 @@ class Route
         }
         return $url;
     }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
 
     public function with($param, $regex)
     {
@@ -107,4 +118,6 @@ class Route
     {
         return $this->method;
     }
+
+
 }

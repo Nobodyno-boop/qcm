@@ -3,8 +3,8 @@
 namespace App\Model;
 
 
-use Vroom\Orm\decorator\Column;
-use Vroom\Orm\decorator\Entity;
+use Vroom\Orm\Decorator\Column;
+use Vroom\Orm\Decorator\Entity;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Types;
 

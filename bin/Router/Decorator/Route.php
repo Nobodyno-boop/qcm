@@ -1,6 +1,6 @@
 <?php
 
-namespace Vroom\Router\decorator;
+namespace Vroom\Router\Decorator;
 
 use Attribute;
 

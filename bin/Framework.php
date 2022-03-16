@@ -16,6 +16,7 @@ class Framework {
 
     /**
      * @param Config $config
+     * @param AbstractApp $app
      */
     public function __construct(Config $config, AbstractApp $app)
     {
