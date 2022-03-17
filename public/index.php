@@ -1,10 +1,11 @@
 <?php
+require '../vendor/autoload.php';
 
 use Spatie\Ignition\Ignition;
+use Vroom\Framework;
 
-require '../vendor/autoload.php';
 Ignition::make()->register();
-\Vroom\Framework::newInstance('../config.php', new \App\App());
+Framework::newInstance('../config.php', new \App\App());
 
 //$models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
 

@@ -15,6 +15,7 @@ class QueryBuilder
     private $from = [];
     private $word = "";
     private $values = [];
+    private $limit = 0;
 
     /**
      * @param string|null $model
@@ -100,6 +101,13 @@ class QueryBuilder
         return $this;
     }
 
+    public function limit(int $limit = 1) : QueryBuilder
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
     public function insert(array|Model $insert): QueryBuilder
     {
         $this->word = "INSERT";
@@ -132,6 +140,7 @@ class QueryBuilder
                 case "insert":
                     $keys = "(".implode(", ", $this->values['keys']).")";
                     $values = "(".implode(", ", $this->values['values']).")";
+
                     $query = "INSERT INTO ".$table." "
                     .$keys." VALUES".
                         $values;
@@ -148,9 +157,12 @@ class QueryBuilder
                     break;
                 default:
                 case "select":
-                    $query = "SELECT".$selector." FROM "
+                $limit = $this->limit != 0 ? " LIMIT ".$this->limit :"";
+
+                $query = "SELECT".$selector." FROM "
                         .$table
-                        .$w;
+                        .$w.$limit;
+
                     break;
             }
         }

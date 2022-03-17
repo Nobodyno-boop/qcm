@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Model\UserModel;
 use Vroom\Controller\AbstractController;
+use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
 
@@ -13,10 +15,12 @@ class UserController extends AbstractController
     {
         dump($this->getRequest());
     }
-    #[Route("/user/:id/:slug")]
-    public function getUser(Request $request, $id, $slug, $other)
+    #[Route("/user/:id")]
+    public function getUser(Request $request, $id)
     {
-        dump($request, $id, $slug, $other);
+        $user = $this->repository(UserModel::class)->get($id);
+
+        dump($user);
     }
 
     #[Route("/")]

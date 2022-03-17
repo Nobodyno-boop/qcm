@@ -24,7 +24,7 @@ class Sql
             $db = Container::get("_config")->getConfig()['db'];
             $this->con = new PDO("mysql:dbname=".$db["database"].";host=".$db['host'], $db['user'], $db['password']);
         }catch (\PDOException $e){
-            die($e->getMessage());
+            die($e);
         }
     }
 

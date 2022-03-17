@@ -24,7 +24,7 @@ class Router
 
     public function handle()
     {
-       $url = $_GET['url'];
+       $url = $_GET['url'] ?? $_SERVER['REQUEST_URI'];
         $r = null;
         $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
         if(!empty($routes)){
@@ -39,6 +39,7 @@ class Router
                 }
             }
             if($r != null){
+
                 $this->callController($r);
             } else {
 //            throw new \Error("Cannot find route");
@@ -56,14 +57,13 @@ class Router
             $class = new \ReflectionClass($route->getController());
             $request = new Request($route);
             $obj = $class->newInstance($request);
-            $method = $class->getMethod($route->getMethod());
+            $method = $class->getMethod($route->getControllerMethod());
             $params = [];
             if($method->getNumberOfRequiredParameters() >= 1){
                 $parameters = $method->getParameters();
                 foreach ($parameters as $parameter){
                     switch ($parameter->getType()){
                         case Request::class:
-
                                 $params[] = $request;
                             break;
                         default:
@@ -75,6 +75,7 @@ class Router
             }
             $method->invokeArgs($obj, $params);
         } catch (\ReflectionException $e) {
+            die($e);
         }
     }
 

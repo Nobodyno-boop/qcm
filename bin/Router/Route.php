@@ -119,5 +119,13 @@ class Route
         return $this->method;
     }
 
+    /**
+     * @return mixed|string
+     */
+    public function getControllerMethod(): mixed
+    {
+        return $this->controllerMethod;
+    }
+
 
 }

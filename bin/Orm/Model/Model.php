@@ -2,6 +2,7 @@
 
 namespace Vroom\Orm\Model;
 
+use JetBrains\PhpStorm\Pure;
 use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Utils\Container;
@@ -23,6 +24,18 @@ class Model
         $this->getSQL()->query($query);
     }
 
+    #[Pure] public function newInstance()
+    {
+        return new $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSave(): bool
+    {
+        return $this->isSave;
+    }
 
 
     public function query(): QueryBuilder

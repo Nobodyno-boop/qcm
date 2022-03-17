@@ -2,7 +2,10 @@
 
 namespace Vroom\Controller;
 
+use Vroom\Orm\Repository;
+use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Request;
+use Vroom\Utils\Container;
 
 class AbstractController
 {
@@ -43,5 +46,17 @@ class AbstractController
     {
         return !empty($this->getSession("user"));
     }
+
+    protected function repository($class): Repository
+    {
+        if(is_object($class)){
+            $class = get_class($class);
+        }
+        if(is_string($class)){
+            return new Repository($class);
+        }
+        throw new \Error("Could not get model class");
+    }
+
 
 }

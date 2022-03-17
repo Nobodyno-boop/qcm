@@ -46,11 +46,11 @@ class Models
                 ];
                 if(Container::isEmpty(Models::CONTAINER_NAMESPACE)){
                     Container::set(Models::CONTAINER_NAMESPACE, [
-                        $entityClass->getName() => [$m]
+                        $entityClass->getName() => $m
                     ]);
                 } else {
                     $models = Container::get(Models::CONTAINER_NAMESPACE);
-                    $models = array_merge([ $entityClass->getName() => [$m]], $models);
+                    $models = array_merge([ $entityClass->getName() => $m], $models);
                     Container::set(self::CONTAINER_NAMESPACE, $models);
                 }
                 return $m;
@@ -70,7 +70,7 @@ class Models
 
         if(is_string($model)){
             $models = Container::get(self::CONTAINER_NAMESPACE);
-            return $models[$models] ?? [];
+            return $models[$model] ?? self::readModel($model);
         } else return [];
     }
 
