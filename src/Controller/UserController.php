@@ -8,6 +8,7 @@ use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
 
+#[Route("/api/")]
 class UserController extends AbstractController
 {
     #[Route("/user/", methods: ['POST'])]
@@ -19,8 +20,11 @@ class UserController extends AbstractController
     public function getUser(Request $request, $id)
     {
         $user = $this->repository(UserModel::class)->get($id);
-
-        dump($user);
+        if($user != null){
+            $this->response()->json($user);
+        } else {
+            $this->response()->json();
+        }
     }
 
     #[Route("/")]

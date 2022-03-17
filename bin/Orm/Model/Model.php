@@ -49,4 +49,17 @@ class Model
         return Container::get("_db");
     }
 
+
+    public function serialize(): array
+    {
+        $model = Models::get($this);
+        $json = [];
+        foreach ($model['properties'] as $property){
+            $value = call_user_func([$this, 'get'.ucfirst($property->getName())]) ?? null;
+            $json[$property->getName()] = $value;
+        }
+//        dump($json);
+        return $json;
+    }
+
 }

@@ -37,10 +37,14 @@ class Controllers
             }
 
             if(empty(self::get($controller))){
-                Container::set(self::CONTAINER_NAMESPACE, [$controller=>$results]);
+                Container::set(self::CONTAINER_NAMESPACE, [$controller=> [
+                    "routes" => $results
+                ]]);
             } else {
                 $controllers = self::get($controller);
-                $controllers = array_merge($controllers, $results);
+                $controllers = array_merge($controllers, [
+                    "routes" => $results
+                ]);
                 Container::set(self::CONTAINER_NAMESPACE, $controllers);
             }
         }catch (\Exception $e){

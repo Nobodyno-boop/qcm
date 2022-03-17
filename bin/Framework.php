@@ -42,7 +42,7 @@ class Framework {
             Controllers::read($controller);
             $data = Controllers::get($controller);
             if(!empty($data)){
-                foreach ($data as $route){
+                foreach ($data['routes'] as $route){
                     $router->addRoute($route, $controller);
                 }
             }

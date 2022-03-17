@@ -5,6 +5,7 @@ namespace Vroom\Controller;
 use Vroom\Orm\Repository;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Request;
+use Vroom\Router\Response;
 use Vroom\Utils\Container;
 
 class AbstractController
@@ -57,6 +58,12 @@ class AbstractController
         }
         throw new \Error("Could not get model class");
     }
+
+    public function response() : Response
+    {
+        return new Response();
+    }
+
 
 
 }
