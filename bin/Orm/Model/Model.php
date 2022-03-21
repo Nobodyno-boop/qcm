@@ -15,10 +15,10 @@ class Model
     {
 
         $query = "";
-        if($this->isSave){
-            $query = (string) $this->query()->update($this);
+        if ($this->isSave) {
+            $query = (string)$this->query()->update($this);
         } else {
-            $query = (string) $this->query()->insert($this);
+            $query = (string)$this->query()->insert($this);
         }
 
         $this->getSQL()->query($query);
@@ -44,7 +44,7 @@ class Model
     }
 
 
-    private function getSQL() : Sql
+    private function getSQL(): Sql
     {
         return Container::get("_db");
     }
@@ -54,8 +54,8 @@ class Model
     {
         $model = Models::get($this);
         $json = [];
-        foreach ($model['properties'] as $property){
-            $value = call_user_func([$this, 'get'.ucfirst($property->getName())]) ?? null;
+        foreach ($model['properties'] as $property) {
+            $value = call_user_func([$this, 'get' . ucfirst($property->getName())]) ?? null;
             $json[$property->getName()] = $value;
         }
 //        dump($json);

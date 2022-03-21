@@ -2,7 +2,8 @@
 
 namespace Vroom\Config;
 
-class Config {
+class Config
+{
     private array $config;
     /**
      * @var mixed|null

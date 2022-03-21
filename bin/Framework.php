@@ -2,8 +2,6 @@
 
 namespace Vroom;
 
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 use Vroom\App\AbstractApp;
 use Vroom\Config\Config;
 use Vroom\Controller\Controllers;
@@ -13,7 +11,8 @@ use Vroom\Router\Router;
 use Vroom\Utils\Container;
 use Vroom\View\View;
 
-class Framework {
+class Framework
+{
     private Config $config;
     private AbstractApp $app;
 
@@ -28,14 +27,13 @@ class Framework {
         $router = new Router();
 
 
-
         Container::set("_config", $this->config);
         Container::set("_db", new Sql());
         Container::set("_router", $router);
         Container::set("_twig", View::getTwig());
 
-        if($this->getConfig()->getConfig()['debug']['checkModels']){
-            foreach ($app->models() as $model){
+        if ($this->getConfig()->getConfig()['debug']['checkModels']) {
+            foreach ($app->models() as $model) {
                 Models::readModel($model);
             }
         }
@@ -43,11 +41,11 @@ class Framework {
 
         $controllers = $app->controller();
 
-        foreach ($controllers as $controller){
+        foreach ($controllers as $controller) {
             Controllers::read($controller);
             $data = Controllers::get($controller);
-            if(!empty($data)){
-                foreach ($data['routes'] as $route){
+            if (!empty($data)) {
+                foreach ($data['routes'] as $route) {
                     $router->addRoute($route, $controller);
                 }
             }
@@ -61,7 +59,7 @@ class Framework {
     public static function newInstance(string $configPath, AbstractApp $app): Framework
     {
         $include = include($configPath);
-        if(is_array($include)){
+        if (is_array($include)) {
             return new Framework(new Config($include), $app);
         } else {
             throw new \Error();

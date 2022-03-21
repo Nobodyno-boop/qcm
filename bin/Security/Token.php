@@ -28,7 +28,7 @@ class Token
     {
         return [
             "token" => $this->token,
-            "url"=> $this->url
+            "url" => $this->url
         ];
     }
 

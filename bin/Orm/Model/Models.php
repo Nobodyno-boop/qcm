@@ -19,38 +19,38 @@ class Models
     {
         try {
             $class = new \ReflectionClass($model);
-            if($class->isSubclassOf(Model::class)){
+            if ($class->isSubclassOf(Model::class)) {
                 $entityAttr = $class->getAttributes(Entity::class, ReflectionAttribute::IS_INSTANCEOF);
-                if(empty($entityAttr)){
+                if (empty($entityAttr)) {
                     throw new \Error("Le model n'est pas instancier !");
                 }
-                /**@var Entity $entityClass*/
+                /**@var Entity $entityClass */
                 $entityClass = $entityAttr[0]->newInstance();
 
                 $classproperties = $class->getProperties();
-                if(empty($classproperties)){
+                if (empty($classproperties)) {
                     throw  new \Error();
                 }
                 $properties = [];
-                foreach ($classproperties as $k){
+                foreach ($classproperties as $k) {
                     $columns = $k->getAttributes(Column::class, ReflectionAttribute::IS_INSTANCEOF);
-                    if(!empty($columns)){
+                    if (!empty($columns)) {
                         /** @var Column $columnClass */
                         $columnClass = $columns[0]->newInstance();
-                        $properties[] =  $columnClass;
+                        $properties[] = $columnClass;
                     }
                 }
                 $m = [
                     "entity" => $entityClass,
                     "properties" => $properties
                 ];
-                if(Container::isEmpty(Models::CONTAINER_NAMESPACE)){
+                if (Container::isEmpty(Models::CONTAINER_NAMESPACE)) {
                     Container::set(Models::CONTAINER_NAMESPACE, [
                         $entityClass->getName() => $m
                     ]);
                 } else {
                     $models = Container::get(Models::CONTAINER_NAMESPACE);
-                    $models = array_merge([ $entityClass->getName() => $m], $models);
+                    $models = array_merge([$entityClass->getName() => $m], $models);
                     Container::set(self::CONTAINER_NAMESPACE, $models);
                 }
                 return $m;
@@ -64,11 +64,11 @@ class Models
 
     public static function get($model)
     {
-        if(is_object($model)){
+        if (is_object($model)) {
             $model = get_class($model);
         }
 
-        if(is_string($model)){
+        if (is_string($model)) {
             $models = Container::get(self::CONTAINER_NAMESPACE);
             return $models[$model] ?? self::readModel($model);
         } else return [];
@@ -86,10 +86,10 @@ class Models
         try {
             $class = new ReflectionClass($model);
             $m = $class->newInstance();
-            foreach ($models['properties'] as $k){
+            foreach ($models['properties'] as $k) {
                 $name = $k->getName();
-                if(isset($var[$name])){
-                    call_user_func_array([$m, 'set'.ucfirst($name)],[$var[$name]]);
+                if (isset($var[$name])) {
+                    call_user_func_array([$m, 'set' . ucfirst($name)], [$var[$name]]);
                 }
             }
             return $m;
@@ -99,7 +99,7 @@ class Models
         return null;
     }
 
-    private static function getSQL() :Sql
+    private static function getSQL(): Sql
     {
         return Container::get("_db");
     }

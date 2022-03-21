@@ -26,8 +26,8 @@ class View
         $loader = new FilesystemLoader($config['template']['dir']);
         $twig = new Environment($loader, ['debug' => true]);
         $url = $config['site'];
-        $asset =  new TwigFunction('asset', function ($path) use ($url){
-            return $url['url'].$url['assets']."/$path";
+        $asset = new TwigFunction('asset', function ($path) use ($url) {
+            return $url['url'] . $url['assets'] . "/$path";
         });
 
 

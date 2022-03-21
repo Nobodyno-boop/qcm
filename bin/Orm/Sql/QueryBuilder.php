@@ -5,7 +5,6 @@ namespace Vroom\Orm\Sql;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Models;
 use Vroom\Orm\Model\Types;
-use Vroom\Utils\Container;
 
 class QueryBuilder
 {
@@ -22,9 +21,9 @@ class QueryBuilder
      */
     public function __construct(string $model = null)
     {
-        if($model != null){
+        if ($model != null) {
             $models = Models::readModel($model);
-            if(!empty($models)){
+            if (!empty($models)) {
                 $this->model = $models;
             }
         }
@@ -42,11 +41,11 @@ class QueryBuilder
 
     public function select(string ...$select): QueryBuilder
     {
-        if(empty($select)){
-            foreach ($this->model['properties'] as $k){
+        if (empty($select)) {
+            foreach ($this->model['properties'] as $k) {
                 $this->fields[] = $k->getName();
             }
-        }else {
+        } else {
             $this->fields = $select;
         }
         $this->word = "SELECT";
@@ -55,8 +54,8 @@ class QueryBuilder
 
     public function where(array $where): QueryBuilder
     {
-        foreach ($where as $k => $v){
-            $this->cond[] = $k." = '".$v."'";
+        foreach ($where as $k => $v) {
+            $this->cond[] = $k . " = '" . $v . "'";
         }
         return $this;
     }
@@ -65,7 +64,7 @@ class QueryBuilder
     {
         $name = $table == "" ? strtolower($this->model['entity']->getName()) : "";
 
-        if($alias === null){
+        if ($alias === null) {
             $this->from[] = $name;
         } else {
             $this->from[] = "${$name} AS ${alias}";
@@ -75,25 +74,27 @@ class QueryBuilder
     }
 
 
-    public function delete(): QueryBuilder {
+    public function delete(): QueryBuilder
+    {
         $this->word = "DELETE";
         return $this;
     }
 
 
-    public function update(array|Model $update): QueryBuilder {
+    public function update(array|Model $update): QueryBuilder
+    {
         $this->word = "UPDATE";
 
-        if(is_array($update)){
-            foreach ($update as $k => $v){
-                $this->fields[] = $k." = '".$v."'";
+        if (is_array($update)) {
+            foreach ($update as $k => $v) {
+                $this->fields[] = $k . " = '" . $v . "'";
             }
         } else { // when is the object
-            foreach ($this->model['properties'] as $item){
-                if(!($item->getType() == Types::id)){
-                    $value = call_user_func(array($update, 'get'.ucfirst($item->getName())));
+            foreach ($this->model['properties'] as $item) {
+                if (!($item->getType() == Types::id)) {
+                    $value = call_user_func(array($update, 'get' . ucfirst($item->getName())));
 
-                    $this->fields[] = $item->getName()." = '".$value."'";
+                    $this->fields[] = $item->getName() . " = '" . $value . "'";
                 }
             }
         }
@@ -101,7 +102,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function limit(int $limit = 1) : QueryBuilder
+    public function limit(int $limit = 1): QueryBuilder
     {
         $this->limit = $limit;
 
@@ -111,17 +112,17 @@ class QueryBuilder
     public function insert(array|Model $insert): QueryBuilder
     {
         $this->word = "INSERT";
-        if(is_array($insert)){
-            foreach ($insert as $k => $v){
+        if (is_array($insert)) {
+            foreach ($insert as $k => $v) {
                 $this->values['keys'][] = $k;
-                $this->values['values'][] = "'".$v."'";
+                $this->values['values'][] = "'" . $v . "'";
             }
         } else { //model
-            foreach ($this->model['properties'] as $item){
-                if(!($item->getType() === Types::id)){
-                    $value = call_user_func(array($insert, 'get'.ucfirst($item->getName())));
+            foreach ($this->model['properties'] as $item) {
+                if (!($item->getType() === Types::id)) {
+                    $value = call_user_func(array($insert, 'get' . ucfirst($item->getName())));
                     $this->values['keys'][] = $item->getName();
-                    $this->values['values'][] = "'".$value."'";
+                    $this->values['values'][] = "'" . $value . "'";
                 }
             }
         }
@@ -132,36 +133,36 @@ class QueryBuilder
     {
         $query = "";
         $table = empty($this->from) ? strtolower($this->model['entity']->getName()) : implode(", ", $this->from);
-        if(!empty($table)){
-            $w = empty($this->cond) ? '' : ' WHERE '.implode(" AND ", $this->cond);
+        if (!empty($table)) {
+            $w = empty($this->cond) ? '' : ' WHERE ' . implode(" AND ", $this->cond);
             $selector = empty($this->fields) ? " *" : implode(", ", $this->fields);
 
-            switch (strtolower($this->word)){
+            switch (strtolower($this->word)) {
                 case "insert":
-                    $keys = "(".implode(", ", $this->values['keys']).")";
-                    $values = "(".implode(", ", $this->values['values']).")";
+                    $keys = "(" . implode(", ", $this->values['keys']) . ")";
+                    $values = "(" . implode(", ", $this->values['values']) . ")";
 
-                    $query = "INSERT INTO ".$table." "
-                    .$keys." VALUES".
+                    $query = "INSERT INTO " . $table . " "
+                        . $keys . " VALUES" .
                         $values;
                     break;
                 case "update":
-                    $query = $this->word." ".$table.
-                        " SET ".implode(", ", $this->fields)
-                        .$w;
+                    $query = $this->word . " " . $table .
+                        " SET " . implode(", ", $this->fields)
+                        . $w;
                     break;
                 case "delete":
-                    $query = $this->word." "
-                        .$table." "
-                        .$w;
+                    $query = $this->word . " "
+                        . $table . " "
+                        . $w;
                     break;
                 default:
                 case "select":
-                $limit = $this->limit != 0 ? " LIMIT ".$this->limit :"";
+                    $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
 
-                $query = "SELECT".$selector." FROM "
-                        .$table
-                        .$w.$limit;
+                    $query = "SELECT" . $selector . " FROM "
+                        . $table
+                        . $w . $limit;
 
                     break;
             }
