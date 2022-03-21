@@ -30,19 +30,21 @@ class Router
         if(!empty($routes)){
             usort($routes, function ($a, $b){
                 if($a == $b) return 0;
-                return (strlen($b->getUrl()) > strlen($a->getUrl()) ? -1 : 1);
+                return (strlen($b->getPath()) > strlen($a->getPath()) ? -1 : 1);
             });
 
             foreach ($routes as $route){
-                if($route->match($url)){
-                    $r = $route;
+                if(!$route->match($url, $_SERVER['REQUEST_METHOD'])){
+                    continue;
                 }
+
+                $r = $route;
             }
             if($r != null){
 
                 $this->callController($r);
             } else {
-//            throw new \Error("Cannot find route");
+            throw new \Error("Cannot find route");
             }
         } else {
             // No route so 404
@@ -68,7 +70,7 @@ class Router
                             break;
                         default:
                             $name = $parameter->getName();
-                            $params[] = $route->getParams()[$name] ?? null;
+                            $params[] = $route->getVars()[$name] ?? null;
                             break;
                     }
                 }

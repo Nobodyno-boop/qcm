@@ -4,19 +4,19 @@ namespace App\Controller;
 
 use App\Model\UserModel;
 use Vroom\Controller\AbstractController;
-use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
 
-#[Route("/api/")]
 class UserController extends AbstractController
 {
     #[Route("/user/", methods: ['POST'])]
-    public function index()
+    public function index(Request $r)
     {
-        dump($this->getRequest());
+        if($this->matchToken($r->getBody()->token)){
+            $this->response()->json(["dance" => "singe"]);
+        }
     }
-    #[Route("/user/:id")]
+    #[Route("/user/{id}/")]
     public function getUser(Request $request, $id)
     {
         $user = $this->repository(UserModel::class)->get($id);
@@ -27,9 +27,11 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route("/")]
+    #[Route("user/")]
     public function login(){
+        $token = $this->getToken();
         echo /** HTML */'<form id="form" action="/user" method="post">
+                 <input type="hidden" name="crsf" id="crsf_token" value="'.$token.'" >
                 <input type="email" name="email" id="email"><br>
                 <input type="password" name="password" id="password"><br>
                 <button type="submit">Login </button>
@@ -41,13 +43,13 @@ class UserController extends AbstractController
                         
                         let email = document.getElementById("email").value
                         let password = document.getElementById("password").value
-                           
+                        let token = document.getElementById("crsf_token").value;
                         fetch("/user/", {
                             method: "POST",
                             headers: {
-                                "Content-type": "application/json"
+                                "Content-Type": "application/json"
                             },
-                            body: JSON.stringify({email:email, password:password})
+                            body: JSON.stringify({email:email, password:password, token})
                         }).catch(e => console.log(e)).then(x => x.text()).then(console.log)
                     })
              

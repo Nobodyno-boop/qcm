@@ -5,118 +5,84 @@ namespace Vroom\Router;
 
 class Route
 {
-    private string $url;
+    private string $path;
     private string $controller;
     private string $controllerMethod;
     private string $method;
-    private $matches = [];
+    private array $var = [];
     private array $params = [];
-    private string $prefix;
-    private array $currentMatchs;
+    private string $name;
 
-    /**
-     * @param array $data
-     */
+
     public function __construct(array $data, string $controller, string $method)
     {
-        $this->url = trim($data['url'], "/");
-        $this->prefix = $data['prefix'];
-        $this->controllerMethod = $data['name'];
+        $this->path = trim($data['url'], "/");
+        $this->name = $data['prefix'];
+        $this->controllerMethod = $data['name'] ?? "";
         $this->controller = $controller;
         $this->method = $method;
     }
 
-
-    /**
-     * @return string
-     */
-    public function getController(): string
+    public function match(string $path, string $method): bool
     {
-        return $this->controller;
-    }
-
-
-    public function match($url): bool
-    {
-        $this->currentMatchs = [];
-        $url = trim($url, '/');
-        $path = preg_replace_callback('/:([\w]+)/', [$this, 'paramMatch'], $this->url);
-        $regex = "#^$path#i";
-        if (!preg_match($regex, $url, $matches)) {
-            return false;
+        $regex = $this->getPath();
+        foreach ($this->getVarsNames() as $variable) {
+            $varName = trim($variable, '{\}');
+            $regex = str_replace($variable, '(?P<' . $varName . '>[^/]++)', $regex);
         }
-        array_shift($matches);
-        $this->matches = $matches;
-        if(!empty($this->currentMatchs)){
-            if(count($matches) == count($this->currentMatchs)){ // when correct url
-                for($i =0; $i < count($matches); $i++){
-                    $this->params[$this->currentMatchs[$i]] = $matches[$i];
-                }
+
+
+        if ($method === $this->method && preg_match('#^' . $regex . '$#sD', self::trimPath($path), $matches)) {
+            $values = array_filter($matches, static function ($key) {
+                return is_string($key);
+            }, ARRAY_FILTER_USE_KEY);
+            foreach ($values as $key => $value) {
+                $this->var[$key] = $value;
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private function paramMatch($match): string
+    public function getName(): string
     {
-        $this->currentMatchs[] = $match[1];
-        if (isset($this->params[$match[1]])) {
-            return '(' . $this->params[$match[1]] . ')';
-        }
-        return '([^/]+)';
+        return $this->name;
     }
 
-    public function getUrlWith($params)
+    public function getPath(): string
     {
-        $url = $this->url;
-        foreach ($params as $k => $v) {
-            $url = str_replace(":$k", $v, $url);
-        }
-        return $url;
+        return $this->path;
     }
 
-    /**
-     * @return string
-     */
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-
-    public function with($param, $regex)
-    {
-        $this->params[$param] = str_replace('(', '(?:', $regex);
-        return $this; // On retourne tjrs l'objet pour enchainer les arguments
-    }
-
-    public function call()
-    {
-        dump($this);
-    }
-
-    /**
-     * @return array
-     */
-    public function getParams(): array
+    public function getParameters(): array
     {
         return $this->params;
     }
 
-    /**
-     * @return mixed|string
-     */
-    public function getPrefix(): mixed
-    {
-        return $this->prefix;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getMethod(): mixed
+    public function getMethod(): string
     {
         return $this->method;
+    }
+
+    public function getVarsNames(): array
+    {
+        preg_match_all('/{[^}]*}/', $this->path, $matches);
+        return reset($matches) ?? [];
+    }
+
+    public function hasVars(): bool
+    {
+        return $this->getVarsNames() !== [];
+    }
+
+    public function getVars(): array
+    {
+        return $this->var;
+    }
+
+    public static function trimPath(string $path): string
+    {
+        return  rtrim(ltrim(trim($path), '/'), '/');
     }
 
     /**
@@ -127,5 +93,12 @@ class Route
         return $this->controllerMethod;
     }
 
+    /**
+     * @return string
+     */
+    public function getController(): string
+    {
+        return $this->controller;
+    }
 
 }

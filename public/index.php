@@ -3,9 +3,25 @@ require '../vendor/autoload.php';
 
 use Spatie\Ignition\Ignition;
 use Vroom\Framework;
-
+use Vroom\Router\Route;
+session_start();
 Ignition::make()->register();
 Framework::newInstance('../config.php', new \App\App());
+//dump($_SERVER['REQUEST_URI']);
+//function getRoutes() {
+//    $routes = [new Route(["prefix" => "", "url" => "api/user/{id}"], \App\Controller\UserController::class, "GET"), new Route(["prefix" => "", "url" => "api/user/"], \App\Controller\UserController::class, "GET")];
+//
+//    foreach ($routes as $route){
+//        if(!$route->match($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'])){
+//            continue;
+//        }
+//
+//        return $route;
+//    }
+//}
+//
+//dump(getRoutes());
+
 
 //$models = \Vroom\Orm\Model\Models::readModel(\App\Model\UserModel::class);
 
