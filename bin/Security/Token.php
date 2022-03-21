@@ -78,10 +78,10 @@ class Token
      * $MyLongToken = Token::(30, "my");
      * ```
      * @param int $length
-     * @param $url
+     * @param string $url
      * @return void|Token
      */
-    public static function getToken(int $length = 15, $url = "")
+    public static function getToken(int $length = 15, string $url = "")
     {
         $h = null;
         try {
