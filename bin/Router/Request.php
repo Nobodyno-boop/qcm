@@ -61,4 +61,12 @@ class Request
     {
 
     }
+
+    /**
+     * @return Route
+     */
+    public function getRoute(): Route
+    {
+        return $this->route;
+    }
 }

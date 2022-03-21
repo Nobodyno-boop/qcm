@@ -32,10 +32,6 @@ class Repository
     public function get(mixed $value, $key = null)
     {
 
-
-
-
-
         if($key === null){
             $keys = array_filter($this->getModel()['properties'], function ($e){
                 if($e->getType() == Types::id) {

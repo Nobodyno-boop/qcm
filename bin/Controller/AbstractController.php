@@ -6,6 +6,7 @@ use Vroom\Orm\Repository;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
+use Vroom\Security\Token;
 use Vroom\Utils\Container;
 
 class AbstractController
@@ -35,11 +36,14 @@ class AbstractController
      */
     protected function getSession(string $key = null): mixed
     {
-        return $key == null ? $_SESSION : $_SESSION[$key] ?? [];
+        return $key == null ? $_SESSION : $_SESSION[$key];
     }
 
     protected function addSession(string $key, mixed $value)
     {
+        if(is_object($value)){
+            $value = serialize($value);
+        }
         $_SESSION[$key] = $value;
     }
 
@@ -64,6 +68,37 @@ class AbstractController
         return new Response();
     }
 
+    public function url() : string
+    {
+        return $this->getRequest()->getRoute()->getPath();
+    }
+
+
+    /**
+     * Make a fresh CRSF Token and return it
+     *
+     * The token is putting in the session
+     * @return string
+     */
+    public function getToken(): string
+    {
+        $token = Token::getToken(url: $this->url());
+
+        $this->addSession("_crsf", $token);
+
+        return $token->token;
+    }
+
+
+    public function matchToken(string $token)
+    {
+        $sessionToken = unserialize($this->getSession("_crsf"));
+        if(get_class($sessionToken) === Token::class){
+            return $sessionToken->match($token, $this->url());
+        }
+
+        return false;
+    }
 
 
 }
