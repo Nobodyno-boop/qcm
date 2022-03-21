@@ -2,6 +2,8 @@
 
 namespace Vroom;
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 use Vroom\App\AbstractApp;
 use Vroom\Config\Config;
 use Vroom\Controller\Controllers;
@@ -9,6 +11,7 @@ use Vroom\Orm\Model\Models;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Router;
 use Vroom\Utils\Container;
+use Vroom\View\View;
 
 class Framework {
     private Config $config;
@@ -25,9 +28,11 @@ class Framework {
         $router = new Router();
 
 
+
         Container::set("_config", $this->config);
         Container::set("_db", new Sql());
         Container::set("_router", $router);
+        Container::set("_twig", View::getTwig());
 
         if($this->getConfig()->getConfig()['debug']['checkModels']){
             foreach ($app->models() as $model){

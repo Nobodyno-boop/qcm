@@ -2,6 +2,7 @@
 
 namespace Vroom\Controller;
 
+use Twig\Environment;
 use Vroom\Orm\Repository;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Request;
@@ -68,6 +69,11 @@ class AbstractController
         return new Response();
     }
 
+    public function twig() : Environment
+    {
+        return Container::get("_twig");
+    }
+
     public function url() : string
     {
         return $this->getRequest()->getRoute()->getPath();
@@ -98,6 +104,13 @@ class AbstractController
         }
 
         return false;
+    }
+
+    public function renderView(string $view, array $context = [])
+    {
+        $template = $this->twig()->load($view);
+
+        $template->display(["app" => ["id" => 1], ...$context]);
     }
 
 
