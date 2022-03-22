@@ -1,3 +1,7 @@
-* {
-    color: red
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text {
+    @apply  text-[8px]
 }
