@@ -11,7 +11,7 @@
     {% block seo %}
     <meta property="og:title" content="I am prout"/>
     {% endblock %}
-    <title>Cursed website</title>
+    <title>{% block title %} Cursed website {% endblock %}</title>
 </head>
 <body>
     {% block content %}

@@ -8,6 +8,7 @@ use Vroom\Router\Request;
 use Vroom\Router\Response;
 use Vroom\Security\Token;
 use Vroom\Utils\Container;
+use Vroom\View\AppContext;
 
 class AbstractController
 {
@@ -108,8 +109,8 @@ class AbstractController
     public function renderView(string $view, array $context = [])
     {
         $template = $this->twig()->load($view);
-
-        $template->display(["app" => ["id" => 1], ...$context]);
+        $appContext = new AppContext($_SESSION, true);
+        $template->display(["app" => $appContext, ...$context]);
     }
 
 

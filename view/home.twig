@@ -1,7 +1,11 @@
 {%  extends "base.twig" %}
 
 {% block content %}
-    {{ app.id }}
+    {{ app.session.ap  }}
+
+    {% if app.session %}
+        I'm here
+    {% endif %}
 
     i'm cursed btw
 
