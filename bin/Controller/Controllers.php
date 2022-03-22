@@ -2,7 +2,6 @@
 
 namespace Vroom\Controller;
 
-use Vroom\Framework;
 use Vroom\Router\Decorator\Route;
 use Vroom\Utils\Container;
 
@@ -12,18 +11,18 @@ class Controllers
 
     public static function read(string|object $controller)
     {
-        try{
-            if(is_object($controller)){
+        try {
+            if (is_object($controller)) {
                 $controller = get_class($controller);
             }
             $class = new \ReflectionClass($controller);
-            if(!$class->isSubclassOf(AbstractController::class)){
+            if (!$class->isSubclassOf(AbstractController::class)) {
                 throw new \Error("Cannot init a controller without extends AbAbstractController");
             }
             $results = [];
-            foreach ($class->getMethods() as $method){
+            foreach ($class->getMethods() as $method) {
                 $routes = $method->getAttributes(Route::class, \ReflectionAttribute::IS_INSTANCEOF);
-                if(!empty($routes)){
+                if (!empty($routes)) {
                     /**
                      * @var Route $route
                      */
@@ -36,8 +35,8 @@ class Controllers
                 }
             }
 
-            if(empty(self::get($controller))){
-                Container::set(self::CONTAINER_NAMESPACE, [$controller=> [
+            if (empty(self::get($controller))) {
+                Container::set(self::CONTAINER_NAMESPACE, [$controller => [
                     "routes" => $results
                 ]]);
             } else {
@@ -47,7 +46,7 @@ class Controllers
                 ]);
                 Container::set(self::CONTAINER_NAMESPACE, $controllers);
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             die($e);
         }
     }

@@ -2,12 +2,13 @@
 
 namespace Vroom\Controller;
 
+use Twig\Environment;
 use Vroom\Orm\Repository;
-use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
 use Vroom\Security\Token;
 use Vroom\Utils\Container;
+use Vroom\View\AppContext;
 
 class AbstractController
 {
@@ -41,7 +42,7 @@ class AbstractController
 
     protected function addSession(string $key, mixed $value)
     {
-        if(is_object($value)){
+        if (is_object($value)) {
             $value = serialize($value);
         }
         $_SESSION[$key] = $value;
@@ -54,21 +55,26 @@ class AbstractController
 
     protected function repository($class): Repository
     {
-        if(is_object($class)){
+        if (is_object($class)) {
             $class = get_class($class);
         }
-        if(is_string($class)){
+        if (is_string($class)) {
             return new Repository($class);
         }
         throw new \Error("Could not get model class");
     }
 
-    public function response() : Response
+    public function response(): Response
     {
         return new Response();
     }
 
-    public function url() : string
+    public function twig(): Environment
+    {
+        return Container::get("_twig");
+    }
+
+    public function url(): string
     {
         return $this->getRequest()->getRoute()->getPath();
     }
@@ -93,11 +99,18 @@ class AbstractController
     public function matchToken(string $token)
     {
         $sessionToken = unserialize($this->getSession("_crsf"));
-        if(get_class($sessionToken) === Token::class){
+        if (get_class($sessionToken) === Token::class) {
             return $sessionToken->match($token, $this->url());
         }
 
         return false;
+    }
+
+    public function renderView(string $view, array $context = [])
+    {
+        $template = $this->twig()->load($view);
+        $appContext = new AppContext($_SESSION, true);
+        $template->display(["app" => $appContext, ...$context]);
     }
 
 

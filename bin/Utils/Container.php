@@ -7,7 +7,7 @@ class Container
     private static array $containers = [];
 
 
-    public static function set(string $name, mixed $value) : void
+    public static function set(string $name, mixed $value): void
     {
         self::$containers[$name] = $value;
     }

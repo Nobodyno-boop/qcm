@@ -8,15 +8,15 @@ class Response
 {
     public function json(mixed $value = "{}")
     {
-        $json= null;
+        $json = null;
 
-        $json = match (gettype($value)){
+        $json = match (gettype($value)) {
             "array" => json_encode($value),
             "object" => $this->objectToJson($value),
             default => "{}"
         };
 
-        if(is_string($json)){
+        if (is_string($json)) {
             header("Content-Type: application/json");
             echo $json ?? '{}';
         }
@@ -25,7 +25,7 @@ class Response
     private function objectToJson($value)
     {
         $json = null;
-        if(get_parent_class($value) === Model::class){
+        if (get_parent_class($value) === Model::class) {
             $json = json_encode($value->serialize());
         }
 

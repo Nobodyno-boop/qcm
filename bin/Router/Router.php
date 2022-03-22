@@ -16,7 +16,7 @@ class Router
 
     public function addRoute(array $data, $controller)
     {
-        foreach ($data['methods'] as $method){
+        foreach ($data['methods'] as $method) {
             $route = new Route($data, $controller, $method);
             $this->routes[$method][] = $route;
         }
@@ -24,27 +24,27 @@ class Router
 
     public function handle()
     {
-       $url = $_GET['url'] ?? $_SERVER['REQUEST_URI'];
+        $url = $_GET['url'] ?? $_SERVER['REQUEST_URI'];
         $r = null;
         $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
-        if(!empty($routes)){
-            usort($routes, function ($a, $b){
-                if($a == $b) return 0;
+        if (!empty($routes)) {
+            usort($routes, function ($a, $b) {
+                if ($a == $b) return 0;
                 return (strlen($b->getPath()) > strlen($a->getPath()) ? -1 : 1);
             });
 
-            foreach ($routes as $route){
-                if(!$route->match($url, $_SERVER['REQUEST_METHOD'])){
+            foreach ($routes as $route) {
+                if (!$route->match($url, $_SERVER['REQUEST_METHOD'])) {
                     continue;
                 }
 
                 $r = $route;
             }
-            if($r != null){
+            if ($r != null) {
 
                 $this->callController($r);
             } else {
-            throw new \Error("Cannot find route");
+                throw new \Error("Cannot find route");
             }
         } else {
             // No route so 404
@@ -61,12 +61,12 @@ class Router
             $obj = $class->newInstance($request);
             $method = $class->getMethod($route->getControllerMethod());
             $params = [];
-            if($method->getNumberOfRequiredParameters() >= 1){
+            if ($method->getNumberOfRequiredParameters() >= 1) {
                 $parameters = $method->getParameters();
-                foreach ($parameters as $parameter){
-                    switch ($parameter->getType()){
+                foreach ($parameters as $parameter) {
+                    switch ($parameter->getType()) {
                         case Request::class:
-                                $params[] = $request;
+                            $params[] = $request;
                             break;
                         default:
                             $name = $parameter->getName();

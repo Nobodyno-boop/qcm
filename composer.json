@@ -20,7 +20,8 @@
     "symfony/var-dumper": "v6.0.3",
     "spatie/ignition": "1.0.5",
     "klitsche/dog": "v0.4.2",
-    "phpunit/phpunit": "^9"
+    "phpunit/phpunit": "^9",
+    "twig/twig": "^3"
   },
   "require": {
     "ext-pdo": "*"
