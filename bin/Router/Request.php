@@ -8,6 +8,7 @@ class Request
     private mixed $_body;
     private array|false $header;
     private string $method;
+
     /**
      * @param Route $route
      */
@@ -19,7 +20,8 @@ class Request
     }
 
 
-    private function getBodyByHeader(){
+    private function getBodyByHeader()
+    {
         $input = file_get_contents("php://input");
         return match ($this->header['Content-Type'] ?? "") {
             "application/json" => json_decode($input),
@@ -40,10 +42,10 @@ class Request
     {
         $parse = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
         $obj = [];
-        if($parse != null){
-            if(str_contains($parse, "&")){
+        if ($parse != null) {
+            if (str_contains($parse, "&")) {
                 $objets = explode("&", $parse);
-                $objets = array_map(function ($e){
+                $objets = array_map(function ($e) {
                     $cut = explode("=", $e);
                     return [$cut[0] => $cut[1]];
                 }, $objets);

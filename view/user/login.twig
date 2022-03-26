@@ -1,0 +1,9 @@
+{%  extends "base.twig" %}
+
+{% block title %} Login - Name {% endblock %}
+{% block content %}
+    <form action="{{ url("login") }}" method="post">
+        <input type="hidden" name="token" value="{{ crsf() }}">
+
+    </form>
+{% endblock %}

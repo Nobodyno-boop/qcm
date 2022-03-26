@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "npx tailwindcss -c tailwind.config.js  --output public/assets/css/main.css",
+    "build:watch": "npx tailwindcss -c tailwind.config.js  --output public/assets/css/main.css --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.4",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.23"
+  }
+}

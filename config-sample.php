@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     "db" => [
         "host" => "localhost",
@@ -9,7 +8,11 @@ return [
         "database" => "qcm"
     ],
     "site" => [
-      "url" => "https://cul-cm.dev"
+      "url" => "https://cul-cm.dev",
+        "assets"=> "/assets"
+    ],
+    "template" => [
+        "dir" => ""
     ],
     "debug" => [
         "checkModels" => "true"

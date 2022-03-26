@@ -2,9 +2,23 @@
 
 namespace Vroom\Security;
 
+/**
+ *
+ * Example usage:
+ * ```php
+ * $freshToken = Token::(15, "mysuperurl");
+ * ```
+ *
+ */
 class Token
 {
+    /**
+     * @var string random token
+     */
     public string $token;
+    /**
+     * @var string url used for match with the token
+     */
     public string $url;
 
     /**
@@ -28,17 +42,46 @@ class Token
     {
         return [
             "token" => $this->token,
-            "url"=> $this->url
+            "url" => $this->url
         ];
     }
 
 
+    /**
+     *
+     * Verify if the token and url is the same.
+     * Example:
+     * ```php
+     * // request on /user/login
+     * $token = "blalba";
+     * $FreshToken = Token::(url: "myWrongUrl");
+     * if(token->match($token, "/user/login") {
+     *  // Will not pass because the url does not match with the token.
+     * }
+     *
+     * ```
+     *
+     * @param string $token
+     * @param string $url
+     * @return bool
+     */
     public function match(string $token, string $url): bool
     {
         return ($token === $this->token && $url === $this->url);
     }
 
-    public static function getToken(int $length = 15, $url = "")
+    /**
+     * Generate a new instance of token with a random token.
+     *  Example:
+     * ```php
+     * $freshToken = Token::(url: "myUrl");
+     * $MyLongToken = Token::(30, "my");
+     * ```
+     * @param int $length
+     * @param string $url
+     * @return void|Token
+     */
+    public static function getToken(int $length = 15, string $url = "")
     {
         $h = null;
         try {
