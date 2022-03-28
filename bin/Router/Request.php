@@ -2,6 +2,8 @@
 
 namespace Vroom\Router;
 
+use Vroom\Utils\ArrayUtils;
+
 class Request
 {
     private Route $route;
@@ -25,7 +27,7 @@ class Request
         $input = file_get_contents("php://input");
         return match ($this->header['Content-Type'] ?? "") {
             "application/json" => json_decode($input),
-            default => $input,
+            default => $input
         };
     }
 
@@ -38,6 +40,16 @@ class Request
         return $this->_body;
     }
 
+    public function get($path)
+    {
+        return ArrayUtils::from($_GET)->get($path);
+    }
+
+    public function post($path)
+    {
+        return ArrayUtils::from($_POST)->get($path);
+    }
+    
     public function query(string $key = ""): mixed
     {
         $parse = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);

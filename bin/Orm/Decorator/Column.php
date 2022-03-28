@@ -7,15 +7,16 @@ class Column
 {
     private string $name;
     private int $type;
-
+    private bool $nullable;
     /**
      * @param string $name
      * @param int $type
      */
-    public function __construct(string $name, int $type)
+    public function __construct(string $name, int $type, bool $nullable = false)
     {
         $this->name = $name;
         $this->type = $type;
+        $this->nullable = $nullable;
     }
 
     /**
@@ -34,5 +35,12 @@ class Column
         return $this->type;
     }
 
+    /**
+     * @return bool
+     */
+    public function isNullable(): bool
+    {
+        return $this->nullable;
+    }
 
 }

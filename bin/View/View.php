@@ -23,10 +23,10 @@ class View
 
     private static function make(): Environment
     {
-        $config = Container::get("_config")->getConfig();
-        $loader = new FilesystemLoader($config['template']['dir']);
+        $config = Container::get("_config");
+        $loader = new FilesystemLoader($config->get('template.dir'));
         $twig = new Environment($loader, ['debug' => true]);
-        $url = $config['site'];
+        $url = $config->get("site");
         $furl = new TwigFunction('url', function ($path) use ($url){
             if(!str_starts_with($path, "/")){
                 $path = "/".$path;

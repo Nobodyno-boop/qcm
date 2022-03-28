@@ -37,7 +37,14 @@ class AbstractController
      */
     protected function getSession(string $key = null): mixed
     {
-        return $key == null ? $_SESSION : $_SESSION[$key];
+        if($key){
+            if(!isset($_SESSION[$key])){
+                return null;
+            }
+            return $_SESSION[$key];
+        }
+
+        return $_SESSION;
     }
 
     protected function addSession(string $key, mixed $value)
@@ -96,11 +103,19 @@ class AbstractController
     }
 
 
-    public function matchToken(string $token)
+    public function matchToken(string $token): bool
     {
         $sessionToken = unserialize($this->getSession("_crsf"));
         if (get_class($sessionToken) === Token::class) {
-            return $sessionToken->match($token, $this->url());
+            $url = $this->url();
+            if(!str_starts_with($url, "/")){
+                $url = "/".$url;
+            }
+            if($sessionToken->match($token, $url)){
+                $this->getToken();
+                return true;
+            }
+            return false;
         }
 
         return false;
@@ -108,8 +123,13 @@ class AbstractController
 
     public function renderView(string $view, array $context = [])
     {
+        if(!str_ends_with($view, ".twig")){
+            $view = $view.".twig";
+        }
         $template = $this->twig()->load($view);
-        $appContext = new AppContext($_SESSION, true);
+        $appContext = new AppContext($_SESSION, true, [
+            "class" => get_class($this)
+        ]);
         $template->display(["app" => $appContext, ...$context]);
     }
 

@@ -9,5 +9,5 @@ class Types
 
     const varchar = 101;
     const int = 102;
-
+    const datetime= 120;
 }

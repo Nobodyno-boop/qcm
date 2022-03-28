@@ -90,11 +90,21 @@ class QueryBuilder
                 $this->fields[] = $k . " = '" . $v . "'";
             }
         } else { // when is the object
+            $vars = $update->_getvars();
             foreach ($this->model['properties'] as $item) {
                 if (!($item->getType() == Types::id)) {
-                    $value = call_user_func(array($update, 'get' . ucfirst($item->getName())));
+                    $value = null;
+                    if($item->isNullable()){
+                        if(isset($vars[Model::varName($item->getName())])) {
+                            $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
+                        }
+                    }else {
+                        $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
+                    }
 
-                    $this->fields[] = $item->getName() . " = '" . $value . "'";
+                    if($value){
+                        $this->fields[] = $item->getName() . " = '" . $value . "'";
+                    }
                 }
             }
         }
@@ -118,11 +128,21 @@ class QueryBuilder
                 $this->values['values'][] = "'" . $v . "'";
             }
         } else { //model
+            $vars = $insert->_getvars();
             foreach ($this->model['properties'] as $item) {
-                if (!($item->getType() === Types::id)) {
-                    $value = call_user_func(array($insert, 'get' . ucfirst($item->getName())));
-                    $this->values['keys'][] = $item->getName();
-                    $this->values['values'][] = "'" . $value . "'";
+                if (!($item->getType() === Types::id) ) {
+                    $value = null;
+                    if($item->isNullable()){
+                        if(isset($vars[Model::varName($item->getName())])) {
+                            $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
+                        }
+                    }else {
+                        $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
+                    }
+                    if($value){
+                        $this->values['keys'][] = $item->getName();
+                        $this->values['values'][] = "'" . $value . "'";
+                    }
                 }
             }
         }

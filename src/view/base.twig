@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block assets %}
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    {% endblock %}
+    {% block seo %}
+    <meta property="og:title" content="I am prout"/>
+    {% endblock %}
+    <title>{% block title %} Cursed website {% endblock %}</title>
+</head>
+<body class="h-screen flex flex-col">
+    <div class="flex-grow">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+    {% if app.debug %}
+        <div class="bg-emerald-800 h-10 p-2">
+            <div class="inline-flex text-white">
+                <p class="mr-1">
+                    Load time : {{ app.load | number_format(2) }}
+                </p>
+                <p class="mr-1">|</p>
+                <p>
+                    Controller: {{ app.other.class }}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>

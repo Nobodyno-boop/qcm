@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Model\UserModel;
+use App\Model\User;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
@@ -16,10 +16,11 @@ class UserController extends AbstractController
             $this->response()->json(["dance" => "singe"]);
         }
     }
+
     #[Route("/user/{id}/")]
     public function getUser(Request $request, $id)
     {
-        $user = $this->repository(UserModel::class)->get($id);
+        $user = $this->repository(User::class)->get($id);
         if($user != null){
             $this->response()->json($user);
         } else {
@@ -27,10 +28,10 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route("/login")]
+//    #[Route("/login")]
     public function login(){
 //        $token = $this->getToken();
-            $this->renderView('user/login.twig');
+//            $this->renderView('user/login.twig');
 //        echo /** HTML */'<form id="form" action="/user" method="post">
 //                 <input type="hidden" name="crsf" id="crsf_token" value="'.$token.'" >
 //                <input type="email" name="email" id="email"><br>

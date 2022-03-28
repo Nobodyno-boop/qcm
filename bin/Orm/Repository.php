@@ -4,6 +4,7 @@ namespace Vroom\Orm;
 
 use PDO;
 use ReflectionClass;
+use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Models;
 use Vroom\Orm\Model\Types;
 use Vroom\Orm\Sql\QueryBuilder;
@@ -78,7 +79,7 @@ class Repository
                 foreach ($this->getModel()['properties'] as $k) {
                     $name = $k->getName();
                     if (isset($var[$name])) {
-                        call_user_func_array([$m, 'set' . ucfirst($name)], [$var[$name]]);
+                        call_user_func_array([$m, 'set' . Model::varName($name)], [$var[$name]]);
                     }
                 }
                 return $m;
@@ -86,5 +87,10 @@ class Repository
             }
         }
         return null;
+    }
+
+    public function findBy(string $key, mixed $value)
+    {
+        return $this->get($value, $key);
     }
 }

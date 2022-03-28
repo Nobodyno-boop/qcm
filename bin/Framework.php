@@ -9,6 +9,7 @@ use Vroom\Orm\Model\Models;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Router;
 use Vroom\Utils\Container;
+use Vroom\Utils\Metrics;
 use Vroom\View\View;
 
 class Framework
@@ -22,6 +23,9 @@ class Framework
      */
     public function __construct(Config $config, AbstractApp $app)
     {
+        $renderPageTime = new Metrics();
+        $renderPageTime->start();
+        Container::set("_telemetry_time", $renderPageTime);
         $this->config = $config;
         $this->app = $app;
         $router = new Router();
@@ -32,10 +36,8 @@ class Framework
         Container::set("_router", $router);
         Container::set("_twig", View::getTwig());
 
-        if ($this->getConfig()->getConfig()['debug']['checkModels']) {
-            foreach ($app->models() as $model) {
-                Models::readModel($model);
-            }
+        foreach ($app->models() as $model) {
+            Models::readModel($model);
         }
 
 

@@ -62,4 +62,22 @@ class Model
         return $json;
     }
 
+    public function _getvars(): array
+    {
+        return get_object_vars($this);
+    }
+
+    public static function varName(string $row)
+    {
+        if(str_contains($row,"_")){
+            $split = explode("_", $row);
+            $word = array_shift($split);
+            foreach ($split as $key){
+                $word .= ucfirst($key);
+            }
+            return $word;
+        }
+        return ucfirst($row);
+    }
+
 }
