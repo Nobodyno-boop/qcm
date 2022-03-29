@@ -36,8 +36,8 @@ class ArrayUtils
     /**
      * Return search in the array with a path
      *
-     * ```
-     * get('user.id')
+     * ```php
+     * ArrayUtils::from([...])->get('user.id');
      * ```
      *
      * @param string $path

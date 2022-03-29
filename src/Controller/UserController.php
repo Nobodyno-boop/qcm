@@ -17,15 +17,10 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route("/user/{id}/")]
-    public function getUser(Request $request, $id)
+    #[Route("/profile", "app_user_profile")]
+    public function profil(Request $request, $id)
     {
-        $user = $this->repository(User::class)->get($id);
-        if($user != null){
-            $this->response()->json($user);
-        } else {
-            $this->response()->json();
-        }
+        $this->renderView("user/profile");
     }
 
 //    #[Route("/login")]

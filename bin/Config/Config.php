@@ -9,9 +9,9 @@ class Config
     private $config;
 
     /**
-     * @param $config
+     * @param array $config
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $this->config = $config;
     }
@@ -29,10 +29,10 @@ class Config
     /**
      * Use the ArrayUtils class and get
      * Return null is the path ins't valid.
-     * @param $path
+     * @param string $path
      * @return mixed
      */
-    public function get($path): mixed
+    public function get(string $path): mixed
     {
         return ArrayUtils::from($this->config)->get($path);
     }

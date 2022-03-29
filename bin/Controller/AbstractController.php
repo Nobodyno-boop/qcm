@@ -3,6 +3,7 @@
 namespace Vroom\Controller;
 
 use Twig\Environment;
+use Vroom\Orm\Model\Model;
 use Vroom\Orm\Repository;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
@@ -50,7 +51,10 @@ class AbstractController
     protected function addSession(string $key, mixed $value)
     {
         if (is_object($value)) {
-            $value = serialize($value);
+            if(get_parent_class($value) === Model::class){
+                $value = $value->serialize();
+            } else $value = serialize($value);
+
         }
         $_SESSION[$key] = $value;
     }

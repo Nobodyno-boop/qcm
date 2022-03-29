@@ -2,7 +2,7 @@
 title: 'Overview'
 # Relative or absolute paths to source files - plus patterns to include or exclude path pr files
 srcPaths:
-  'src':
+  'bin':
     '/.*\.php$/': true
 # Add new or change validation rules - omit completely to use default set
 rules:

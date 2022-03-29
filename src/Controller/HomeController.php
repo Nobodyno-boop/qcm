@@ -7,7 +7,7 @@ use Vroom\Router\Decorator\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route("/")]
+    #[Route("/", "app_home")]
     public function index()
     {
         $this->renderView("home.twig");

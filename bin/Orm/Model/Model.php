@@ -54,13 +54,24 @@ class Model
     {
         $model = Models::get($this);
         $json = [];
+        $vars = $this->_getvars();
         foreach ($model['properties'] as $property) {
-            $value = call_user_func([$this, 'get' . ucfirst($property->getName())]) ?? null;
-            $json[$property->getName()] = $value;
+            $value = null;
+            if($property->isNullable()){
+                if(isset($vars[$property->getName()])){
+                    $value = call_user_func([$this, 'get' . Model::varName($property->getName())]) ?? null;
+                }
+            }else {
+                $value = call_user_func([$this, 'get' . Model::varName($property->getName())]) ?? null;
+            }
+            if($value){
+                $json[$property->getName()] = $value;
+            }
         }
-//        dump($json);
         return $json;
     }
+
+
 
     public function _getvars(): array
     {

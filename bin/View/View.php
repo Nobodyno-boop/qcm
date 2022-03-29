@@ -5,6 +5,7 @@ namespace Vroom\View;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
+use Vroom\Router\Router;
 use Vroom\Security\Token;
 use Vroom\Utils\Container;
 
@@ -28,6 +29,10 @@ class View
         $twig = new Environment($loader, ['debug' => true]);
         $url = $config->get("site");
         $furl = new TwigFunction('url', function ($path) use ($url){
+            $path = Router::getFromPrefix($path) ?? $path;
+            if(is_object($path)){
+                $path = $path->getPath();
+            }
             if(!str_starts_with($path, "/")){
                 $path = "/".$path;
             }

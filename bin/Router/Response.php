@@ -2,7 +2,9 @@
 
 namespace Vroom\Router;
 
+use Vroom\Config\Config;
 use Vroom\Orm\Model\Model;
+use Vroom\Utils\Container;
 
 class Response
 {
@@ -28,7 +30,27 @@ class Response
         if (get_parent_class($value) === Model::class) {
             $json = json_encode($value->serialize());
         }
+        if($json){
+            return $json;
+        } else return "";
+    }
 
-        return $json;
+    /**
+     * @param string $url can be a full url or route prefix
+     * @return void
+     */
+    public function redirect(string $url)
+    {
+        $url = Router::getFromPrefix($url) ?? $url;
+        $site = Container::get("_config")->get("site.url");
+        if(is_object($url)){
+            $url = $url->getPath();
+        }
+
+        if(!str_starts_with($url, "/")){
+            $url = "/".$url;
+        }
+        header("Location: ".$site.$url);
+        exit();
     }
 }

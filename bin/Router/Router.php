@@ -2,6 +2,8 @@
 
 namespace Vroom\Router;
 
+use Vroom\Utils\Container;
+
 /**
  *  Router take always the last better
  */
@@ -12,7 +14,6 @@ class Router
      */
     private array $routes = [];
     const CONTAINER_NAMESPACE = "_router";
-
 
     public function addRoute(array $data, $controller)
     {
@@ -79,6 +80,30 @@ class Router
         } catch (\ReflectionException $e) {
             die($e);
         }
+    }
+
+    /**
+     * @return Route[]
+     */
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
+
+
+
+    public static function getFromPrefix(string $prefix)
+    {
+        $routes = Container::get(self::CONTAINER_NAMESPACE)->getRoutes();
+
+        foreach ($routes as $method){
+            foreach ($method as $route){
+                if($prefix === $route->getName()){
+                    return $route;
+                }
+            }
+        }
+        return null;
     }
 
 }

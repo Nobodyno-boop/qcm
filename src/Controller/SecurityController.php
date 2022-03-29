@@ -31,7 +31,8 @@ class SecurityController extends AbstractController
                 $user = $this->repository(User::class)->findBy("email", $email);
                 if($user){
                     if(password_verify($passord, $user->getPassword())){
-                        $this->response()->json(['ok']);
+                        $this->addSession("user", $user);
+                        $this->response()->redirect("app_home");
                     } else {
                         $this->response()->json(['Wrong credential']);
                     }
@@ -39,7 +40,7 @@ class SecurityController extends AbstractController
             } else $this->response()->json(["message" => "wrong access"]);
         }
     }
-    #[Route("/register")]
+    #[Route("/register", "app_register")]
     public function register()
     {
         if($this->isLogin()){
@@ -65,7 +66,14 @@ class SecurityController extends AbstractController
 
             $this->response()->json(["message" => "ok"]);
         }
-
+    }
+    #[Route('/logout', "app_logout")]
+    public function logout()
+    {
+        if($this->isLogin()){
+            session_destroy();
+        }
+        $this->response()->redirect("app_home");
     }
 
 }
