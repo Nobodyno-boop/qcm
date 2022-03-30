@@ -53,7 +53,6 @@ class Router
 
     }
 
-
     private function callController(Route $route)
     {
         try {

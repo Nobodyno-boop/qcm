@@ -34,7 +34,7 @@ class Repository
 
         if ($key === null) {
             $keys = array_filter($this->getModel()['properties'], function ($e) {
-                if ($e->getType() == Types::id) {
+                if ($e->getType() == Types::ID) {
                     return $e;
                 }
             });
