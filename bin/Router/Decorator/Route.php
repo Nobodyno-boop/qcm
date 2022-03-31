@@ -4,7 +4,7 @@ namespace Vroom\Router\Decorator;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_ALL)]
 class Route
 {
     private string $url;

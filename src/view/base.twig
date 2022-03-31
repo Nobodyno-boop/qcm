@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% block assets %}
-        <script src="https://cdn.tailwindcss.com"></script>
+{#        <script src="https://cdn.tailwindcss.com"></script>#}
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     {% endblock %}
     {% block seo %}
@@ -22,7 +22,7 @@
     </div>
 
     {% if app.debug %}
-        <div class="bg-emerald-800 h-10 p-2">
+        <div class="md:bg-blue-400 bg-emerald-800 h-10 p-2">
             <div class="inline-flex text-white">
                 <p class="mr-1">
                     Load time : {{ app.load | number_format(2) }}

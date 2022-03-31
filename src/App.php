@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Controller\ApiController;
 use App\Controller\HomeController;
 use App\Controller\SecurityController;
 use App\Controller\UserController;
@@ -16,7 +17,8 @@ class App extends AbstractApp
         return [
             HomeController::class,
             UserController::class,
-            SecurityController::class
+            SecurityController::class,
+            ApiController::class
         ];
     }
 
