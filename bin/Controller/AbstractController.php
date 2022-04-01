@@ -13,6 +13,9 @@ use Vroom\View\AppContext;
 
 class AbstractController
 {
+    /**
+     * @var Request the current request
+     */
     private Request $request;
 
     /**
@@ -24,6 +27,7 @@ class AbstractController
     }
 
     /**
+     * Get the current request
      * @return Request
      */
     protected function getRequest(): Request
@@ -48,6 +52,13 @@ class AbstractController
         return $_SESSION;
     }
 
+    /**
+     * Store object in the session with key => value
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     protected function addSession(string $key, mixed $value)
     {
         if (is_object($value)) {
@@ -59,11 +70,20 @@ class AbstractController
         $_SESSION[$key] = $value;
     }
 
+    /**
+     * Check if the user is Login by checking the session
+     * @return bool
+     */
     protected function isLogin(): bool
     {
         return !empty($this->getSession("user"));
     }
 
+    /**
+     * Retrieve a new instance of Repository with Model instance
+     * @param $class
+     * @return Repository
+     */
     protected function repository($class): Repository
     {
         if (is_object($class)) {
@@ -75,16 +95,29 @@ class AbstractController
         throw new \Error("Could not get model class");
     }
 
+    /**
+     * Get a new instance of Response
+     * @see Response
+     * @return Response
+     */
     public function response(): Response
     {
         return new Response();
     }
 
-    public function twig(): Environment
+    /**
+     * Get the twig environment
+     * @return Environment
+     */
+    protected function twig(): Environment
     {
         return Container::get("_twig");
     }
 
+    /**
+     * Get the url of the current request
+     * @return string
+     */
     public function url(): string
     {
         return $this->getRequest()->getRoute()->getPath();
@@ -106,7 +139,13 @@ class AbstractController
         return $token->token;
     }
 
-
+    /**
+     * Check if the Token is good
+     *
+     * @see Token
+     * @param string $token
+     * @return bool
+     */
     public function matchToken(string $token): bool
     {
         $sessionToken = unserialize($this->getSession("_crsf"));
@@ -125,6 +164,16 @@ class AbstractController
         return false;
     }
 
+    /**
+     * Render the view of twig file
+     *
+     * @param string $view
+     * @param array $context
+     * @return void
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function renderView(string $view, array $context = [])
     {
         if(!str_ends_with($view, ".twig")){
