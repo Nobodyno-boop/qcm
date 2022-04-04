@@ -5,10 +5,11 @@ use App\Model\User;
 use Spatie\Ignition\Ignition;
 use Vroom\Framework;
 use Vroom\Orm\Model\Types;
+use Vroom\Utils\Form;
 
 session_start();
 Ignition::make()->register();
-Framework::newInstance('../config.php', new \App\App());
+//Framework::newInstance('../config.php', new \App\App());
 //dump($_SERVER['REQUEST_URI']);
 //function getRoutes() {
 //    $routes = [new Route(["prefix" => "", "url" => "api/user/{id}"], \App\Controller\UserController::class, "GET"), new Route(["prefix" => "", "url" => "api/user/"], \App\Controller\UserController::class, "GET")];
@@ -74,4 +75,10 @@ Framework::newInstance('../config.php', new \App\App());
 //$user->save();
 // select * from user where id = 2
 //$user = \Vroom\Orm\Model\Models::findBy(\App\Model\User::class, ['id' => 2]);
-//
+$form = Form::new()
+    ->add("email", Form::TYPE_EMAIL, ["input_class"=> "red"])
+    ->add("password", Form::TYPE_PASSWORD)
+    ->add("Send !", Form::TYPE_SUBMIT);
+
+
+var_dump($form->toView());

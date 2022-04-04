@@ -35,13 +35,13 @@ class ArrayUtils
 
     /**
      * Return search in the array with a path
-     *
+     * Return null if the ins't exist
      * ```php
      * ArrayUtils::from([...])->get('user.id');
      * ```
      *
      * @param string $path
-     * @return mixed
+     * @return mixed return null if ins't exist
      */
     public function get(string $path) :mixed {
         if(!$this->isValidPath($path)){
@@ -60,6 +60,21 @@ class ArrayUtils
         return $result;
     }
 
+    /**
+     * We use the get method and if its null we just return default value
+     *
+     *
+     * @see ArrayUtils::get() for the base value
+     * @param string $path
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getOrDefault(string $path, mixed $default): mixed
+    {
+        $get = $this->get($path);
+
+        return $get ? $get : $default;
+    }
 
     /**
      * Return a new instance of ArrayUtils
