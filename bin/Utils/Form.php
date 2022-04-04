@@ -42,6 +42,7 @@ class Form
     {
         $result = "";
         foreach ($this->inputs as $input){
+            $result .= "<label>";
             $result .= $this->makeInput($input);
         }
 
@@ -74,15 +75,16 @@ class Form
         $typeName = $data['name'];
         $type = $data['type'];
         $option = $data['option'];
+        $base = ["id" => $typeName];
 
         $classOption = $array->getOrDefault("input.class", null);
         if(is_array($classOption)) {
             $classOption = implode(" ", $classOption);
+            $base['class'] = $classOption;
         }
-        $class = $classOption === null ? "class='$classOption'" : "";
+        $class = $classOption !== null ? "class='$classOption'" : "";
 
-        $placeholder =
-
+        $placeholder = $array->getOrDefault("input.placeholder", "");
 
         switch ($type){
             case self::TYPE_BUTTON: {
@@ -98,9 +100,20 @@ class Form
                 return "<input type='$typeName' $class >";
             }
             case self::TYPE_EMAIL: {
-                return "<input type='email' $class placeholder=''>";
+
+                $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
+//                return "<input type='email' $class placeholder='$placeholder'>";
+                return $this->input($base);
             }
 
+        }
+        return "";
+    }
+
+    private function input(array $option): string
+    {
+        foreach ($option as $key => $value){
+            
         }
         return "";
     }
