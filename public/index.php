@@ -75,10 +75,21 @@ Ignition::make()->register();
 //$user->save();
 // select * from user where id = 2
 //$user = \Vroom\Orm\Model\Models::findBy(\App\Model\User::class, ['id' => 2]);
-$form = Form::new()
-    ->add("email", Form::TYPE_EMAIL, ["input_class"=> "red"])
-    ->add("password", Form::TYPE_PASSWORD)
-    ->add("Send !", Form::TYPE_SUBMIT);
+//$form = Form::new()
+//    ->add("email", Form::TYPE_EMAIL, ["input_class"=> "red"])
+//    ->add("password", Form::TYPE_PASSWORD)
+//    ->add("Send !", Form::TYPE_SUBMIT);
+//
+//
+//dump($form->toView());
+
+$h = new \Vroom\Utils\HTMLUtils();
+
+$h->add("div")
+    ->add("nav")
+        ->in("ul")
+            ->in("li")
+        ->add("span");
 
 
-dump($form->toView());
+$h->to();

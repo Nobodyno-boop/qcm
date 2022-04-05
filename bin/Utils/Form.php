@@ -31,14 +31,18 @@ class Form
      * @var array{name: string, type: string, option: array}
      */
     private array $inputs;
+    private array $options;
 
-    public function __construct()
+    /**
+     * @param array $options
+     */
+    public function __construct(array $options)
     {
-
+        $this->options = $options;
     }
 
 
-    public function toView(): string
+    public function toView(string $url): string
     {
         $result = "";
         foreach ($this->inputs as $input){
@@ -50,8 +54,6 @@ class Form
             }
             $result .= $this->makeInput($input);
         }
-
-
         return $result;
     }
 
@@ -74,7 +76,7 @@ class Form
      * @param $data array{name: string, type: int, option: array}
      * @return string
      */
-    private function makeInput($data): string
+    private function makeInput(array $data): string
     {
         $array = ArrayUtils::from($data);
         $typeName = $data['name'];
@@ -121,7 +123,6 @@ class Form
                 return "<input type='$typeName' $class >";
             }
         }
-        return "";
     }
 
     private function input(array $option, bool $required = true): string
@@ -143,8 +144,8 @@ class Form
         return implode(" ", $attributes);
     }
 
-    public static function new(): Form
+    public static function new(array $option = []): Form
     {
-        return new Form();
+        return new Form($option);
     }
 }
