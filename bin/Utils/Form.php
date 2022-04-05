@@ -4,31 +4,31 @@ namespace Vroom\Utils;
 
 class Form
 {
-    const TYPE_BUTTON = 1;
-    const TYPE_CHECKBOX = 2;
-    const TYPE_COLOR = 3;
-    const TYPE_DATE = 4;
-    const TYPE_DATE_LOCAL = 5;
-    const TYPE_EMAIL = 6;
-    const TYPE_FILE = 7;
-    const TYPE_HIDDEN = 8;
-    const TYPE_IMAGE = 9;
-    const TYPE_MONTH = 10;
-    const TYPE_NUMBER = 11;
-    const TYPE_PASSWORD = 12;
-    const TYPE_RADIO = 13;
-    const TYPE_RANGE = 14;
-    const TYPE_RESET = 15;
-    const TYPE_SEARCH = 16;
-    const TYPE_SUBMIT = 17;
-    const TYPE_TEL = 18;
-    const TYPE_TEXT = 19;
-    const TYPE_TIME = 20;
-    const TYPE_URL = 21;
-    const TYPE_WEEK = 22;
+    const TYPE_BUTTON = "button";
+    const TYPE_CHECKBOX = "checkbox";
+    const TYPE_COLOR = "color";
+    const TYPE_DATE = "date";
+    const TYPE_DATE_LOCAL = "datetime-local";
+    const TYPE_EMAIL = "email";
+    const TYPE_FILE = "file";
+    const TYPE_HIDDEN = "hidden";
+    const TYPE_IMAGE = "image";
+    const TYPE_MONTH = "month";
+    const TYPE_NUMBER = "number";
+    const TYPE_PASSWORD = "password";
+    const TYPE_RADIO = "radio";
+    const TYPE_RANGE = "range";
+    const TYPE_RESET = "reset";
+    const TYPE_SEARCH = "search";
+    const TYPE_SUBMIT = "submit";
+    const TYPE_TEL = "tel";
+    const TYPE_TEXT = "text";
+    const TYPE_TIME = "time";
+    const TYPE_URL = "url";
+    const TYPE_WEEK = "week";
 
     /**
-     * @var array{name: string, type: int, option: array}
+     * @var array{name: string, type: string, option: array}
      */
     private array $inputs;
 
@@ -42,7 +42,12 @@ class Form
     {
         $result = "";
         foreach ($this->inputs as $input){
-            $result .= "<label>";
+            $array = ArrayUtils::from($input);
+            if($input['type'] != self::TYPE_SUBMIT){
+                $text = $array->getOrDefault("label.text", ucfirst($array->get("name")));
+
+                $result .= "<label for='".$input['name']."'>$text</label>";
+            }
             $result .= $this->makeInput($input);
         }
 
@@ -55,11 +60,11 @@ class Form
      * Form::new()->add("name", Form::TYPE_TEXT);
      * ```
      * @param string $name
-     * @param int $type constant type
+     * @param string $type constant type
      * @param array $option
      * @return Form
      */
-    public function add(string $name, int $type, array $option = []): Form
+    public function add(string $name, string $type, array $option = []): Form
     {
         $this->inputs[] = ["name" => $name, "type" => $type, "option" => $option];
 
@@ -75,47 +80,67 @@ class Form
         $typeName = $data['name'];
         $type = $data['type'];
         $option = $data['option'];
-        $base = ["id" => $typeName];
+        $base = ["id" => $array->getOrDefault("input.attr.id", $typeName), "name" => $array->getOrDefault("input.attr.name", $typeName) ];
 
         $classOption = $array->getOrDefault("input.class", null);
+        $inputAttr = $array->getOrDefault("input.attr", []);
+        if(is_array($inputAttr)){
+            $base = [...$base, ...$inputAttr];
+        }
         if(is_array($classOption)) {
             $classOption = implode(" ", $classOption);
             $base['class'] = $classOption;
         }
         $class = $classOption !== null ? "class='$classOption'" : "";
 
-        $placeholder = $array->getOrDefault("input.placeholder", "");
 
         switch ($type){
+            case self::TYPE_SUBMIT:
             case self::TYPE_BUTTON: {
-                $value = $option['value'] ?? "";
-
-                return "<input type='button' $class value='$value'>";
+                $base['id'] = $type;
+                unset($base['name']);
+                $value = $array->getOrDefault("input.attr.value", $typeName);
+                return $this->input([...$base,"type" => $type ,"value" => $value]);
+            }
+            case self::TYPE_EMAIL: {
+                $placeholder = $array->getOrDefault("input.attr.placeholder", "");
+                $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
+                return $this->input([...$base, "type" => "email", "placeholder" => $placeholder]);
+            }
+            case self::TYPE_TEXT: {
+                $placeholder = $array->getOrDefault("input.attr.placeholder", "");
+                $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
+                return $this->input([...$base, "type" => "text", "placeholder" => $placeholder]);
+            }
+            default: {
+                return $this->input([...$base, "type" => $type]);
             }
             case self::TYPE_RADIO:
             case self::TYPE_CHECKBOX: {
                 $choice = $option['choice'];
-
-
                 return "<input type='$typeName' $class >";
             }
-            case self::TYPE_EMAIL: {
-
-                $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
-//                return "<input type='email' $class placeholder='$placeholder'>";
-                return $this->input($base);
-            }
-
         }
         return "";
     }
 
-    private function input(array $option): string
+    private function input(array $option, bool $required = true): string
     {
-        foreach ($option as $key => $value){
-            
+        $text = $this->attributesToString($option);
+
+        if($required){
+            $text .= " required";
         }
-        return "";
+        return "<input ".$text. ">";
+    }
+
+    private function attributesToString(array $attr):string
+    {
+        $attributes = [];
+        foreach ($attr as $key => $value){
+            $attributes[] = $key."='".$value."'";
+        }
+        return implode(" ", $attributes);
     }
 
     public static function new(): Form

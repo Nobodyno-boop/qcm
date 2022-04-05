@@ -81,4 +81,4 @@ $form = Form::new()
     ->add("Send !", Form::TYPE_SUBMIT);
 
 
-echo $form->toView();
+dump($form->toView());
