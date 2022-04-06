@@ -8,6 +8,7 @@ class Column
     private string $name;
     private int $type;
     private bool $nullable;
+
     /**
      * @param string $name
      * @param int $type
