@@ -44,16 +44,18 @@ class Form
 
     public function toView(string $url): string
     {
-        $result = "";
-        foreach ($this->inputs as $input){
+        $formAttr = $this->attributesToString($this->options['input_attr'] ?? []);
+        $result = "<form action='$url' $formAttr>" . PHP_EOL;
+        foreach ($this->inputs as $input) {
             $array = ArrayUtils::from($input);
-            if($input['type'] != self::TYPE_SUBMIT){
+            if ($input['type'] != self::TYPE_SUBMIT) {
                 $text = $array->getOrDefault("label.text", ucfirst($array->get("name")));
 
-                $result .= "<label for='".$input['name']."'>$text</label>";
+                $result .= "<label for='" . $input['name'] . "'>$text</label>" . PHP_EOL;
             }
-            $result .= $this->makeInput($input);
+            $result .= $this->makeInput($input) . PHP_EOL;
         }
+        $result .= "</form>";
         return $result;
     }
 
