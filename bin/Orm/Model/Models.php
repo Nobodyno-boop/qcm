@@ -55,11 +55,10 @@ class Models
                 }
                 return $m;
 
-            } // can't load
+            } return []; // can't load
         } catch (\ReflectionException $e) {
-            die($e->getMessage());
+            return [];
         }
-        return [];
     }
 
     public static function get($model)

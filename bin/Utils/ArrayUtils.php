@@ -73,7 +73,7 @@ class ArrayUtils
     {
         $get = $this->get($path);
 
-        return $get ? $get : $default;
+        return $get !== null ? $get : $default;
     }
 
     /**
