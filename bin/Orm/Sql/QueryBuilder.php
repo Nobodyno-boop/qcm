@@ -92,17 +92,17 @@ class QueryBuilder
         } else { // when is the object
             $vars = $update->_getvars();
             foreach ($this->model['properties'] as $item) {
-                if (!($item->getType() == Types::id)) {
+                if (!($item->getType() == Types::ID)) {
                     $value = null;
-                    if($item->isNullable()){
-                        if(isset($vars[Model::varName($item->getName())])) {
+                    if ($item->isNullable()) {
+                        if (isset($vars[Model::varName($item->getName())])) {
                             $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
                         }
-                    }else {
+                    } else {
                         $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
                     }
 
-                    if($value){
+                    if ($value) {
                         $this->fields[] = $item->getName() . " = '" . $value . "'";
                     }
                 }
@@ -130,16 +130,16 @@ class QueryBuilder
         } else { //model
             $vars = $insert->_getvars();
             foreach ($this->model['properties'] as $item) {
-                if (!($item->getType() === Types::id) ) {
+                if (!($item->getType() === Types::ID)) {
                     $value = null;
-                    if($item->isNullable()){
-                        if(isset($vars[Model::varName($item->getName())])) {
+                    if ($item->isNullable()) {
+                        if (isset($vars[Model::varName($item->getName())])) {
                             $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
                         }
-                    }else {
+                    } else {
                         $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
                     }
-                    if($value){
+                    if ($value) {
                         $this->values['keys'][] = $item->getName();
                         $this->values['values'][] = "'" . $value . "'";
                     }

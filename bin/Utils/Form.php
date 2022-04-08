@@ -6,6 +6,7 @@ use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Models;
 use Vroom\Orm\Model\Types;
+use Vroom\Router\Request;
 
 class Form
 {
@@ -33,6 +34,7 @@ class Form
     const TYPE_TIME = "time";
     const TYPE_URL = "url";
     const TYPE_WEEK = "week";
+
     //custom input
     const TYPE_MODEL = "model";
 
@@ -41,43 +43,43 @@ class Form
      */
     private array $inputs;
     private array $options;
+    private mixed $data;
+    private Request $request;
+    private array $errors;
 
     /**
      * @param array $options
      */
-    public function __construct(array $options)
+    public function __construct(array $options, mixed $data)
     {
         $this->options = $options;
+        $this->data = $data;
     }
 
 
-    public function toView(string $url): string
+    public function toView(string $url = ""): string
     {
         $formAttr = $this->attributesToString($this->options['input_attr'] ?? []);
-        $result = "<form action='$url' $formAttr>" . PHP_EOL;
+        $result = "<form action='$url' method='post' $formAttr>" . PHP_EOL;
         foreach ($this->inputs as $input) {
             $array = ArrayUtils::from($input);
-            if($input['type'] == self::TYPE_MODEL){
+            if ($input['type'] == self::TYPE_MODEL) {
                 $class = $array->getOrDefault("option.model", null);
-                if($class){
+                if ($class) {
                     $model = Models::get($class);
-                    if(!empty($model)) {
+                    if (!empty($model)) {
                         $result .= $this->modelToInputs($model['properties'], $input['option']);
 
                     } // else throw new \Error("Something is wrong. Please check if $class have ".Model::class. " in sub class.");
                 } //else throw new \Error("Could not initiate the input without class");
 
             } else {
-                if ($input['type'] != self::TYPE_SUBMIT) {
+                if ($input['type'] !== self::TYPE_SUBMIT && $input['type'] !== self::TYPE_RESET) {
                     $text = $array->getOrDefault("label.text", ucfirst($array->get("name")));
-
                     $result .= "<label for='" . $input['name'] . "'>$text</label>" . PHP_EOL;
                 }
                 $result .= $this->makeInput($input) . PHP_EOL;
-
             }
-
-
         }
         $result .= "</form>";
         return $result;
@@ -85,21 +87,45 @@ class Form
 
     /**
      * @param Column[] $data
-     * @return void
+     * @param $option
+     * @return array
      */
-    private function modelToInputs(array $data, $option):string
+    private function modelToInputs(array $data, $option): array
     {
-        $inputs = "";
-
+        $inputs = [];
+        /**
+         * @var Model|null $obj
+         */
+        $obj = $this->data['user'] ?? null;
+        $displayNullable = $this->options['displayNullable'] ?? false;
         foreach ($data as $column) {
             $type = $column->getType();
-
-            $types = match ($type){
+            $see = true;
+            $types = match ($type) {
                 Types::int => self::TYPE_NUMBER,
+                Types::ID => null,
                 default => self::TYPE_TEXT
             };
+            $value = null;
+            if ($obj && get_parent_class($obj) === Model::class) {
+//                $tmpValue = Model::getVariable($obj, $column->getName());
+//                dump(call_user_func([$obj, "_getvars"]));
+//                dump($obj->_getvars());
 
-            $inputs .= $this->makeInput(["name" => $column->getName(),  "type" => $types, "option" => ["require" => !$column->isNullable(),...$option]]).PHP_EOL;
+//                if($tmpValue){
+//                    $value = $tmpValue;
+//                }
+            }
+            if ($column->isNullable()) {
+                if (!$displayNullable) {
+                    $see = false;
+                }
+            }
+
+            if ($types != null && $see) {
+                $name = $column->getName();
+                $inputs[] = ["name" => $column->getName(), "type" => $types, "option" => ["require" => !$column->isNullable(), "input" => ["attr" => ["value" => $value ?? ""]], ...$option]];
+            }
         }
         return $inputs;
     }
@@ -144,11 +170,13 @@ class Form
 
         switch ($type){
             case self::TYPE_SUBMIT:
-            case self::TYPE_BUTTON: {
+            case self::TYPE_RESET:
+            case self::TYPE_BUTTON:
+            {
                 $base['id'] = $type;
                 unset($base['name']);
                 $value = $array->getOrDefault("input.attr.value", $typeName);
-                return $this->input([...$base,"type" => $type ,"value" => $value], false);
+                return $this->input([...$base, "type" => $type, "value" => $value], false);
             }
             case self::TYPE_EMAIL: {
                 $placeholder = $array->getOrDefault("input.attr.placeholder", "");
@@ -181,17 +209,53 @@ class Form
         return "<input ".$text. ">";
     }
 
-    private function attributesToString(array $attr):string
+    private function attributesToString(array $attr): string
     {
         $attributes = [];
-        foreach ($attr as $key => $value){
-            $attributes[] = $key."='".$value."'";
+        foreach ($attr as $key => $value) {
+            $attributes[] = $key . "='" . $value . "'";
         }
         return implode(" ", $attributes);
     }
 
-    public static function new(array $option = []): Form
+    public static function new(array $option = [], mixed $data = null): Form
     {
-        return new Form($option);
+        return new Form($option, $data);
     }
+
+    public function isValid()
+    {
+
+        if ($this->request->post()->isEmpty()) {
+            foreach ($this->inputs as $input) {
+                $arr = ArrayUtils::from($input);
+                if ($arr['type'] === self::TYPE_MODEL) {
+
+                }
+            }
+        }
+
+
+        return false;
+    }
+
+    public function isSent(): bool
+    {
+        if (isset($this->request)) {
+            if ($this->request->post()->isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function handleRequest(Request $r)
+    {
+        if ($r->getRoute()->getMethod() === "POST") {
+            $this->request = $r;
+        }
+    }
+
+
 }

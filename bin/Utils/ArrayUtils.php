@@ -44,20 +44,24 @@ class ArrayUtils
      * @return mixed return null if ins't exist
      */
     public function get(string $path) :mixed {
-        if(!$this->isValidPath($path)){
+        if (!$this->isValidPath($path)) {
             return null;
         }
-        // if the does not contains "." we just put $path in a array.
-        $keys = str_contains($path, ".") ? explode(".",$path) : [$path];
 
-        $result = $this->array;
-        foreach ($keys as $key){
-            if(!isset($result[$key])){
-                return null;
+        if (count($this->array) >= 1) {
+            // if the does not contains "." we just put $path in a array.
+            $keys = str_contains($path, ".") ? explode(".", $path) : [$path];
+
+            $result = $this->array;
+            foreach ($keys as $key) {
+                if (!isset($result[$key])) {
+                    return null;
+                }
+                $result = $result[$key];
             }
-            $result = $result[$key];
+            return $result;
         }
-        return $result;
+        return null;
     }
 
     /**
@@ -74,6 +78,15 @@ class ArrayUtils
         $get = $this->get($path);
 
         return $get !== null ? $get : $default;
+    }
+
+    /**
+     * Return if the array is empty or not
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return !(count($this->array) >= 1);
     }
 
     /**

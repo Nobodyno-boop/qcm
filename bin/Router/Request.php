@@ -9,7 +9,6 @@ class Request
     private Route $route;
     private mixed $_body;
     private array|false $header;
-    private string $method;
 
     /**
      * @param Route $route
@@ -40,14 +39,14 @@ class Request
         return $this->_body;
     }
 
-    public function get($path)
+    public function get(): ArrayUtils
     {
-        return ArrayUtils::from($_GET)->get($path);
+        return ArrayUtils::from($_GET);
     }
 
-    public function post($path)
+    public function post(): ArrayUtils
     {
-        return ArrayUtils::from($_POST)->get($path);
+        return ArrayUtils::from($_POST);
     }
     
     public function query(string $key = ""): mixed

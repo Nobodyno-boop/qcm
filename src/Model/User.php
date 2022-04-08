@@ -13,7 +13,7 @@ class User extends Model
 {
 
     #[
-        Column('id', Types::id),
+        Column('id', Types::ID),
     ]
     private int $id;
 

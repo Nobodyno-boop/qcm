@@ -24,7 +24,7 @@ class Repository
     }
 
 
-    private function newQuery()
+    private function newQuery(): QueryBuilder
     {
         return QueryBuilder::newInstance($this->model);
     }
@@ -49,7 +49,7 @@ class Repository
         return $this->toModel($var);
     }
 
-    public function getAll(int $limit = 10)
+    public function getAll(int $limit = 10): ?object
     {
         $q = $this->newQuery();
         $q->select()->limit($limit);

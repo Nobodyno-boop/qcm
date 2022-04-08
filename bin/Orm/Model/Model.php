@@ -72,23 +72,46 @@ class Model
     }
 
 
-
     public function _getvars(): array
     {
         return get_object_vars($this);
     }
 
-    public static function varName(string $row)
+    /**
+     * @param string $row
+     * @return string
+     */
+    public static function varName(string $row): string
     {
-        if(str_contains($row,"_")){
+        if (str_contains($row, "_")) {
             $split = explode("_", $row);
             $word = array_shift($split);
-            foreach ($split as $key){
+            foreach ($split as $key) {
                 $word .= ucfirst($key);
             }
             return $word;
         }
         return ucfirst($row);
+    }
+
+    /**
+     * Return a variable based on a instance of Model
+     *
+     * @param Model $obj
+     * @param string $row
+     * @return mixed|null
+     */
+    public static function getVariable(Model $obj, string $row)
+    {
+        $vars = $obj->_getvars();
+        dump($obj);
+        if (isset($vars[$row])) {
+            $value = call_user_func([$obj, "get" . self::varName($row)]);
+            if ($value) {
+                return $value;
+            }
+        }
+        return null;
     }
 
 }

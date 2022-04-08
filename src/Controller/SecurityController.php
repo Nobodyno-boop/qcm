@@ -6,6 +6,7 @@ use App\Model\User;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
+use Vroom\Utils\Form;
 
 class SecurityController extends AbstractController
 {
@@ -40,37 +41,50 @@ class SecurityController extends AbstractController
             } else $this->response()->json(["message" => "wrong access"]);
         }
     }
-    #[Route("/register", "app_register")]
+
+    #[Route("/register", "app_register", methods: ['GET', 'POST'])]
     public function register()
     {
-        if($this->isLogin()){
+        if ($this->isLogin()) {
+
+        }
+        $user = new User();
+        $form = Form::new()
+            ->add("user", Form::TYPE_MODEL, ["model" => User::class])
+            ->add("reset", Form::TYPE_RESET)
+            ->add("register !", Form::TYPE_SUBMIT);
+
+        $form->handleRequest($this->getRequest());
+
+        if ($form->isSent() && $form->isValid()) {
 
         }
 
-        $this->renderView("security/register");
+        $this->renderView("security/register", ['form' => $form->toView()]);
     }
 
-    #[Route("/register", methods: ['POST'])]
-    public function registerPost(Request $r)
-    {
-        $token = $r->post('crsf');
-        $email = $r->post("email");
-        $passord = $r->post("password");
+//    #[Route("/register", methods: ['POST'])]
+//    public function registerPost(Request $r)
+//    {
+//        $token = $r->post('crsf');
+//        $email = $r->post("email");
+//        $passord = $r->post("password");
+//
+//        if($this->matchToken($token)){
+//            $user = new User();
+//            $user->setEmail($email);
+//            $user->setPassword(password_hash($passord, PASSWORD_DEFAULT));
+//            $user->setUsername("Nobody");
+//            $user->save();
+//
+//            $this->response()->json(["message" => "ok"]);
+//        }
+//    }
 
-        if($this->matchToken($token)){
-            $user = new User();
-            $user->setEmail($email);
-            $user->setPassword(password_hash($passord, PASSWORD_DEFAULT));
-            $user->setUsername("Nobody");
-            $user->save();
-
-            $this->response()->json(["message" => "ok"]);
-        }
-    }
     #[Route('/logout', "app_logout")]
     public function logout()
     {
-        if($this->isLogin()){
+        if ($this->isLogin()) {
             session_destroy();
         }
         $this->response()->redirect("app_home");
