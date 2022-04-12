@@ -42,7 +42,7 @@ class Router
                 $r = $route;
             }
             if ($r != null) {
-
+                Container::set("currentRoute", $r->getPath());
                 $this->callController($r);
             } else {
                 throw new \Error("Cannot find route");

@@ -7,6 +7,7 @@ use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Decorator\Entity;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Types;
+use Vroom\Utils\Form;
 
 #[Entity('User')]
 class User extends Model
@@ -22,10 +23,10 @@ class User extends Model
     ]
     private string $username;
 
-    #[Column("email", Types::varchar)]
+    #[Column("email", Types::varchar, formType: Form::TYPE_EMAIL)]
     private string $email;
 
-    #[Column("password", Types::varchar)]
+    #[Column("password", Types::varchar, formType: Form::TYPE_PASSWORD)]
     private string $password;
 
     #[Column("updated_at", Types::datetime, nullable: true)]

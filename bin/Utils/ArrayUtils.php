@@ -63,7 +63,6 @@ class ArrayUtils
         }
         return null;
     }
-
     /**
      * We use the get method and if its null we just return default value
      *
@@ -97,5 +96,13 @@ class ArrayUtils
     public static function from(array $array): ArrayUtils
     {
         return new ArrayUtils($array);
+    }
+
+    /**
+     * @return array
+     */
+    public function getArray(): array
+    {
+        return $this->array;
     }
 }

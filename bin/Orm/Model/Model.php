@@ -11,6 +11,10 @@ class Model
 {
     protected bool $isSave = false;
 
+    public function __construct()
+    {
+    }
+
     public function save()
     {
 
@@ -72,10 +76,6 @@ class Model
     }
 
 
-    public function _getvars(): array
-    {
-        return get_object_vars($this);
-    }
 
     /**
      * @param string $row
@@ -97,21 +97,21 @@ class Model
     /**
      * Return a variable based on a instance of Model
      *
-     * @param Model $obj
      * @param string $row
-     * @return mixed|null
+     * @return mixed
      */
-    public static function getVariable(Model $obj, string $row)
+    public function getVariable(string $row): mixed
     {
-        $vars = $obj->_getvars();
-        dump($obj);
-        if (isset($vars[$row])) {
-            $value = call_user_func([$obj, "get" . self::varName($row)]);
-            if ($value) {
-                return $value;
+        try{
+            $name = "get".self::varName($row);
+            $result = static::$name();
+            if($result){
+                return $result;
             }
+        }catch (\Error $e){ // avoid didn't get the method
+            return null;
         }
+
         return null;
     }
-
 }

@@ -49,15 +49,16 @@ class SecurityController extends AbstractController
 
         }
         $user = new User();
-        $form = Form::new()
+        $form = Form::new(data: ['user' => $user])
             ->add("user", Form::TYPE_MODEL, ["model" => User::class])
             ->add("reset", Form::TYPE_RESET)
             ->add("register !", Form::TYPE_SUBMIT);
 
         $form->handleRequest($this->getRequest());
-
+        dump("pass");
         if ($form->isSent() && $form->isValid()) {
 
+            dump($form->getData());
         }
 
         $this->renderView("security/register", ['form' => $form->toView()]);

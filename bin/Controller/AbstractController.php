@@ -151,9 +151,6 @@ class AbstractController
         $sessionToken = unserialize($this->getSession("_crsf"));
         if (get_class($sessionToken) === Token::class) {
             $url = $this->url();
-            if(!str_starts_with($url, "/")){
-                $url = "/".$url;
-            }
             if($sessionToken->match($token, $url)){
                 $this->getToken();
                 return true;
