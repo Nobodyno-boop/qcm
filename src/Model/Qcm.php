@@ -2,9 +2,6 @@
 
 namespace App\Model;
 
-use Vroom\Orm\Decorator\Column;
-use Vroom\Orm\Model\Types;
-
 class Qcm
 {
 //    #[Column("id", Types::)]

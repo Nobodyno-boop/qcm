@@ -2,7 +2,6 @@
 
 namespace Vroom\Router;
 
-use Vroom\Config\Config;
 use Vroom\Orm\Model\Model;
 use Vroom\Utils\Container;
 

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Model\User;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
