@@ -100,7 +100,10 @@ class Form
     public function toView(string $url = ""): string
     {
         $formAttr = $this->attributesToString($this->options['input_attr'] ?? []);
-        $result = "<form action='$url' method='post' $formAttr>" . PHP_EOL;
+        $result = "";
+        $result.= $this->errorsForm();
+        $result .= "<form action='$url' method='post' $formAttr>" . PHP_EOL;
+
         $tempInputs = [];
 
 
@@ -112,8 +115,8 @@ class Form
             $token = Token::getToken(url:$url);
             $_SESSION['_crsf'] = serialize($token);
             $tempInputs[] = ['name' => 'crsf', "type" => self::TYPE_HIDDEN, "option" => ["input" => ['attr' => ['value' => $token->token]]]];
-
         }
+
           foreach ($tempInputs as $input) {
             $array = ArrayUtils::from($input);
             if ($input['type'] !== self::TYPE_SUBMIT && $input['type'] !== self::TYPE_RESET && $input['type'] != self::TYPE_HIDDEN) {
@@ -121,7 +124,9 @@ class Form
                 $result .= "<label for='" . $input['name'] . "'>$text</label>" . PHP_EOL;
             }
             $result .= $this->makeInput($input) . PHP_EOL;
-        }
+              $result .= $this->errorInput($array->get("name"));
+
+          }
         $result .= "</form>";
         return $result;
     }
@@ -129,6 +134,7 @@ class Form
     /**
      * @param Column[] $data
      * @param $option
+     * @param string $input
      * @return array
      */
     private function modelToInputs(array $data, $option, string $input): array
@@ -263,7 +269,7 @@ class Form
         return new Form($option, $data);
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
         if (!$this->request->post()->isEmpty()) {
             foreach ($this->request->post()->getArray() as $key => $input) {
@@ -368,5 +374,35 @@ class Form
     public function getData(): ArrayUtils
     {
         return ArrayUtils::from($this->data);
+    }
+
+    public function addError(string $message)
+    {
+        $this->errors['form'][] = $message;
+    }
+
+    private function errorsForm()
+    {
+        if(count($this->errors) >=1){
+            $form = $this->errors['form'] ?? null;
+            if($form){
+                $result = "";
+                foreach ($form as $message){
+                    $result .= "<div style='color:red;'>$message</div>";
+                }
+                return $result;
+            }
+        }
+
+        return "";
+    }
+
+    private function errorInput(string $name)
+    {
+        if(isset($this->errors['input'])){
+            $message = $this->errors['input'][$name] ?? null;
+            return "<div style='color:red'>$message</div>";
+        }
+        return "";
     }
 }

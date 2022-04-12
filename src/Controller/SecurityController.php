@@ -57,8 +57,16 @@ class SecurityController extends AbstractController
         $form->handleRequest($this->getRequest());
 
         if ($form->isSent() && $form->isValid()) {
+            /**
+             * @var User $user
+             */
             $user = $form->getData()->get("user");
-            dump($user);
+            if($user){
+                $repo = $this->repository(User::class)->findBy("email", $user->getEmail());
+                if(!$repo){
+
+                } else $form->addError("Il y'a déjà un utilisateur avec cette email");
+            }
         }
 
         $this->renderView("security/register", ['form' => $form->toView()]);
