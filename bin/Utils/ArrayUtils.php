@@ -43,7 +43,7 @@ class ArrayUtils
      * @param string $path
      * @return mixed return null if ins't exist
      */
-    public function get(string $path) :mixed {
+    public function get(string $path): mixed {
         if (!$this->isValidPath($path)) {
             return null;
         }

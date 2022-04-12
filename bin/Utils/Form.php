@@ -48,6 +48,7 @@ class Form
     private mixed $data;
     private Request $request;
     private array $errors;
+    private array $requestData;
 
     /**
      * @param array $options
@@ -57,6 +58,7 @@ class Form
         $this->options = $options;
         $this->data = $data ?? [];
         $this->errors = [];
+        $this->requestData = [];
     }
 
     private function updateCurrentInput():array
@@ -273,14 +275,16 @@ class Form
                         }
                     }));
 
+
                     if(!empty($filter)){
-                        $value = match ($filter[0]['type']) {
-                            self::TYPE_URL => $filter($input, FILTER_SANITIZE_URL),
+                        $filter = ArrayUtils::from($filter[0]);
+                        $value = match ($filter->get("type")) {
+                            self::TYPE_URL => filter_var($input, FILTER_SANITIZE_URL),
                             self::TYPE_EMAIL => filter_var($input, FILTER_SANITIZE_EMAIL),
                             default => filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS)
                         };
 
-                        $value = match ($filter[0]['type']){
+                        $value = match ($filter->get("type")){
                             self::TYPE_EMAIL => filter_var($value, FILTER_VALIDATE_EMAIL, FILTER_NULL_ON_FAILURE),
                             self::TYPE_NUMBER => filter_var($value, FILTER_VALIDATE_INT),
                             default => $input
@@ -289,18 +293,19 @@ class Form
                         if(!$value){
                             $this->errors['input'][$key] = "L'input n'est pas valide";
                         } else {
-                            $ismodel = $filter[0]['model'] ?? null;
-                            if($ismodel){
-                                $nameModel = $filter[0]['inputmodel'];
+                            $cmodel = $filter->get('option.model');
+                            if($cmodel){
+                                $nameModel = $filter->get("option.inputmodel");
                                 $obj = $this->data[$nameModel] ?? null;
-                                $clasz = $filter[0]['model'];
-                                if($obj && get_class($obj) === $clasz){
+                                if($obj){
                                     try {
-                                        call_user_func([$obj, 'set'.Model::varName($key)]);
+                                        call_user_func_array([$obj, 'set'.Model::varName($key)], [$input]);
                                     }catch (\Error $e){
 
                                     }
                                 }
+                            } else {
+                                $this->requestData[$key] = $value;
                             }
                         }
                     } else if($key === "crsf") {
@@ -352,8 +357,16 @@ class Form
         return $this->errors;
     }
 
+    public function getReceiveData(): ArrayUtils
+    {
+        return ArrayUtils::from($this->requestData);
+    }
+
+    /**
+     * @return ArrayUtils
+     */
     public function getData(): ArrayUtils
     {
-        return $this->request->post();
+        return ArrayUtils::from($this->data);
     }
 }
