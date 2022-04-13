@@ -94,6 +94,7 @@ class Model
         return ucfirst($row);
     }
 
+
     /**
      * Return a variable based on a instance of Model
      *
@@ -105,13 +106,18 @@ class Model
         try{
             $name = "get".self::varName($row);
             $result = static::$name();
-            if($result){
+            if ($result) {
                 return $result;
             }
-        }catch (\Error $e){ // avoid didn't get the method
+        } catch (\Error $e) { // avoid didn't get the method
             return null;
         }
 
         return null;
+    }
+
+    public function _getvars(): array
+    {
+        return get_object_vars($this);
     }
 }

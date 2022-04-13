@@ -165,6 +165,7 @@ class QueryBuilder
                     $query = "INSERT INTO " . $table . " "
                         . $keys . " VALUES" .
                         $values;
+
                     break;
                 case "update":
                     $query = $this->word . " " . $table .
@@ -187,7 +188,6 @@ class QueryBuilder
                     break;
             }
         }
-
 
         return $query;
     }

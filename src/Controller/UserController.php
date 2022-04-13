@@ -8,22 +8,22 @@ use Vroom\Router\Request;
 
 class UserController extends AbstractController
 {
-    #[Route("/user/", methods: ['POST'])]
-    public function index(Request $r)
+    #[Route("/profile/{username}", "app_user_profile_username")]
+    public function profileUser(Request $request, $username)
     {
-        if($this->matchToken($r->getBody()->token)){
-            $this->response()->json(["dance" => "singe"]);
-        }
+        $this->renderView("user/profile_username", ["username" => $username]);
     }
 
-    #[Route("/profile", "app_user_profile")]
-    public function profil(Request $request, $id)
+    #[Route("/profile/", "app_user_profile")]
+    public function profile(Request $request)
     {
         $this->renderView("user/profile");
     }
 
+
 //    #[Route("/login")]
-    public function login(){
+    public function login()
+    {
 //        $token = $this->getToken();
 //            $this->renderView('user/login.twig');
 //        echo /** HTML */'<form id="form" action="/user" method="post">

@@ -21,22 +21,20 @@ class Qcm
      * @param array $response
      * @return bool
      */
-    public function check(array $response): bool
+    public function isValid(array $response): bool
     {
-        if(count($response) !== count($this->qcm)){
+        if (count($response) !== count($this->qcm)) {
             return false;
         }
 
-
-        for ($i = 0; $i < count($response); $i++){
+        for ($i = 0; $i < count($response); $i++) {
             $choice = $response[$i];
             $answer = $this->qcm[$i]->toJson();
 
-            if(!(0 <= $choice) && $choice <= count($answer['answers'])-1) {
+            if (!(0 <= $choice) && $choice <= count($answer['answers']) - 1) {
                 return false;
             }
         }
-
         return true;
     }
 

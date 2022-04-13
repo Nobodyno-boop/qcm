@@ -46,7 +46,8 @@ class Question
         return $this->correct;
     }
 
-    #[ArrayShape(["question" => "string", "answers" => "array", "correct" => "int"])] public function toJson(): array
+    #[ArrayShape(["question" => "string", "answers" => "array", "correct" => "int"])]
+    public function toJson(): array
     {
         return [
             "question" => $this->question,

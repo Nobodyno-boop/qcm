@@ -10,43 +10,58 @@ use Vroom\Utils\Form;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/login', "app_login")]
-    public function index()
-    {
-        if($this->isLogin()){
-            // redirect
-        }
-
-        $this->renderView("security/login.twig");
-    }
-
-    #[Route("/login", methods: ['POST'])]
+    #[Route("/login", "app_login", ['GET', 'POST'])]
     public function loginPost(Request $r)
     {
-        if(!$this->isLogin()){
-            $token = $r->post('crsf');
-            $email = $r->post("email");
-            $passord = $r->post("password");
+        if (!$this->isLogin()) {
+            $form = Form::new()
+                ->add("email", Form::TYPE_EMAIL)
+                ->add("password", Form::TYPE_PASSWORD)
+                ->add("Ce connecter !", Form::TYPE_SUBMIT);
 
-            if($this->matchToken($token)) {
-                $user = $this->repository(User::class)->findBy("email", $email);
-                if($user){
-                    if(password_verify($passord, $user->getPassword())){
-                        $this->addSession("user", $user);
-                        $this->response()->redirect("app_home");
-                    } else {
-                        $this->response()->json(['Wrong credential']);
-                    }
-                } else $this->response()->json(['Wrong credential']);
-            } else $this->response()->json(["message" => "wrong access"]);
+            $form->handleRequest($r);
+            if ($form->isSent() && $form->isValid()) {
+                $email = $form->getReceiveData()->get("email");
+                $password = $form->getReceiveData()->get("password");
+//                dd($form->getData());
+                if ($email && $password) {
+                    /**
+                     * @var User $user
+                     */
+                    $user = $this->repository(User::class)->findBy("email", $email);
+                    if ($user) {
+                        if (password_verify($password, $user->getPassword())) {
+                            $this->addSession("user", $user);
+                            $this->response()->redirect("app_home");
+                        } else $form->addError("Le mot de passe ne corresponde pas");
+                    } else $form->addError("L'email ne corresponds à aucune donnée dans notre base.");
+                } else $form->addError("Formulaire invalide");
+            }
         }
+//            $token = $r->post('crsf');
+//            $email = $r->post("email");
+//            $passord = $r->post("password");
+//
+//            if($this->matchToken($token)) {
+//                $user = $this->repository(User::class)->findBy("email", $email);
+//                if($user){
+//                    if(password_verify($passord, $user->getPassword())){
+//                        $this->addSession("user", $user);
+//                        $this->response()->redirect("app_home");
+//                    } else {
+//                        $this->response()->json(['Wrong credential']);
+//                    }
+//                } else $this->response()->json(['Wrong credential']);
+//            } else $this->response()->json(["message" => "wrong access"]);
+//        } else $this->response()->redirect("app_home");
+        $this->renderView("security/login.twig", ["form" => $form->toView()]);
     }
 
     #[Route("/register", "app_register", methods: ['GET', 'POST'])]
     public function register()
     {
         if ($this->isLogin()) {
-
+            $this->response()->redirect("app_home");
         }
         $user = new User();
         $form = Form::new(data: ['user' => $user])
@@ -63,12 +78,14 @@ class SecurityController extends AbstractController
             $user = $form->getData()->get("user");
             if($user){
                 $repo = $this->repository(User::class)->findBy("email", $user->getEmail());
-                if(!$repo){
-
+                if(!$repo) {
+                    $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
+                    $user->save();
+                    $this->response()->redirect("app_login");
                 } else $form->addError("Il y'a déjà un utilisateur avec cette email");
             }
-        }
 
+        }
         $this->renderView("security/register", ['form' => $form->toView()]);
     }
 

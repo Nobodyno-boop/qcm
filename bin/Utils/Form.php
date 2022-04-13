@@ -350,8 +350,6 @@ class Form
     {
         if ($r->getRoute()->getMethod() === "POST") {
             $this->request = $r;
-
-
         }
     }
 
@@ -363,6 +361,9 @@ class Form
         return $this->errors;
     }
 
+    /**
+     * @return ArrayUtils
+     */
     public function getReceiveData(): ArrayUtils
     {
         return ArrayUtils::from($this->requestData);
