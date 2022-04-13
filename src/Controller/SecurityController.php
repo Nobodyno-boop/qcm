@@ -23,7 +23,6 @@ class SecurityController extends AbstractController
             if ($form->isSent() && $form->isValid()) {
                 $email = $form->getReceiveData()->get("email");
                 $password = $form->getReceiveData()->get("password");
-//                dd($form->getData());
                 if ($email && $password) {
                     /**
                      * @var User $user
@@ -37,24 +36,9 @@ class SecurityController extends AbstractController
                     } else $form->addError("L'email ne corresponds à aucune donnée dans notre base.");
                 } else $form->addError("Formulaire invalide");
             }
+            $this->renderView("security/login.twig", ["form" => $form->toView()]);
+
         }
-//            $token = $r->post('crsf');
-//            $email = $r->post("email");
-//            $passord = $r->post("password");
-//
-//            if($this->matchToken($token)) {
-//                $user = $this->repository(User::class)->findBy("email", $email);
-//                if($user){
-//                    if(password_verify($passord, $user->getPassword())){
-//                        $this->addSession("user", $user);
-//                        $this->response()->redirect("app_home");
-//                    } else {
-//                        $this->response()->json(['Wrong credential']);
-//                    }
-//                } else $this->response()->json(['Wrong credential']);
-//            } else $this->response()->json(["message" => "wrong access"]);
-//        } else $this->response()->redirect("app_home");
-        $this->renderView("security/login.twig", ["form" => $form->toView()]);
     }
 
     #[Route("/register", "app_register", methods: ['GET', 'POST'])]
