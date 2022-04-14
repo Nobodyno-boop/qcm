@@ -6,12 +6,6 @@ title: Models
 
 Class \Vroom\Orm\Model\Models
 
-
-
-
-
-
-
 ## Constants
 
 ### CONTAINER_NAMESPACE
@@ -21,12 +15,6 @@ Class \Vroom\Orm\Model\Models
 public CONTAINER_NAMESPACE = "_models"
 
 ```
-
-
-
-
-
-
 
 ## Methods
 
@@ -40,18 +28,12 @@ public static findBy (
  ): ?object
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>mixed</code> 
-: _array_ <code>array</code> 
+: _model_ <code>mixed</code>
+: _array_ <code>array</code>
 
 **Returns**
-: <code>?object</code> 
-
+: <code>?object</code>
 
 ### get()
 
@@ -62,17 +44,11 @@ public static get (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>mixed</code> 
+: _model_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### readModel()
 
@@ -83,13 +59,8 @@ public static readModel (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>mixed</code> 
+: _model_ <code>mixed</code>
 
 **Returns**
 : <code>mixed</code> 

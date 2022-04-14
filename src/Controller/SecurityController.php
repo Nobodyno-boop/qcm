@@ -60,9 +60,9 @@ class SecurityController extends AbstractController
              * @var User $user
              */
             $user = $form->getData()->get("user");
-            if($user){
+            if ($user) {
                 $repo = $this->repository(User::class)->findBy("email", $user->getEmail());
-                if(!$repo) {
+                if (!$repo) {
                     $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
                     $user->save();
                     $this->response()->redirect("app_login");

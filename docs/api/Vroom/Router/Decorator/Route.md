@@ -6,14 +6,6 @@ title: Route
 
 Class \Vroom\Router\Decorator\Route
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -27,17 +19,10 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _url_ <code>string</code> 
-: _name_ <code>string|null</code> 
-: _methods_ <code>array</code> 
-
-
+: _url_ <code>string</code>
+: _name_ <code>string|null</code>
+: _methods_ <code>array</code>
 
 ### getMethods()
 
@@ -46,15 +31,8 @@ public __construct (
 public getMethods (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### getName()
 
@@ -63,15 +41,8 @@ public getMethods (  ): array
 public getName (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getUrl()
 
@@ -80,15 +51,8 @@ public getName (  ): string
 public getUrl (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### setName()
 
@@ -98,11 +62,6 @@ public setName (
     string|null $name
  ): void
 ```
-
-
-
-
-
 
 **Parameters**
 : _name_ <code>string|null</code> 

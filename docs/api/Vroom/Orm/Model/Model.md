@@ -6,14 +6,6 @@ title: Model
 
 Class \Vroom\Orm\Model\Model
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### _getvars()
@@ -23,15 +15,8 @@ Class \Vroom\Orm\Model\Model
 public _getvars (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### isSave()
 
@@ -40,15 +25,8 @@ public _getvars (  ): array
 public isSave (  ): bool
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>bool</code> 
-
+: <code>bool</code>
 
 ### newInstance()
 
@@ -57,15 +35,8 @@ public isSave (  ): bool
 public newInstance (  ): mixed
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### query()
 
@@ -74,15 +45,8 @@ public newInstance (  ): mixed
 public query (  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](../Sql/QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](../Sql/QueryBuilder.md)</code>
 
 ### save()
 
@@ -91,15 +55,8 @@ public query (  ): \Vroom\Orm\Sql\QueryBuilder
 public save (  ): mixed
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### serialize()
 
@@ -108,15 +65,8 @@ public save (  ): mixed
 public serialize (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### varName()
 
@@ -127,13 +77,8 @@ public static varName (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _row_ <code>string</code> 
+: _row_ <code>string</code>
 
 **Returns**
 : <code>mixed</code> 

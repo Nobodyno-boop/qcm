@@ -55,7 +55,8 @@ class Models
                 }
                 return $m;
 
-            } return []; // can't load
+            }
+            return []; // can't load
         } catch (\ReflectionException $e) {
             return [];
         }

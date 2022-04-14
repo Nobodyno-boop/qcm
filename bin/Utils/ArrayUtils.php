@@ -43,7 +43,8 @@ class ArrayUtils
      * @param string $path
      * @return mixed return null if ins't exist
      */
-    public function get(string $path): mixed {
+    public function get(string $path): mixed
+    {
         if (!$this->isValidPath($path)) {
             return null;
         }
@@ -63,14 +64,15 @@ class ArrayUtils
         }
         return null;
     }
+
     /**
      * We use the get method and if its null we just return default value
      *
      *
-     * @see ArrayUtils::get() for the base value
      * @param string $path
      * @param mixed $default
      * @return mixed
+     * @see ArrayUtils::get() for the base value
      */
     public function getOrDefault(string $path, mixed $default): mixed
     {

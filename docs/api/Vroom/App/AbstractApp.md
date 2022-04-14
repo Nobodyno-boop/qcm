@@ -6,14 +6,6 @@ title: AbstractApp
 
 abstract Class \Vroom\App\AbstractApp
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### controller()
@@ -23,15 +15,8 @@ abstract Class \Vroom\App\AbstractApp
 public controller (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### models()
 
@@ -39,12 +24,6 @@ public controller (  ): array
 
 public models (  ): array
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>array</code> 

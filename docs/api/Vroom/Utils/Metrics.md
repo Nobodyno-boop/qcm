@@ -6,14 +6,6 @@ title: Metrics
 
 Class \Vroom\Utils\Metrics
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### getTime()
@@ -23,15 +15,8 @@ Class \Vroom\Utils\Metrics
 public getTime (  ): float
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>float</code> 
-
+: <code>float</code>
 
 ### start()
 
@@ -40,15 +25,8 @@ public getTime (  ): float
 public start (  ): mixed
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### stop()
 
@@ -56,12 +34,6 @@ public start (  ): mixed
 
 public stop (  ): mixed
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>mixed</code> 

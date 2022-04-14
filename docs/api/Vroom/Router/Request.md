@@ -6,14 +6,6 @@ title: Request
 
 Class \Vroom\Router\Request
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _route_ <code>[\Vroom\Router\Route](./Route.md)</code> 
-
-
+: _route_ <code>[\Vroom\Router\Route](./Route.md)</code>
 
 ### get()
 
@@ -44,17 +29,11 @@ public get (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _path_ <code>mixed</code> 
+: _path_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getBody()
 
@@ -63,15 +42,8 @@ public get (
 public getBody (  ): mixed
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getRoute()
 
@@ -80,15 +52,8 @@ public getBody (  ): mixed
 public getRoute (  ): \Vroom\Router\Route
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Router\Route](./Route.md)</code> 
-
+: <code>[\Vroom\Router\Route](./Route.md)</code>
 
 ### post()
 
@@ -99,17 +64,11 @@ public post (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _path_ <code>mixed</code> 
+: _path_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### query()
 
@@ -120,17 +79,11 @@ public query (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _key_ <code>string</code> 
+: _key_ <code>string</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### redirect()
 
@@ -141,13 +94,8 @@ public redirect (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _url_ <code>mixed</code> 
+: _url_ <code>mixed</code>
 
 **Returns**
 : <code>mixed</code> 

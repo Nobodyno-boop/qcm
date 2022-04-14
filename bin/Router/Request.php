@@ -48,7 +48,7 @@ class Request
     {
         return ArrayUtils::from($_POST);
     }
-    
+
     public function query(string $key = ""): mixed
     {
         $parse = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);

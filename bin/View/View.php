@@ -29,24 +29,24 @@ class View
         $twig = new Environment($loader, ['debug' => true]);
         $url = $config->get("site");
 
-        $furl = new TwigFunction('url', function ($path) use ($url){
+        $furl = new TwigFunction('url', function ($path) use ($url) {
             $path = Router::getFromPrefix($path) ?? $path;
-            if(is_object($path)){
+            if (is_object($path)) {
                 $path = $path->getPath();
             }
-            if(!str_starts_with($path, "/")){
-                $path = "/".$path;
+            if (!str_starts_with($path, "/")) {
+                $path = "/" . $path;
             }
-            return $url['url'].$path;
+            return $url['url'] . $path;
         });
         $asset = new TwigFunction('asset', function ($path) use ($url) {
             return $url['url'] . $url['assets'] . "/$path";
         });
         $crsf = new TwigFunction("crsf", function () {
-           $token = Token::getToken(url: $_SERVER['REQUEST_URI']);
-           $_SESSION['_crsf'] = serialize($token);
+            $token = Token::getToken(url: $_SERVER['REQUEST_URI']);
+            $_SESSION['_crsf'] = serialize($token);
 
-           return $token->token;
+            return $token->token;
         });
 
         $twig->addFunction($asset);

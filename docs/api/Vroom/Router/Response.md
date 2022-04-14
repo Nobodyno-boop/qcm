@@ -6,14 +6,6 @@ title: Response
 
 Class \Vroom\Router\Response
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### json()
@@ -25,17 +17,11 @@ public json (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _value_ <code>mixed</code> 
+: _value_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### redirect()
 
@@ -45,11 +31,6 @@ public redirect (
     string $url
  ): void
 ```
-
-
-
-
-
 
 **Parameters**
 : _url_ <code>string</code> can be a full url or route prefix

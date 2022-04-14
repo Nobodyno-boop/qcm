@@ -1,6 +1,7 @@
 <?php
 
 namespace Vroom\View;
+
 use Vroom\Utils\Container;
 
 /**
@@ -12,6 +13,7 @@ class AppContext
     public bool $debug = false;
     public $load;
     public array $other;
+
     /**
      * @param array $session
      * @param bool $debug

@@ -23,9 +23,9 @@ class Controllers
             $classAttribute = $class->getAttributes(Route::class, \ReflectionAttribute::IS_INSTANCEOF);
             $classUrl = "";
             $classPrefix = "";
-            if(!empty($classAttribute)){
+            if (!empty($classAttribute)) {
                 $classRoute = $classAttribute[0]->newInstance();
-                 $classUrl = $classRoute->getUrl() ?? "";
+                $classUrl = $classRoute->getUrl() ?? "";
                 $classPrefix = $classRoute->getName() ?? "";
 
             }
@@ -37,8 +37,8 @@ class Controllers
                      */
                     $route = $routes[0]->newInstance();
                     $result["name"] = $method->getName();
-                    $result['url'] = $classUrl.$route->getUrl();
-                    $result['prefix'] = $classPrefix.$route->getName();
+                    $result['url'] = $classUrl . $route->getUrl();
+                    $result['prefix'] = $classPrefix . $route->getName();
                     $result['methods'] = $route->getMethods();
                     $results[] = $result;
                 }

@@ -6,14 +6,6 @@ title: Column
 
 Class \Vroom\Orm\Decorator\Column
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -27,17 +19,10 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
-: _type_ <code>int</code> 
-: _nullable_ <code>bool</code> 
-
-
+: _name_ <code>string</code>
+: _type_ <code>int</code>
+: _nullable_ <code>bool</code>
 
 ### getName()
 
@@ -46,15 +31,8 @@ public __construct (
 public getName (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getType()
 
@@ -63,15 +41,8 @@ public getName (  ): string
 public getType (  ): int
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>int</code> 
-
+: <code>int</code>
 
 ### isNullable()
 
@@ -79,12 +50,6 @@ public getType (  ): int
 
 public isNullable (  ): bool
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>bool</code> 

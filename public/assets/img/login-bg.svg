@@ -1,0 +1,24 @@
+<svg id="visual" viewBox="0 0 900 675" width="900" height="675" xmlns="http://www.w3.org/2000/svg"
+     version="1.1">
+    <rect x="0" y="0" width="900" height="675" fill="#001220"></rect>
+    <defs>
+        <linearGradient id="grad1_0" x1="25%" y1="0%" x2="100%" y2="100%">
+            <stop offset="23.333333333333336%" stop-color="#001220" stop-opacity="1"></stop>
+            <stop offset="76.66666666666666%" stop-color="#001220" stop-opacity="1"></stop>
+        </linearGradient>
+    </defs>
+    <defs>
+        <linearGradient id="grad2_0" x1="0%" y1="0%" x2="75%" y2="100%">
+            <stop offset="23.333333333333336%" stop-color="#001220" stop-opacity="1"></stop>
+            <stop offset="76.66666666666666%" stop-color="#001220" stop-opacity="1"></stop>
+        </linearGradient>
+    </defs>
+    <g transform="translate(900, 0)">
+        <path d="M0 281.3C-29.5 240.3 -59 199.3 -104.5 181C-150 162.7 -211.4 167 -243.6 140.6C-275.7 114.2 -278.5 57.1 -281.2 0L0 0Z"
+              fill="#FBAE3C"></path>
+    </g>
+    <g transform="translate(0, 675)">
+        <path d="M0 -281.2C34.8 -249.5 69.7 -217.8 114.5 -198.3C159.3 -178.8 214.1 -171.6 243.6 -140.6C273 -109.6 277.1 -54.8 281.3 0L0 0Z"
+              fill="#FBAE3C"></path>
+    </g>
+</svg>

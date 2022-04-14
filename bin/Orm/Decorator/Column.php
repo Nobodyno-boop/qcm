@@ -11,6 +11,7 @@ class Column
     private int $type;
     private bool $nullable;
     private string $formType;
+
     /**
      * @param string $name
      * @param int $type
@@ -46,6 +47,7 @@ class Column
     {
         return $this->nullable;
     }
+
     /**
      * @return string
      */

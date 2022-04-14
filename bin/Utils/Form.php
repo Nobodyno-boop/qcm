@@ -61,14 +61,14 @@ class Form
         $this->requestData = [];
     }
 
-    private function updateCurrentInput():array
+    private function updateCurrentInput(): array
     {
         $tempInputs = [];
         // pre match if its a model
-        foreach ($this->inputs as $input){
-            if($input['type'] === self::TYPE_MODEL){
+        foreach ($this->inputs as $input) {
+            if ($input['type'] === self::TYPE_MODEL) {
                 $model = $input['option']['model'] ?? null;
-                if($model){
+                if ($model) {
                     $class = Models::get($model);
                     $tempInputs = [...$this->modelToInputs($class['properties'], $input['option'], $input['name'])];
                 }
@@ -81,16 +81,16 @@ class Form
         return $tempInputs;
     }
 
-    public function countCurrentInputs():int
+    public function countCurrentInputs(): int
     {
         $count = 0;
         $crsf = $this->options['crsf'] ?? true;
-        if($crsf){
+        if ($crsf) {
             $count++;
         }
 
-        foreach ($this->currentInputs as $input){
-            if($input['type'] != self::TYPE_SUBMIT && $input['type'] != self::TYPE_RESET && $input['type'] != self::TYPE_MODEL){
+        foreach ($this->currentInputs as $input) {
+            if ($input['type'] != self::TYPE_SUBMIT && $input['type'] != self::TYPE_RESET && $input['type'] != self::TYPE_MODEL) {
                 $count++;
             }
         }
@@ -101,7 +101,7 @@ class Form
     {
         $formAttr = $this->attributesToString($this->options['input_attr'] ?? []);
         $result = "";
-        $result.= $this->errorsForm();
+        $result .= $this->errorsForm();
         $result .= "<form action='$url' method='post' $formAttr>" . PHP_EOL;
 
         $tempInputs = [];
@@ -110,23 +110,23 @@ class Form
         $tempInputs = $this->currentInputs;
         // add crsf
         $haveCrsf = $this->options['crsf'] ?? true;
-        if($haveCrsf){
+        if ($haveCrsf) {
             $url = empty($url) ? Container::get("currentRoute") : $url;
-            $token = Token::getToken(url:$url);
+            $token = Token::getToken(url: $url);
             $_SESSION['_crsf'] = serialize($token);
             $tempInputs[] = ['name' => 'crsf', "type" => self::TYPE_HIDDEN, "option" => ["input" => ['attr' => ['value' => $token->token]]]];
         }
 
-          foreach ($tempInputs as $input) {
+        foreach ($tempInputs as $input) {
             $array = ArrayUtils::from($input);
             if ($input['type'] !== self::TYPE_SUBMIT && $input['type'] !== self::TYPE_RESET && $input['type'] != self::TYPE_HIDDEN) {
                 $text = $array->getOrDefault("label.text", ucfirst($array->get("name")));
                 $result .= "<label for='" . $input['name'] . "'>$text</label>" . PHP_EOL;
             }
             $result .= $this->makeInput($input) . PHP_EOL;
-              $result .= $this->errorInput($array->get("name"));
+            $result .= $this->errorInput($array->get("name"));
 
-          }
+        }
         $result .= "</form>";
         return $result;
     }
@@ -158,7 +158,7 @@ class Form
             if ($obj && get_parent_class($obj) === Model::class) {
                 $tmpValue = $obj->getVariable($column->getName());
 
-                if($tmpValue){
+                if ($tmpValue) {
                     $value = $tmpValue;
                 }
             }
@@ -175,6 +175,7 @@ class Form
         }
         return $inputs;
     }
+
     /**
      * ```php
      * Form::new()->add("name", Form::TYPE_TEXT);
@@ -201,20 +202,20 @@ class Form
         $typeName = $data['name'];
         $type = $data['type'];
         $option = $data['option'];
-        $base = ["id" => $array->getOrDefault("input.attr.id", $typeName), "name" => $array->getOrDefault("input.attr.name", $typeName) ];
+        $base = ["id" => $array->getOrDefault("input.attr.id", $typeName), "name" => $array->getOrDefault("input.attr.name", $typeName)];
         $required = $array->getOrDefault("require", true);
         $classOption = $array->getOrDefault("input.class", null);
         $inputAttr = $array->getOrDefault("input.attr", []);
-        if(is_array($inputAttr)){
+        if (is_array($inputAttr)) {
             $base = [...$base, ...$inputAttr];
         }
-        if(is_array($classOption)) {
+        if (is_array($classOption)) {
             $classOption = implode(" ", $classOption);
             $base['class'] = $classOption;
         }
         $class = $classOption !== null ? "class='$classOption'" : "";
 
-        switch ($type){
+        switch ($type) {
             case self::TYPE_SUBMIT:
             case self::TYPE_RESET:
             case self::TYPE_BUTTON:
@@ -224,21 +225,25 @@ class Form
                 $value = $array->getOrDefault("input.attr.value", $typeName);
                 return $this->input([...$base, "type" => $type, "value" => $value], false);
             }
-            case self::TYPE_EMAIL: {
+            case self::TYPE_EMAIL:
+            {
                 $placeholder = $array->getOrDefault("input.attr.placeholder", "");
                 $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
                 return $this->input([...$base, "type" => "email", "placeholder" => $placeholder], $required);
             }
-            case self::TYPE_TEXT: {
+            case self::TYPE_TEXT:
+            {
                 $placeholder = $array->getOrDefault("input.attr.placeholder", "");
                 $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
                 return $this->input([...$base, "type" => "text", "placeholder" => $placeholder], $required);
             }
-            default: {
+            default:
+            {
                 return $this->input([...$base, "type" => $type], $required);
             }
             case self::TYPE_RADIO:
-            case self::TYPE_CHECKBOX: {
+            case self::TYPE_CHECKBOX:
+            {
                 $choice = $option['choice'];
                 return "<input type='$typeName' $class >";
             }
@@ -249,10 +254,10 @@ class Form
     {
         $text = $this->attributesToString($option);
 
-        if($required){
+        if ($required) {
             $text .= " required";
         }
-        return "<input ".$text. ">";
+        return "<input " . $text . ">";
     }
 
     private function attributesToString(array $attr): string
@@ -274,15 +279,15 @@ class Form
         if (!$this->request->post()->isEmpty()) {
             foreach ($this->request->post()->getArray() as $key => $input) {
 //                $arr = ArrayUtils::from($input);
-                if($this->countCurrentInputs() == count($this->request->post()->getArray())){
-                    $filter = array_values(array_filter($this->currentInputs, function ($map) use($key){
-                        if($map['name'] === $key){
+                if ($this->countCurrentInputs() == count($this->request->post()->getArray())) {
+                    $filter = array_values(array_filter($this->currentInputs, function ($map) use ($key) {
+                        if ($map['name'] === $key) {
                             return $map;
                         }
                     }));
 
 
-                    if(!empty($filter)){
+                    if (!empty($filter)) {
                         $filter = ArrayUtils::from($filter[0]);
                         $value = match ($filter->get("type")) {
                             self::TYPE_URL => filter_var($input, FILTER_SANITIZE_URL),
@@ -290,23 +295,23 @@ class Form
                             default => filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS)
                         };
 
-                        $value = match ($filter->get("type")){
+                        $value = match ($filter->get("type")) {
                             self::TYPE_EMAIL => filter_var($value, FILTER_VALIDATE_EMAIL, FILTER_NULL_ON_FAILURE),
                             self::TYPE_NUMBER => filter_var($value, FILTER_VALIDATE_INT),
                             default => $input
                         };
 
-                        if(!$value){
+                        if (!$value) {
                             $this->errors['input'][$key] = "L'input n'est pas valide";
                         } else {
                             $cmodel = $filter->get('option.model');
-                            if($cmodel){
+                            if ($cmodel) {
                                 $nameModel = $filter->get("option.inputmodel");
                                 $obj = $this->data[$nameModel] ?? null;
-                                if($obj){
+                                if ($obj) {
                                     try {
-                                        call_user_func_array([$obj, 'set'.Model::varName($key)], [$input]);
-                                    }catch (\Error $e){
+                                        call_user_func_array([$obj, 'set' . Model::varName($key)], [$input]);
+                                    } catch (\Error $e) {
 
                                     }
                                 }
@@ -314,9 +319,9 @@ class Form
                                 $this->requestData[$key] = $value;
                             }
                         }
-                    } else if($key === "crsf") {
+                    } else if ($key === "crsf") {
                         $token = $_SESSION['_crsf'] ?? null;
-                        if($token){
+                        if ($token) {
                             $token = unserialize($token);
                             $token->match($input, $this->request->getRoute()->getPath());
                         } else $this->errors['form'][] = "no token"; // illegal access
@@ -326,7 +331,7 @@ class Form
                 }
             }
 
-            if(empty($this->errors)){
+            if (empty($this->errors)) {
                 return true;
             }
         }
@@ -384,11 +389,11 @@ class Form
 
     private function errorsForm()
     {
-        if(count($this->errors) >=1){
+        if (count($this->errors) >= 1) {
             $form = $this->errors['form'] ?? null;
-            if($form){
+            if ($form) {
                 $result = "";
-                foreach ($form as $message){
+                foreach ($form as $message) {
                     $result .= "<div style='color:red;'>$message</div>";
                 }
                 return $result;
@@ -400,7 +405,7 @@ class Form
 
     private function errorInput(string $name)
     {
-        if(isset($this->errors['input'])){
+        if (isset($this->errors['input'])) {
             $message = $this->errors['input'][$name] ?? null;
             return "<div style='color:red'>$message</div>";
         }

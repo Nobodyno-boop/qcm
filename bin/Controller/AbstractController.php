@@ -42,8 +42,8 @@ class AbstractController
      */
     protected function getSession(string $key = null): mixed
     {
-        if($key){
-            if(!isset($_SESSION[$key])){
+        if ($key) {
+            if (!isset($_SESSION[$key])) {
                 return null;
             }
             return $_SESSION[$key];
@@ -62,7 +62,7 @@ class AbstractController
     protected function addSession(string $key, mixed $value)
     {
         if (is_object($value)) {
-            if(get_parent_class($value) === Model::class){
+            if (get_parent_class($value) === Model::class) {
                 $value = $value->serialize();
             } else $value = serialize($value);
 
@@ -97,8 +97,8 @@ class AbstractController
 
     /**
      * Get a new instance of Response
-     * @see Response
      * @return Response
+     * @see Response
      */
     public function response(): Response
     {
@@ -142,16 +142,16 @@ class AbstractController
     /**
      * Check if the Token is good
      *
-     * @see Token
      * @param string $token
      * @return bool
+     * @see Token
      */
     public function matchToken(string $token): bool
     {
         $sessionToken = unserialize($this->getSession("_crsf"));
         if (get_class($sessionToken) === Token::class) {
             $url = $this->url();
-            if($sessionToken->match($token, $url)){
+            if ($sessionToken->match($token, $url)) {
                 $this->getToken();
                 return true;
             }
@@ -173,8 +173,8 @@ class AbstractController
      */
     public function renderView(string $view, array $context = [])
     {
-        if(!str_ends_with($view, ".twig")){
-            $view = $view.".twig";
+        if (!str_ends_with($view, ".twig")) {
+            $view = $view . ".twig";
         }
         $template = $this->twig()->load($view);
         $appContext = new AppContext($_SESSION, true, [

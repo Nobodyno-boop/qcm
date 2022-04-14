@@ -6,14 +6,6 @@ title: QueryBuilder
 
 Class \Vroom\Orm\Sql\QueryBuilder
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>string|null</code> 
-
-
+: _model_ <code>string|null</code>
 
 ### __toString()
 
@@ -42,15 +27,8 @@ public __construct (
 public __toString (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### delete()
 
@@ -59,15 +37,8 @@ public __toString (  ): string
 public delete (  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### from()
 
@@ -79,18 +50,12 @@ public from (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _table_ <code>?string</code> 
-: _alias_ <code>?string</code> 
+: _table_ <code>?string</code>
+: _alias_ <code>?string</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### fromModel()
 
@@ -101,17 +66,11 @@ public static fromModel (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>[\Vroom\Orm\Model\Model](../Model/Model.md)</code> 
+: _model_ <code>[\Vroom\Orm\Model\Model](../Model/Model.md)</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### insert()
 
@@ -122,17 +81,11 @@ public insert (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _insert_ <code>array|[\Vroom\Orm\Model\Model](../Model/Model.md)</code> 
+: _insert_ <code>array|[\Vroom\Orm\Model\Model](../Model/Model.md)</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### limit()
 
@@ -143,17 +96,11 @@ public limit (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _limit_ <code>int</code> 
+: _limit_ <code>int</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### newInstance()
 
@@ -164,17 +111,11 @@ public static newInstance (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>string</code> 
+: _model_ <code>string</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### select()
 
@@ -185,17 +126,11 @@ public select (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _select_ <code>string</code> 
+: _select_ <code>string</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### update()
 
@@ -206,17 +141,11 @@ public update (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _update_ <code>array|[\Vroom\Orm\Model\Model](../Model/Model.md)</code> 
+: _update_ <code>array|[\Vroom\Orm\Model\Model](../Model/Model.md)</code>
 
 **Returns**
-: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 
-
+: <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>
 
 ### where()
 
@@ -227,13 +156,8 @@ public where (
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
-
-
-
-
-
 **Parameters**
-: _where_ <code>array</code> 
+: _where_ <code>array</code>
 
 **Returns**
 : <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code> 

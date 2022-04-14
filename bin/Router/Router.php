@@ -90,14 +90,13 @@ class Router
     }
 
 
-
     public static function getFromPrefix(string $prefix)
     {
         $routes = Container::get(self::CONTAINER_NAMESPACE)->getRoutes();
 
-        foreach ($routes as $method){
-            foreach ($method as $route){
-                if($prefix === $route->getName()){
+        foreach ($routes as $method) {
+            foreach ($method as $route) {
+                if ($prefix === $route->getName()) {
                     return $route;
                 }
             }

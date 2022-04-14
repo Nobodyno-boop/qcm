@@ -61,20 +61,19 @@ class Model
         $vars = $this->_getvars();
         foreach ($model['properties'] as $property) {
             $value = null;
-            if($property->isNullable()){
-                if(isset($vars[$property->getName()])){
+            if ($property->isNullable()) {
+                if (isset($vars[$property->getName()])) {
                     $value = call_user_func([$this, 'get' . Model::varName($property->getName())]) ?? null;
                 }
-            }else {
+            } else {
                 $value = call_user_func([$this, 'get' . Model::varName($property->getName())]) ?? null;
             }
-            if($value){
+            if ($value) {
                 $json[$property->getName()] = $value;
             }
         }
         return $json;
     }
-
 
 
     /**
@@ -103,8 +102,8 @@ class Model
      */
     public function getVariable(string $row): mixed
     {
-        try{
-            $name = "get".self::varName($row);
+        try {
+            $name = "get" . self::varName($row);
             $result = static::$name();
             if ($result) {
                 return $result;

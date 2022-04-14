@@ -6,14 +6,6 @@ title: Route
 
 Class \Vroom\Router\Route
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -27,17 +19,10 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _data_ <code>array</code> 
-: _controller_ <code>string</code> 
-: _method_ <code>string</code> 
-
-
+: _data_ <code>array</code>
+: _controller_ <code>string</code>
+: _method_ <code>string</code>
 
 ### getController()
 
@@ -46,15 +31,8 @@ public __construct (
 public getController (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getControllerMethod()
 
@@ -63,15 +41,8 @@ public getController (  ): string
 public getControllerMethod (  ): mixed|string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>mixed|string</code> 
-
+: <code>mixed|string</code>
 
 ### getMethod()
 
@@ -80,15 +51,8 @@ public getControllerMethod (  ): mixed|string
 public getMethod (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getName()
 
@@ -97,15 +61,8 @@ public getMethod (  ): string
 public getName (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getParameters()
 
@@ -114,15 +71,8 @@ public getName (  ): string
 public getParameters (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### getPath()
 
@@ -131,15 +81,8 @@ public getParameters (  ): array
 public getPath (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getVars()
 
@@ -148,15 +91,8 @@ public getPath (  ): string
 public getVars (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### getVarsNames()
 
@@ -165,15 +101,8 @@ public getVars (  ): array
 public getVarsNames (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### hasVars()
 
@@ -182,15 +111,8 @@ public getVarsNames (  ): array
 public hasVars (  ): bool
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>bool</code> 
-
+: <code>bool</code>
 
 ### match()
 
@@ -202,18 +124,12 @@ public match (
  ): bool
 ```
 
-
-
-
-
-
 **Parameters**
-: _path_ <code>string</code> 
-: _method_ <code>string</code> 
+: _path_ <code>string</code>
+: _method_ <code>string</code>
 
 **Returns**
-: <code>bool</code> 
-
+: <code>bool</code>
 
 ### trimPath()
 
@@ -224,13 +140,8 @@ public static trimPath (
  ): string
 ```
 
-
-
-
-
-
 **Parameters**
-: _path_ <code>string</code> 
+: _path_ <code>string</code>
 
 **Returns**
 : <code>string</code> 

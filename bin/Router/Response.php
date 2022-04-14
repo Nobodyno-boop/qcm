@@ -29,7 +29,7 @@ class Response
         if (get_parent_class($value) === Model::class) {
             $json = json_encode($value->serialize());
         }
-        if($json){
+        if ($json) {
             return $json;
         } else return "";
     }
@@ -42,14 +42,14 @@ class Response
     {
         $url = Router::getFromPrefix($url) ?? $url;
         $site = Container::get("_config")->get("site.url");
-        if(is_object($url)){
+        if (is_object($url)) {
             $url = $url->getPath();
         }
 
-        if(!str_starts_with($url, "/")){
-            $url = "/".$url;
+        if (!str_starts_with($url, "/")) {
+            $url = "/" . $url;
         }
-        header("Location: ".$site.$url);
+        header("Location: " . $site . $url);
         exit();
     }
 }

@@ -6,12 +6,6 @@ title: Types
 
 Class \Vroom\Orm\Model\Types
 
-
-
-
-
-
-
 ## Constants
 
 ### datetime
@@ -22,10 +16,6 @@ public datetime = 120
 
 ```
 
-
-
-
-
 ### id
 
 ```php
@@ -34,10 +24,6 @@ public id = 1
 
 ```
 
-
-
-
-
 ### int
 
 ```php
@@ -45,10 +31,6 @@ public id = 1
 public int = 102
 
 ```
-
-
-
-
 
 ### varchar
 

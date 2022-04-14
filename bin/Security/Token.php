@@ -67,8 +67,8 @@ class Token
      */
     public function match(string $token, string $url): bool
     {
-        if(!str_starts_with($url, "/")){
-            $url = "/".$url;
+        if (!str_starts_with($url, "/")) {
+            $url = "/" . $url;
         }
         return ($token === $this->token && $url === $this->url);
     }

@@ -19,7 +19,7 @@ class Metrics
 
     public function getTime(): float
     {
-        if(!isset($this->start, $this->end)){
+        if (!isset($this->start, $this->end)) {
             return -1.0;
         }
 

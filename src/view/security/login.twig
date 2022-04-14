@@ -1,13 +1,10 @@
-{%  extends "base.twig" %}
+{% extends "base.twig" %}
 {% block content %}
-    {#    <form action="{{ url("/login") }}" method="post"> #}
-    {#        <input type="hidden" name="crsf" value="{{ crsf() }}"> #}
-    {#        <input type="text" name="email" id="email"> #}
-    {#        <input type="password" name="password" id="password"> #}
-    {#        <input type="submit" value="Login !"> #}
-    {#        #}
-    {#        #}
-    {#    </form> #}
+    <div class="container login">
+        <div class="form">
+            {{ form|raw }}
 
-    {{ form|raw }}
+            <span>Pas de compte ? <a href="{{ url('app_register') }}">crée un nouveau compte !</a> </span>
+        </div>
+    </div>
 {% endblock %}
