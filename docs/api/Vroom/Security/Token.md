@@ -69,7 +69,7 @@ public __unserialize (
 ```php
 
 public static getToken ( 
-    int $length = 15, 
+    INT $length = 15, 
     string $url = ""
  ): void|\Vroom\Security\Token
 ```
@@ -84,7 +84,7 @@ $MyLongToken = Token::(30, "my");
 ```
 
 **Parameters**
-: _length_ <code>int</code>
+: _length_ <code>INT</code>
 : _url_ <code>string</code>
 
 **Returns**

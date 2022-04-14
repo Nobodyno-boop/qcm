@@ -8,11 +8,11 @@ Class \Vroom\Orm\Model\Types
 
 ## Constants
 
-### datetime
+### DATETIME
 
 ```php
 
-public datetime = 120
+public DATETIME = 120
 
 ```
 
@@ -24,19 +24,19 @@ public id = 1
 
 ```
 
-### int
+### INT
 
 ```php
 
-public int = 102
+public INT = 102
 
 ```
 
-### varchar
+### VARCHAR
 
 ```php
 
-public varchar = 101
+public VARCHAR = 101
 
 ```
 

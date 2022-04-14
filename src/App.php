@@ -4,8 +4,10 @@ namespace App;
 
 use App\Controller\ApiController;
 use App\Controller\HomeController;
+use App\Controller\QcmController;
 use App\Controller\SecurityController;
 use App\Controller\UserController;
+use App\Model\Qcm;
 use App\Model\User;
 use Vroom\App\AbstractApp;
 
@@ -18,6 +20,7 @@ class App extends AbstractApp
             HomeController::class,
             UserController::class,
             SecurityController::class,
+            QcmController::class,
             ApiController::class
         ];
     }
@@ -25,7 +28,8 @@ class App extends AbstractApp
     public function models(): array
     {
         return [
-            User::class
+            User::class,
+            Qcm::class
         ];
     }
 }

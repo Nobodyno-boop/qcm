@@ -19,20 +19,20 @@ class User extends Model
     private int $id;
 
     #[
-        Column('username', Types::varchar),
+        Column('username', Types::VARCHAR),
     ]
     private string $username;
 
-    #[Column("email", Types::varchar, formType: Form::TYPE_EMAIL)]
+    #[Column("email", Types::VARCHAR, formType: Form::TYPE_EMAIL)]
     private string $email;
 
-    #[Column("password", Types::varchar, formType: Form::TYPE_PASSWORD)]
+    #[Column("password", Types::VARCHAR, formType: Form::TYPE_PASSWORD)]
     private string $password;
 
-    #[Column("updated_at", Types::datetime, nullable: true)]
+    #[Column("updated_at", Types::DATETIME, nullable: true)]
     private string $updated_at;
 
-    #[Column("created_at", Types::datetime, nullable: true)]
+    #[Column("created_at", Types::DATETIME, nullable: true)]
     private string $createdAt;
 
     /**

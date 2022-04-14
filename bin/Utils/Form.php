@@ -150,7 +150,7 @@ class Form
             $type = $column->getType();
             $see = true;
             $types = match ($type) {
-                Types::int => self::TYPE_NUMBER,
+                Types::INT => self::TYPE_NUMBER,
                 Types::ID => null,
                 default => $column->getFormType()
             };

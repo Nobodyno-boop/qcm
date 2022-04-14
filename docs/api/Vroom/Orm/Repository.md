@@ -59,12 +59,12 @@ public get (
 ```php
 
 public getAll ( 
-    int $limit = 10
+    INT $limit = 10
  ): mixed
 ```
 
 **Parameters**
-: _limit_ <code>int</code>
+: _limit_ <code>INT</code>
 
 **Returns**
 : <code>mixed</code>

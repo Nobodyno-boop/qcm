@@ -92,12 +92,12 @@ public insert (
 ```php
 
 public limit ( 
-    int $limit = 1
+    INT $limit = 1
  ): \Vroom\Orm\Sql\QueryBuilder
 ```
 
 **Parameters**
-: _limit_ <code>int</code>
+: _limit_ <code>INT</code>
 
 **Returns**
 : <code>[\Vroom\Orm\Sql\QueryBuilder](./QueryBuilder.md)</code>

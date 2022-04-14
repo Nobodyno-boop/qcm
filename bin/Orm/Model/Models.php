@@ -42,7 +42,8 @@ class Models
                 }
                 $m = [
                     "entity" => $entityClass,
-                    "properties" => $properties
+                    "properties" => $properties,
+                    "class" => $class->getName()
                 ];
                 if (Container::isEmpty(Models::CONTAINER_NAMESPACE)) {
                     Container::set(Models::CONTAINER_NAMESPACE, [

@@ -34,9 +34,11 @@ class QueryBuilder
         return new QueryBuilder($model);
     }
 
-    public static function fromModel(Model $model): QueryBuilder
+    public static function fromModel(Model|string $model): QueryBuilder
     {
-        return new QueryBuilder(get_class($model));
+        if (is_object($model)) {
+            return new QueryBuilder(get_class($model));
+        } else return new QueryBuilder($model);
     }
 
     public function select(string ...$select): QueryBuilder

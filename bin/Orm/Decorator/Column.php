@@ -2,6 +2,8 @@
 
 namespace Vroom\Orm\Decorator;
 
+
+use Vroom\Orm\Model\Types;
 use Vroom\Utils\Form;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
@@ -11,17 +13,19 @@ class Column
     private int $type;
     private bool $nullable;
     private string $formType;
+    private string $join;
 
     /**
      * @param string $name
      * @param int $type
      */
-    public function __construct(string $name, int $type, bool $nullable = false, string $formType = Form::TYPE_TEXT)
+    public function __construct(string $name, int $type, bool $nullable = false, string $formType = Form::TYPE_TEXT, string $join = "")
     {
         $this->name = $name;
         $this->type = $type;
         $this->nullable = $nullable;
         $this->formType = $formType;
+        $this->join = $join;
     }
 
     /**
@@ -54,6 +58,14 @@ class Column
     public function getFormType(): string
     {
         return $this->formType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJoin(): string
+    {
+        return $this->join;
     }
 
 }

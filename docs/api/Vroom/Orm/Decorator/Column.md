@@ -14,14 +14,14 @@ Class \Vroom\Orm\Decorator\Column
 
 public __construct ( 
     string $name, 
-    int $type, 
+    INT $type, 
     bool $nullable = false
  ): 
 ```
 
 **Parameters**
 : _name_ <code>string</code>
-: _type_ <code>int</code>
+: _type_ <code>INT</code>
 : _nullable_ <code>bool</code>
 
 ### getName()
@@ -38,11 +38,11 @@ public getName (  ): string
 
 ```php
 
-public getType (  ): int
+public getType (  ): INT
 ```
 
 **Returns**
-: <code>int</code>
+: <code>INT</code>
 
 ### isNullable()
 

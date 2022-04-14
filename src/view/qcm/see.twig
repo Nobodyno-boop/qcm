@@ -1,0 +1,16 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+    {% for q in qcm %}
+        <div data-id="{{ q.id }}">
+            <h3>{{ q.question }}</h3>
+            <ul>
+                {% for a in q.answers %}
+                    <li>{{ a }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+
+{% endblock %}

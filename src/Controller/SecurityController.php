@@ -38,7 +38,7 @@ class SecurityController extends AbstractController
             }
             $this->renderView("security/login.twig", ["form" => $form->toView()]);
 
-        }
+        } else $this->response()->redirect("app_home");
     }
 
     #[Route("/register", "app_register", methods: ['GET', 'POST'])]
@@ -73,23 +73,6 @@ class SecurityController extends AbstractController
         $this->renderView("security/register", ['form' => $form->toView()]);
     }
 
-//    #[Route("/register", methods: ['POST'])]
-//    public function registerPost(Request $r)
-//    {
-//        $token = $r->post('crsf');
-//        $email = $r->post("email");
-//        $passord = $r->post("password");
-//
-//        if($this->matchToken($token)){
-//            $user = new User();
-//            $user->setEmail($email);
-//            $user->setPassword(password_hash($passord, PASSWORD_DEFAULT));
-//            $user->setUsername("Nobody");
-//            $user->save();
-//
-//            $this->response()->json(["message" => "ok"]);
-//        }
-//    }
 
     #[Route('/logout', "app_logout")]
     public function logout()
