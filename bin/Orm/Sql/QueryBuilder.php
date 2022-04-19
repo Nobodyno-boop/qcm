@@ -142,13 +142,45 @@ class QueryBuilder
                         $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
                     }
                     if ($value) {
-                        $this->values['keys'][] = $item->getName();
-                        $this->values['values'][] = "'" . $value . "'";
+                        $value = match ($item->getType()) {
+                            Types::JSON => json_encode($value),
+                            default => $value
+                        };
+
+                        if ($item->getType() === Types::ONE_TO_ONE || $item->getType() === Types::ONE_TO_MANY || $item->getType() === Types::MANY_TO_ONE || $item->getType() === Types::MANY_TO_MANY) {
+                            if (is_object($value)) {
+                                $type = $this->getModelId($value);
+                                if ($type) {
+                                    $value = call_user_func([$value, 'get' . Model::varName($type->getName())]);
+
+                                    $this->values['keys'][] = $item->getName();
+                                    $this->values['values'][] = "'" . $value . "'";
+                                } // error you must specify a type ID
+                            }
+                        } else {
+                            $this->values['keys'][] = $item->getName();
+                            $this->values['values'][] = "'" . $value . "'";
+                        }
+
                     }
                 }
             }
         }
         return $this;
+    }
+
+
+    private function getModelId($model)
+    {
+        $model = Models::get(get_class($model));
+
+        $find = array_values(array_filter($model['properties'], function ($el) {
+            if ($el->getType() === Types::ID) {
+                return $el;
+            }
+        }));
+
+        return (empty($find) === true) ? null : $find[0];
     }
 
     public function __toString(): string

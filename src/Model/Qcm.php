@@ -12,17 +12,20 @@ class Qcm extends Model
 {
     #[Column("id", Types::ID)]
     private int $id;
+
     #[Column("title", Types::VARCHAR)]
     private string $title;
 
     #[Column("data", Types::JSON)]
     private array $data;
+
     #[Column("author", Types::MANY_TO_ONE, join: "User")]
     private User $author;
 
-    #[Column("updated_at", Types::DATETIME)]
+    #[Column("updated_at", Types::DATETIME, nullable: true)]
     private string $updatedAt;
-    #[Column("created_at", Types::DATETIME)]
+
+    #[Column("created_at", Types::DATETIME, nullable: true)]
     private string $createdAt;
 
     /**

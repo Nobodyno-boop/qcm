@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Qcm;
+use App\Model\QcmStats;
 use App\Model\User;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
@@ -12,7 +13,7 @@ class QcmController extends AbstractController
     #[Route("/qcm/")]
     public function see()
     {
-        dump(Qcm::find(['author' => 1]));
+        dump($_SESSION);
     }
 
     #[Route("/qcm/result")]
@@ -29,8 +30,17 @@ class QcmController extends AbstractController
         $qcm->setResponses([["id" => "936e5b847881b862bdf6a35acb6189", "answer" => 2], ["id" => "936e5b847881b862bdf6a35acb6196", "answer" => 2], ["id" => "936e5b847881b875bdf6a35acb6189", "answer" => 2]]);
 
         if ($qcm->isValid()) {
-            dump($qcm->generateStats());
-            dump(json_encode($qcm->getQcmAsJson()));
+//            $qcmm = new Qcm();
+//            $qcmm->setTitle("Meow");
+//            $qcmm->setData($qcm->getQcmAsJson());
+//            $qcmm->setAuthor(User::find(2));
+//            $qcmm->save();
+
+            $qcmStats = new QcmStats();
+            $qcmStats->setQcm(Qcm::find(3));
+            $qcmStats->setData($qcm->generateStats());
+            $qcmStats->setUser(User::find($_SESSION['user']['id']));
+            $qcmStats->save();
         }
 //        $this->renderView('qcm/see', ["qcm"=> $qcm->getQcmAsJson()]);
     }

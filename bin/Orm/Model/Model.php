@@ -27,7 +27,7 @@ class Model
         } else {
             $query = (string)$this->query()->insert($this);
         }
-
+//        dd($query);
         self::getSQL()->query($query);
     }
 
