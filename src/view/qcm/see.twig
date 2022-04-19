@@ -1,16 +1,12 @@
 {% extends 'base.twig' %}
 
 {% block content %}
+    <script type="module" src="{{ asset("js/main.js") }}"></script>
 
-    {% for q in qcm %}
-        <div data-id="{{ q.id }}">
-            <h3>{{ q.question }}</h3>
-            <ul>
-                {% for a in q.answers %}
-                    <li>{{ a }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endfor %}
+
+    <qcm-view data-version="{{ qcm.version }}" data-questions="{{ qcm.question|json_encode() }}">
+
+    </qcm-view>
+
 
 {% endblock %}

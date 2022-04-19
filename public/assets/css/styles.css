@@ -120,3 +120,11 @@ form input {
     border: none;
 
 }
+
+
+/* QCM DESIGN GO BRBRBRBBR*/
+
+
+.question-selected {
+    color:red
+}

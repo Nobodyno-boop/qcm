@@ -330,7 +330,6 @@ class Form
                     }
                 }
             }
-
             if (empty($this->errors)) {
                 return true;
             }
@@ -347,7 +346,6 @@ class Form
                 return true;
             }
         }
-
         return false;
     }
 

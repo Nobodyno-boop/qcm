@@ -45,10 +45,13 @@ class Router
                 Container::set("currentRoute", $r->getPath());
                 $this->callController($r);
             } else {
+                http_response_code(404);
                 throw new \Error("Cannot find route");
             }
         } else {
             // No route so 404
+            throw new \Error("Cannot find route (Big)");
+
         }
 
     }
@@ -77,7 +80,8 @@ class Router
             }
             $method->invokeArgs($obj, $params);
         } catch (\ReflectionException $e) {
-            die($e);
+            throw new \Error($e);
+//            die($e);
         }
     }
 

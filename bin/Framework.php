@@ -53,7 +53,6 @@ class Framework
             }
 
         }
-
         $router->handle();
     }
 

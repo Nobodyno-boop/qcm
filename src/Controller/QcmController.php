@@ -5,18 +5,47 @@ namespace App\Controller;
 use App\Model\Qcm;
 use App\Model\QcmStats;
 use App\Model\User;
+use App\Qcm\Question;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 
 class QcmController extends AbstractController
 {
-    #[Route("/qcm/")]
-    public function see()
+    #[Route("/qcm/view/{see}")]
+    public function see($see)
     {
-        dump($_SESSION);
+        $see = intval($see);
+        if(is_int($see)){
+            $qcmdata = Qcm::find($see);
+            $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
+
+            $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson()]);
+        }
     }
 
-    #[Route("/qcm/result")]
+    #[Route("/qcm/result/{see}", methods: ['POST'])]
+    public function seeResult($see)
+    {
+        $see = intval($see);
+        if(is_int($see)){
+            $qcmdata = Qcm::find($see);
+            $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
+            $body = $this->getRequest()->getBody();
+
+
+            $qcm->setResponses($body['questions']);
+            if($qcm->isValid()){
+                $this->response()->json(["bite" => 2]);
+            } else $this->response()->json(["bite" => 4]);
+
+
+//            $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson()]);
+        }
+    }
+
+
+
+//    #[Route("/qcm/result")]
     public function result()
     {
         $a = [

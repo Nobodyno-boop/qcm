@@ -140,6 +140,18 @@ class Qcm
         return ["version" => $this->version, "question" => $question];
     }
 
+    public static function from(array $data): Qcm
+    {
+
+        $version = $data['version'];
+        $questions = [];
+        foreach ($data['question'] as $question) {
+            $questions[] = Question::from($question['question'], $question['answers'], $question['correct'], $question['id']);
+        }
+        return new Qcm($questions, $version);
+    }
+
+
     /**
      * @param array $responses
      */
