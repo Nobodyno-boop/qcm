@@ -49,9 +49,9 @@ class Question
     }
 
     /**
-     * @return int
+     * @return int|array
      */
-    public function getCorrect(): int
+    public function getCorrect(): int|array
     {
         return $this->correct;
     }

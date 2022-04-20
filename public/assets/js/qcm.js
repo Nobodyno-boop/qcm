@@ -1,5 +1,3 @@
-
-
 export default class Qcm extends HTMLElement {
 
     constructor() {
@@ -35,12 +33,40 @@ export default class Qcm extends HTMLElement {
         return element;
     }
 
-    render(){
-        if(this.dataQuestion.length >=1){
+    markErrors(errors) {
+        for (let error of errors) {
+
+            let id = error['id'];
+            let correct = error['correct'];
+            //filter the question by id
+            let questions = this.questions.filter(x => x.getAttribute("data-id") === id);
+            if (questions.length >= 1) {
+                questions.forEach(element => {
+                    let wrongs = element.shadowRoot.querySelectorAll(".question-selected");
+                    wrongs.forEach(x => x.classList.add("question-wrong"))
+                    if (Array.isArray(correct)) {
+                        correct.forEach(x => {
+                            let el = element.shadowRoot.querySelector(`[data-choice='${x}']`);
+                            if (el) {
+                                el.classList.add("question-correct")
+                            }
+                        })
+                    } else {
+                        let el = element.shadowRoot.querySelector(`[data-choice='${correct}']`)
+                        if (el) {
+                            el.classList.add("question-correct")
+                        }
+                    }
+                })
+            }
+        }
+
+    }
+
+    render() {
+        if (this.dataQuestion.length >= 1) {
             this.dataQuestion.map(x => this.createQuestion(x))
                 .forEach(x => this.wrapper.appendChild(x))
-
-
             let btn = document.createElement("button")
             btn.innerText = "Send !"
             btn.addEventListener("click", (e) => {
@@ -50,25 +76,26 @@ export default class Qcm extends HTMLElement {
                         let choice = x.getAttribute("data-choice") ?? null;
                         let id = x.getAttribute("data-id")
                         if(choice) {
-                            qcm.questions.push({id: id, anwser: choice})
+                            qcm.questions.push({id: id, answer: choice})
                         } else missedQuestion.push(x)
                     })
-                console.log("miss:" + missedQuestion.length )
+
                 if(qcm.questions.length === this.dataQuestion.length){
                     let h = new Headers()
-                        h.append("Content-Type", "application/json")
+                    h.append("Content-Type", "application/json")
                     fetch("/qcm/result/2", {
                         body: JSON.stringify(qcm),
                         method: "POST",
                         headers: new Headers({'Accept': "application/json"})
                     }).catch(e => console.log(e)).then(x => {
-                        x.text().then(x => console.log(x))
-                        // if(x.ok){
-                        //     x.json().then(x => console.log(x))
-                        // } else {
-                        //     x.text().then(x => console.log(x))
-                        // }
+                        if (x.ok) {
+                            return x.json()
+                        }
 
+                    }).then(x => {
+                        if (x.errors !== []) {
+                            this.markErrors(x.errors)
+                        }
                     })
                 }
             })

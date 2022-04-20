@@ -24,7 +24,12 @@ class Request
     private function getBodyByHeader()
     {
         $input = file_get_contents("php://input");
-        return match ($this->header['Content-Type'] ?? "") {
+        $h = $this->header['Content-Type'] ?? null;
+        if (!$h) {
+            $h = $this->header['content-type'] ?? null;
+        }
+
+        return match ($h ?? "") {
             "application/json" => json_decode($input),
             default => $input
         };

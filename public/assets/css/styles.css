@@ -126,5 +126,14 @@ form input {
 
 
 .question-selected {
-    color:red
+    color: red
+}
+
+.question-wrong {
+    font-weight: bold;
+}
+
+.question-correct {
+    font-weight: bold;
+    color: green;
 }

@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Model\Qcm;
 use App\Model\QcmStats;
 use App\Model\User;
-use App\Qcm\Question;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 
@@ -30,13 +29,12 @@ class QcmController extends AbstractController
         if(is_int($see)){
             $qcmdata = Qcm::find($see);
             $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
-            $body = $this->getRequest()->getBody();
-
-
+            $body = json_decode($this->getRequest()->getBody(), true);
             $qcm->setResponses($body['questions']);
-            if($qcm->isValid()){
-                $this->response()->json(["bite" => 2]);
-            } else $this->response()->json(["bite" => 4]);
+            $stats = $qcm->generateStats();
+            if (!empty($stats)) {
+                $this->response()->json($stats);
+            } else $this->response()->json(["bite" => 2]);
 
 
 //            $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson()]);

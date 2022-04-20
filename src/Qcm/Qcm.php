@@ -53,12 +53,16 @@ class Qcm
                 return false;
             }
             $answer = $this->getQuestionById($choice['id']);
-            if (count($answer) === 1) {
-                if (!(0 <= $choice) && $choice <= count($answer[0]->getAnswers()) - 1 && $answer[0]->getId() !== $choice['id']) {
-                    return false;
+            if ($answer) {
+                if (is_array($answer->getCorrect())) {
+                    return true;
+                } else {
+                    if (!(0 <= $choice['answer']) && $choice['answer'] <= count($answer->getAnswers()) - 1 && $answer->getId() !== $choice['id']) {
+                        return false;
+                    }
                 }
-            } else return false;
 
+            } else return false;
         }
         return true;
     }
@@ -66,15 +70,20 @@ class Qcm
     public function checkResponse(): array
     {
         $wrongAnswers = [];
-        if ($this->isValid($this->responses)) {
-            for ($i = 0; $i < count($this->responses); $i++) {
-                $answer = $this->responses[$i];
-                if (isset($answer['id'])) {
-                    $question = $this->getQuestionById($answer['id']);
-                    if (count($question) === 1) {
-                        $correct = $question[0]->getCorrect();
+        for ($i = 0; $i < count($this->responses); $i++) {
+            $answer = $this->responses[$i];
+            if (isset($answer['id'])) {
+                $question = $this->getQuestionById($answer['id']);
+                if ($question) {
+                    $correct = $question->getCorrect();
+                    if (is_array($correct)) {
+                        $check = $answer['answer'];
+                        if (count($check) !== count($correct)) {
+                            $wrongAnswers[] = [...$answer, "correct" => $correct];
+                        }
+                    } else {
                         $check = intval($answer['answer']);
-                        if ($check !== 0 && $check !== $correct) {
+                        if ($check !== -1 && $check !== $correct) {
                             $wrongAnswers[] = [...$answer, "correct" => $correct];
                         }
                     }
@@ -101,13 +110,13 @@ class Qcm
     }
 
 
-    private function getQuestionById(string $id): array
+    private function getQuestionById(string $id): Question|null
     {
         return array_values(array_filter($this->qcm, function ($map) use ($id) {
-            if ($map->getId() === $id) {
-                return $map;
-            }
-        }));
+                if ($map->getId() === $id) {
+                    return $map;
+                }
+            }))[0] ?? null;
     }
 
     /**
@@ -158,6 +167,14 @@ class Qcm
     public function setResponses(array $responses): void
     {
         $this->responses = $responses;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
     }
 
 }
