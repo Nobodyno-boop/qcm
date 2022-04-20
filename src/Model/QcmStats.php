@@ -12,9 +12,9 @@ class QcmStats extends Model
 {
     #[Column("id", Types::ID)]
     private int $id;
-    #[Column("qcm", Types::ONE_TO_ONE, join: "Qcm")]
+    #[Column("qcm", Types::MANY_TO_ONE, join: "Qcm")]
     private Qcm $qcm;
-    #[Column("user", Types::ONE_TO_ONE, join: "User")]
+    #[Column("user", Types::MANY_TO_ONE, join: "User")]
     private User $user;
     #[Column("data", Types::JSON)]
     private array $data;

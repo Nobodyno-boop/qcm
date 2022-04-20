@@ -3,7 +3,9 @@
 {% block content %}
     <script type="module" src="{{ asset("js/main.js") }}"></script>
 
-
+    {% if stats %}
+        {{ stats|json_encode() }}
+    {% endif %}
     <qcm-view data-version="{{ qcm.version }}" data-questions="{{ qcm.question|json_encode() }}">
 
     </qcm-view>

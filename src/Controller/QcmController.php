@@ -14,19 +14,30 @@ class QcmController extends AbstractController
     public function see($see)
     {
         $see = intval($see);
-        if(is_int($see)){
+        if (is_int($see)) {
             $qcmdata = Qcm::find($see);
-            $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
-
-            $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson()]);
+            if ($qcmdata) {
+                $id = $this->getSession("user")['id'];
+                $stats = QcmStats::find(['qcm' => $qcmdata->getId(), 'user' => $id]);
+                $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
+                $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson(), "stats" => $stats->getData()]);
+            }
         }
+    }
+
+    #[Route("/qcm/")]
+    public function qcmlist()
+    {
+        QcmStats::count();
+        dump(Qcm::count());
+        $qcms = Qcm::findAll();
     }
 
     #[Route("/qcm/result/{see}", methods: ['POST'])]
     public function seeResult($see)
     {
         $see = intval($see);
-        if(is_int($see)){
+        if (is_int($see)) {
             $qcmdata = Qcm::find($see);
             $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
             $body = json_decode($this->getRequest()->getBody(), true);
@@ -36,8 +47,6 @@ class QcmController extends AbstractController
                 $this->response()->json($stats);
             } else $this->response()->json(["bite" => 2]);
 
-
-//            $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson()]);
         }
     }
 

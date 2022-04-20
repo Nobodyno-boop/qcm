@@ -15,6 +15,7 @@ class QueryBuilder
     private $word = "";
     private $values = [];
     private $limit = 0;
+    private $offset = 0;
 
     /**
      * @param string|null $model
@@ -82,6 +83,12 @@ class QueryBuilder
         return $this;
     }
 
+    public function offset($offset): QueryBuilder
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
 
     public function update(array|Model $update): QueryBuilder
     {
@@ -117,7 +124,6 @@ class QueryBuilder
     public function limit(int $limit = 1): QueryBuilder
     {
         $this->limit = $limit;
-
         return $this;
     }
 
@@ -213,13 +219,13 @@ class QueryBuilder
                     break;
                 default:
                 case "select":
-                    $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
+                $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
+                $offset = $this->offset != 0 ? " OFFSET " . $this->offset : "";
+                $query = "SELECT " . $selector . " FROM "
+                    . $table
+                    . $w . $limit . $offset;
 
-                    $query = "SELECT" . $selector . " FROM "
-                        . $table
-                        . $w . $limit;
-
-                    break;
+                break;
             }
         }
 

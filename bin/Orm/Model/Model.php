@@ -6,6 +6,7 @@ use App\Model\User;
 use JetBrains\PhpStorm\Pure;
 use PDO;
 use ReflectionClass;
+use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Utils\Container;
@@ -23,11 +24,14 @@ class Model
 
         $query = "";
         if ($this->isSave) {
-            $query = (string)$this->query()->update($this);
+            $rid = $this->getModelId();
+            if ($rid) {
+                $id = $this->getVariable($rid);
+                $query = (string)$this->query()->update($this)->where(['id' => $id]);
+            }
         } else {
             $query = (string)$this->query()->insert($this);
         }
-//        dd($query);
         self::getSQL()->query($query);
     }
 
@@ -86,6 +90,22 @@ class Model
         return $json;
     }
 
+    private function getModelId(): Column|null
+    {
+        $model = Models::get($this);
+        if ($model) {
+            $properties = array_values(array_filter($model['properties'], function ($el) {
+                if ($el->getType() === Types::ID) {
+                    return $el;
+                }
+            }));
+            if (!empty($properties)) {
+                return $properties[0];
+            }
+        }
+        return null;
+    }
+
 
     /**
      * @param string $row
@@ -108,12 +128,16 @@ class Model
     /**
      * Return a variable based on a instance of Model
      *
-     * @param string $row
+     * @param string|Column $row
      * @return mixed
      */
-    public function getVariable(string $row): mixed
+    public function getVariable(string|Column $row): mixed
     {
         try {
+            if (!is_string($row)) {
+                $row = $row->getName();
+            }
+
             $name = "get" . self::varName($row);
             $result = static::$name();
             if ($result) {
@@ -191,6 +215,51 @@ class Model
     public static function find(mixed $value): static|null
     {
         return self::_find($value, static::class);
+    }
+
+    public static function findAll(mixed $value = null, $limit = 10, $offset = 0): static|null
+    {
+        return self::_findAll($value, static::class, $limit, $offset);
+    }
+
+    public static function count(): int
+    {
+        $q = QueryBuilder::fromModel(static::class)->select("COUNT(*)");
+        return self::getSQL()->query($q)->fetch(PDO::FETCH_COLUMN);
+    }
+
+
+    private static function _findAll(mixed $value, $class, $limit = 10, $offset = 0)
+    {
+        if (is_array($value)) {
+
+            $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
+            $stmt = static::getSQL()->query($q);
+            $var = $stmt->fetch(PDO::FETCH_ASSOC);
+            return self::toModel($var, $class);
+        } else {
+            if ($value !== null) {
+                $key = "";
+                $model = Models::get($class);
+                $keys = array_filter($model['properties'], function ($e) {
+                    if ($e->getType() == Types::ID) {
+                        return $e;
+                    }
+                });
+                if (count($keys) == 1) {
+                    $key = $keys[0]->getName();
+                }
+                dump($key);
+                $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
+                $stmt = static::getSQL()->query($q);
+                $var = $stmt->fetch(PDO::FETCH_ASSOC);
+                return self::toModel($var, $class);
+            } else {
+                $q = QueryBuilder::fromModel($class)->limit($limit)->offset($offset);
+                dump((string)$q);
+            }
+        }
+        return null;
     }
 
 
