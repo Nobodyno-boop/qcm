@@ -28,9 +28,27 @@ class QcmController extends AbstractController
     #[Route("/qcm/")]
     public function qcmlist()
     {
-        QcmStats::count();
-        dump(Qcm::count());
-        $qcms = Qcm::findAll();
+        $maxPerPage = 2;
+        $currentPage = $this->request()->get()->getOrDefault("page", 1);
+        $count = Qcm::count();
+        $numberPage = $count / $maxPerPage;
+
+        if ($numberPage < 0) {
+            $numberPage = 1;
+        } else {
+            if (round($numberPage) < $numberPage) {
+                $numberPage = round($numberPage) + 1;
+            } else { // 3.5 -> 4
+                $numberPage = round($numberPage);
+            }
+        }
+        $numberPage = intval($numberPage);
+        $offset = $maxPerPage * ($currentPage - 1);
+        if ($currentPage == 1) {
+            $offset = 0;
+        }
+        $qcms = Qcm::findAll(limit: $maxPerPage, offset: $offset);
+        $this->renderView("qcm/list", ["numberPage" => $numberPage, "currentPage" => $currentPage, "data" => $qcms]);
     }
 
     #[Route("/qcm/result/{see}", methods: ['POST'])]
@@ -40,7 +58,7 @@ class QcmController extends AbstractController
         if (is_int($see)) {
             $qcmdata = Qcm::find($see);
             $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
-            $body = json_decode($this->getRequest()->getBody(), true);
+            $body = json_decode($this->request()->getBody(), true);
             $qcm->setResponses($body['questions']);
             $stats = $qcm->generateStats();
             if (!empty($stats)) {

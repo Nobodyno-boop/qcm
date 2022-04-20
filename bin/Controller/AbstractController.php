@@ -30,7 +30,7 @@ class AbstractController
      * Get the current request
      * @return Request
      */
-    protected function getRequest(): Request
+    protected function request(): Request
     {
         return $this->request;
     }
@@ -120,7 +120,7 @@ class AbstractController
      */
     public function url(): string
     {
-        return $this->getRequest()->getRoute()->getPath();
+        return $this->request()->getRoute()->getPath();
     }
 
 

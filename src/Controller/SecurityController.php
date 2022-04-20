@@ -53,7 +53,7 @@ class SecurityController extends AbstractController
             ->add("reset", Form::TYPE_RESET)
             ->add("register !", Form::TYPE_SUBMIT);
 
-        $form->handleRequest($this->getRequest());
+        $form->handleRequest($this->request());
 
         if ($form->isSent() && $form->isValid()) {
             /**

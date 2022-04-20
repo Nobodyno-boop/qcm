@@ -5,6 +5,23 @@
     box-sizing: border-box;
 }
 
+/*DEBUG*/
+
+.debug-bar {
+    background-color: rgb(6 95 70);
+    height: 2.5rem; /* 40px */
+    padding: 0.5rem; /* 8px */
+}
+
+.debug-bar-flex {
+    display: inline-flex;
+}
+
+.debug-bar-flex p {
+    margin: 0.25rem; /* 4px */
+}
+
+
 /* Custom html*/
 
 body {
@@ -124,7 +141,6 @@ form input {
 
 /* QCM DESIGN GO BRBRBRBBR*/
 
-
 .question-selected {
     color: red
 }
@@ -136,4 +152,72 @@ form input {
 .question-correct {
     font-weight: bold;
     color: green;
+}
+
+
+/* PAGINATION */
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background: red;
+}
+
+/* PAGINATION CARD */
+
+.card {
+    width: 350px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),
+    6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),
+    12.5px 12.5px 10px rgba(0, 0, 0, 0.035),
+    22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042),
+    41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05),
+    100px 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+.card-content {
+    width: 80%;
+    margin: 20px;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: row;
+    margin-top: 3em;
+    justify-content: space-between;
+}
+
+.card-author {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-author > span {
+    text-decoration: underline;
+}
+
+.card-button {
+    background: white;
+    border: 0.125em solid black;
+    cursor: pointer;
+    letter-spacing: 0.125em;
+    margin: 0.5rem;
+    padding: 0.5em 0.75em;
+    position: relative;
+    text-transform: uppercase;
+}
+
+a.card-button {
+    text-decoration: none;
 }

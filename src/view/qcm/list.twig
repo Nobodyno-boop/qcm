@@ -1,0 +1,38 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+    {% for qcm in data %}
+        <div class="card">
+            <div class="card-content">
+                <h3>{{ qcm.title }}</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi consectetur ducimus, est et
+                    fugiat magni minus nemo neque nisi non praesentium quae quas quidem quo quod repudiandae sit
+                    tenetur.</p>
+                <div class="card-info">
+                    <div class="card-author">
+                        <span>Author</span>
+                        {{ qcm.author.username }}
+                    </div>
+                    <div class="card-link">
+                        <a class="card-button" href="qcm/view/{{ qcm.id }}">GO</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <div class="pagination">
+        <a href="#">&laquo;</a>
+        {% for i in 1..numberPage %}
+            {% if i == currentPage %}
+                <a class="active" href="?page={{ i }}">{{ i }}</a>
+            {% else %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+        <a href="#">&raquo;</a>
+    </div>
+
+{% endblock %}

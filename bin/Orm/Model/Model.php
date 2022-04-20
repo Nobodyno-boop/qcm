@@ -217,7 +217,7 @@ class Model
         return self::_find($value, static::class);
     }
 
-    public static function findAll(mixed $value = null, $limit = 10, $offset = 0): static|null
+    public static function findAll(mixed $value = null, $limit = 10, $offset = 0): array|null
     {
         return self::_findAll($value, static::class, $limit, $offset);
     }
@@ -232,11 +232,17 @@ class Model
     private static function _findAll(mixed $value, $class, $limit = 10, $offset = 0)
     {
         if (is_array($value)) {
-
             $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
             $stmt = static::getSQL()->query($q);
-            $var = $stmt->fetch(PDO::FETCH_ASSOC);
-            return self::toModel($var, $class);
+            $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $objs = [];
+            foreach ($datas as $data) {
+                $obj = self::toModel($data, static::class);
+                if ($obj) {
+                    $objs[] = $obj;
+                }
+            }
+            return $objs;
         } else {
             if ($value !== null) {
                 $key = "";
@@ -249,14 +255,24 @@ class Model
                 if (count($keys) == 1) {
                     $key = $keys[0]->getName();
                 }
-                dump($key);
                 $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
                 $stmt = static::getSQL()->query($q);
                 $var = $stmt->fetch(PDO::FETCH_ASSOC);
                 return self::toModel($var, $class);
             } else {
                 $q = QueryBuilder::fromModel($class)->limit($limit)->offset($offset);
-                dump((string)$q);
+                $stmt = static::getSQL()->query($q);
+
+                $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $objs = [];
+
+                foreach ($datas as $data) {
+                    $obj = self::toModel($data, static::class);
+                    if ($obj) {
+                        $objs[] = $obj;
+                    }
+                }
+                return $objs;
             }
         }
         return null;

@@ -12,22 +12,21 @@
     {% block seo %}
         <meta property="og:title" content="I am prout"/>
     {% endblock %}
-    <title>{% block title %} Cursed website {% endblock %}</title>
+    <title>{% block title %} QCM - WEBSITE {% endblock %}</title>
 </head>
 <body>
-{#    <div class="flex-grow"> #}
 {% block content %}
 
 {% endblock %}
-{#    </div> #}
+
 
 {% if app.debug %}
-    <div class="md:bg-blue-400 bg-emerald-800 h-10 p-2">
-        <div class="inline-flex text-white">
-            <p class="mr-1">
+    <div class="debug-bar ">
+        <div class="debug-bar-flex">
+            <p class="">
                 Load time : {{ app.load | number_format(2) }}
             </p>
-            <p class="mr-1">|</p>
+            <p>|</p>
             <p>
                 Controller: {{ app.other.class }}
             </p>
