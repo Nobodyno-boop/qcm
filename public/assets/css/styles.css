@@ -8,6 +8,9 @@
 /*DEBUG*/
 
 .debug-bar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     background-color: rgb(6 95 70);
     height: 2.5rem; /* 40px */
     padding: 0.5rem; /* 8px */
@@ -24,11 +27,15 @@
 
 /* Custom html*/
 
-body {
-    /*linear-gradient(to right, rgb(199, 210, 254), rgb(254, 202, 202), rgb(254, 249, 195))*/
-    /*background-image: linear-gradient(to right, #FDEB71 10%, #F8D800 100%);*/
-    /*background-color: #f8f7ff;*/
-    /*background-image: linear-gradient(135deg, #FAD961 0%, #F76B1C 100%);*/
+html {
+    background-image: url("../svg/bg2.svg");
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow: hidden;
+    height: 100%;
 }
 
 
@@ -90,7 +97,7 @@ a {
     margin: 2% auto;
     padding: 10px;
     max-width: 95%;
-    background: rgba(0, 0, 0, 0.1);
+    background: #F7F5F2;
     border-radius: 3px;
     box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),
     6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),
