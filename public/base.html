@@ -5,19 +5,55 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>HOME - QCM</title>
+    <link href='https://css.gg/css' rel='stylesheet'>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
+
 </head>
 <body>
-<div class="nav">
-    <ul class="nav-links">
-        <li class="link"><a href="">a</a></li>
-        <li class="link"><a href=""></a></li>
-        <li class="link"><a href=""></a></li>
-    </ul>
+<div class="container">
+    <div class="nav">
+        <ul class="nav-links">
+            <li class="link"><a href="">HOME</a></li>
+            <li class="link"><a href="">QCM</a></li>
+        </ul>
+        <div class="nav-brand">
+            <div>LOGO</div>
+        </div>
+        <ul class="nav-links">
+<!--            <li class="link"><a href=""><i class="gg-log-in"></i> <span>LOGIN</span></a></li>-->
+            <li class="link"><a href="">Se connecter</a></li>
+        </ul>
+        <div class="nav-mobile">
+            <i class="gg-menu" data-toggle-element="#mobile-menu" data-toggle-class="scale-a|scale-b|hidden"></i>
+            <div class="nav-menu hidden scale-b" id="mobile-menu">
+                <div class="nav-mobile-close" >
+                    <i class="gg-close-o" data-toggle-element="#mobile-menu" data-toggle-class="scale-a|scale-b" data-toggle-after-delay="hidden,0.5s"></i>
+                </div>
+                <ul class="nav-links">
+                    <li class="link">HOME</li>
+                    <li class="link">QCM</li>
+                    <li class="link">Se connecter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="space"></div>
+
 </div>
 
 
 <script src="assets/js/utils.js"></script>
+<script>
+    function UtilsToggle(){
+
+    }
+
+    UtilsToggle()
+</script>
 </body>
 </html>

@@ -27,7 +27,7 @@ class AppContext
         $this->load = $loadOb->getTime();
 
         $this->session = $session;
-        $this->user = $session['user'] ?? null;
+        $this->user = $session['user'] ?? [];
         $this->debug = $debug;
         $this->other = $other;
     }
