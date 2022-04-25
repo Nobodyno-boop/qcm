@@ -7,6 +7,11 @@
 
 :root {
     --font: 'Karla', sans-serif;
+    --black: #001220 /*#17181f*/;
+    --grey: #96969a;
+    --white: #fcfbfc;
+    --gr-orange: #FA7268;
+    --gr-rose: #C62368;
 }
 
 /*DEBUG*/
@@ -146,7 +151,7 @@ a {
         transform-origin: 0% 100%;
     }
     100% {
-        transform: scaleY(0.3);
+        transform: scaleY(0);
         transform-origin: 0% 100%;
     }
 }
@@ -192,14 +197,16 @@ a {
     margin: 2% auto;
     padding: 10px;
     max-width: 90%;
-    background: #F7F5F2;
+    background: var(--black);
+    color: var(--white);
     border-radius: 3px;
-    box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),
-    6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),
-    12.5px 12.5px 10px rgba(0, 0, 0, 0.035),
-    22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042),
-    41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05),
-    100px 100px 80px rgba(0, 0, 0, 0.07);
+    /*box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),*/
+    /*6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),*/
+    /*12.5px 12.5px 10px rgba(0, 0, 0, 0.035),*/
+    /*22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042),*/
+    /*41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05),*/
+    /*100px 100px 80px rgba(0, 0, 0, 0.07);*/
+
     font-family: var(--font);
 }
 
@@ -227,24 +234,78 @@ a {
 
 
 /* LOGIN */
+.container .login {
+    margin-top: 20%;
+}
+
+.form > h1 {
+    text-align: center;
+}
 
 
-form {
+.form form {
     display: flex;
     flex-flow: column;
     width: 50%;
-    margin: 0 auto;
+    margin: 10% auto;
 }
 
-form input {
-    margin: 5px;
+.form input {
     padding: 15px 20px;
-    box-shadow: 0 4px 8px 0 rgba(21, 21, 21, .2);
     outline: none;
-    border: none;
-
+    border: 1px solid var(--grey);
+    border-radius: 10px;
+    background: var(--black);
+    color: var(--white);
+    margin: 10px 0;
 }
 
+.form input::placeholder {
+    color: var(--white);
+    font-weight: bold;
+}
+
+.form input:placeholder-shown {
+    color: var(--white);
+    font-weight: bold;
+    background: var(--black);
+}
+
+
+.form input:-webkit-autofill {
+    color: var(--white);
+    font-weight: bold;
+    background: var(--black);
+}
+
+
+.form input:-webkit-autofill:focus {
+    color: var(--white);
+    font-weight: bold;
+    background: var(--black);
+}
+
+.form input[type=submit] {
+    margin-top: 30px;
+    background: linear-gradient(var(--gr-orange), var(--gr-rose));
+    border: none;
+}
+
+.form input[type=submit]:hover {
+    /*background: linear-gradient(rgba(250, 114, 104, 9), rgba(198, 35, 104, 0.9));*/
+    filter: drop-shadow(16px 16px 20px red);
+}
+
+.form > div {
+    text-align: center;
+    color: var(--grey);
+}
+
+
+/* LINK */
+a {
+    color: var(--white);
+}
 
 /* QCM DESIGN GO BRBRBRBBR*/
 

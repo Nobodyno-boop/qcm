@@ -121,7 +121,13 @@ class Form
             $array = ArrayUtils::from($input);
             if ($input['type'] !== self::TYPE_SUBMIT && $input['type'] !== self::TYPE_RESET && $input['type'] != self::TYPE_HIDDEN) {
                 $text = $array->getOrDefault("label.text", ucfirst($array->get("name")));
-                $result .= "<label for='" . $input['name'] . "'>$text</label>" . PHP_EOL;
+                $display = true;
+                if (isset($this->options['label']['display'])) {
+                    $display = $this->options['label']['display'];
+                }
+                if ($display) {
+                    $result .= "<label for='" . $input['name'] . "'>$text</label>" . PHP_EOL;
+                }
             }
             $result .= $this->makeInput($input) . PHP_EOL;
             $result .= $this->errorInput($array->get("name"));
@@ -209,11 +215,15 @@ class Form
         if (is_array($inputAttr)) {
             $base = [...$base, ...$inputAttr];
         }
-        if (is_array($classOption)) {
-            $classOption = implode(" ", $classOption);
-            $base['class'] = $classOption;
+        if ($classOption) {
+            if (is_array($classOption)) {
+                $classOption = implode(" ", $classOption);
+                $base['class'] = $classOption;
+            } else {
+                $base['class'] = $classOption;
+            }
         }
-        $class = $classOption !== null ? "class='$classOption'" : "";
+
 
         switch ($type) {
             case self::TYPE_SUBMIT:
@@ -230,6 +240,12 @@ class Form
                 $placeholder = $array->getOrDefault("input.attr.placeholder", "");
                 $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
                 return $this->input([...$base, "type" => "email", "placeholder" => $placeholder], $required);
+            }
+            case self::TYPE_PASSWORD:
+            {
+                $placeholder = $array->getOrDefault("input.attr.placeholder", "");
+                $placeholder = empty($placeholder) ? ucfirst($typeName) : $placeholder;
+                return $this->input([...$base, "type" => "password", "placeholder" => $placeholder], $required);
             }
             case self::TYPE_TEXT:
             {
