@@ -17,7 +17,7 @@ class SecurityController extends AbstractController
             $form = Form::new(option: ['label' => ['display' => false]])
                 ->add("email", Form::TYPE_EMAIL)
                 ->add("password", Form::TYPE_PASSWORD)
-                ->add("Ce connecter !", Form::TYPE_SUBMIT, ["input" => ["class" => "btn"]]);
+                ->add("Se connecter !", Form::TYPE_SUBMIT, ["input" => ["class" => "btn"]]);
 
             $form->handleRequest($r);
             if ($form->isSent() && $form->isValid()) {

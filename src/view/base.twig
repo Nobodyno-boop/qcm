@@ -8,6 +8,8 @@
     {% block assets %}
         {#        <script src="https://cdn.tailwindcss.com"></script> #}
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        <link href='https://css.gg/css' rel='stylesheet'>
+
     {% endblock %}
     {% block seo %}
         <meta property="og:title" content="I am prout"/>
@@ -16,9 +18,11 @@
 </head>
 <body>
 <div class="container">
-{% block content %}
+    {% include 'nav.twig' %}
 
-{% endblock %}
+    {% block content %}
+
+    {% endblock %}
 </div>
 
 {% if app.debug %}

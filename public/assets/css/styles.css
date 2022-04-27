@@ -14,10 +14,18 @@
     --gr-rose: #C62368;
 }
 
+/* MAGIC */
+.bold {
+    color: var(--gr-rose);
+    font-weight: 500;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* MAGIC */
 /*DEBUG*/
 
 .debug-bar {
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
     background-color: rgb(6 95 70);
@@ -38,15 +46,22 @@
 /* Custom html*/
 
 html {
-    background-image: url("../svg/bg2.svg");
-    background-repeat: no-repeat;
+    margin: 0;
+}
+
+body {
+    background: url("../svg/bg3.svg") center no-repeat fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    overflow: hidden;
     height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+
 }
+
 .hidden {
     display: none;
 }
@@ -93,6 +108,11 @@ a {
     display: inline-flex;
     text-decoration: none;
     text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.link a:hover {
+    color: var(--gr-rose);
 }
 
 .link i {
@@ -197,9 +217,9 @@ a {
     margin: 2% auto;
     padding: 10px;
     max-width: 90%;
-    background: var(--black);
     color: var(--white);
     border-radius: 3px;
+    z-index: 10;
     /*box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),*/
     /*6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),*/
     /*12.5px 12.5px 10px rgba(0, 0, 0, 0.035),*/
@@ -221,6 +241,8 @@ a {
 
 .landing-flex {
     display: flex;
+    flex-direction: column;
+    margin: 5% 0;
 }
 
 .landing-left .title {
@@ -230,6 +252,112 @@ a {
     background: linear-gradient(to right, rgb(254, 202, 202), rgb(220, 38, 38));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.landing-flex > * {
+    margin: 50px 0;
+}
+
+.present {
+    text-align: center;
+}
+
+.present .title {
+    font-weight: 800;
+    font-size: 3.75rem; /* 60px */
+    line-height: 1;
+    letter-spacing: -0.025em;
+}
+
+.present .desc {
+    color: var(--grey);
+}
+
+.present > * {
+    margin: 15px 0;
+}
+
+
+.qcms {
+    margin: 0 auto;
+    width: 95%;
+}
+
+.qcms .text {
+    display: inline-flex;
+    margin: 10px auto;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.qcms .text .inline > * {
+    margin: 0 10px;
+}
+
+.qcms .text .inline {
+    display: inline-flex;
+}
+
+.qcms .text .inline.right {
+
+}
+
+.imos {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: auto;
+}
+
+.imo {
+    width: 290px;
+    height: 340px;
+    background: #091928; /* fallback for old browsers */
+    /*backdrop-filter: blur(120px);*/
+    border-radius: 5px;
+    box-shadow: 3.6px 3.7px 2.9px -54px rgba(0, 0, 0, 0.115),
+    9.9px 10.1px 8px -54px rgba(0, 0, 0, 0.165),
+    23.8px 24.4px 19.3px -54px rgba(0, 0, 0, 0.215),
+    79px 81px 64px -54px rgba(0, 0, 0, 0.33);
+}
+
+.imo .image {
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.imo .title {
+    font-size: 25px;
+    text-align: center;
+}
+
+.imo .image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    /*border-top-right-radius: 5px;*/
+    /*border-top-left-radius: 5px;*/
+    border-radius: 5px;
+}
+
+.imo .desc {
+    margin: 10px 5px;
+    text-align: center;
+}
+
+.imo .infos {
+    display: inline-flex;
+    justify-content: space-around;
+    width: 100%;
+    align-items: baseline;
+}
+
+.imo .infos > * {
+    display: inline-flex;
+    justify-content: space-evenly;
+    width: 100%;
+    color: var(--white);
+
 }
 
 
@@ -289,11 +417,12 @@ a {
     margin-top: 30px;
     background: linear-gradient(var(--gr-orange), var(--gr-rose));
     border: none;
+    box-shadow: -0.5em 0.5em rgba(16, 24, 50, 0);
 }
 
 .form input[type=submit]:hover {
     /*background: linear-gradient(rgba(250, 114, 104, 9), rgba(198, 35, 104, 0.9));*/
-    filter: drop-shadow(16px 16px 20px red);
+    /*filter: drop-shadow(16px 16px 20px red);*/
 }
 
 .form > div {
@@ -388,4 +517,75 @@ a {
 
 a.card-button {
     text-decoration: none;
+}
+
+
+.gg-user {
+    display: block;
+    transform: scale(var(--ggs, 1));
+    box-sizing: border-box;
+    width: 12px;
+    height: 18px
+}
+
+.gg-user::after,
+.gg-user::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border: 2px solid
+}
+
+.gg-user::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 30px;
+    top: 0;
+    left: 2px
+}
+
+.gg-user::after {
+    width: 12px;
+    height: 9px;
+    border-bottom: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    top: 9px
+}
+
+.gg-calendar-dates {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs, 1));
+    width: 18px;
+    height: 18px;
+    border: 2px solid;
+    border-radius: 3px
+}
+
+.gg-calendar-dates::after,
+.gg-calendar-dates::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 3px;
+    height: 2px;
+    left: 2px
+}
+
+.gg-calendar-dates::before {
+    background: currentColor;
+    width: 2px;
+    box-shadow: 4px 0 0, 8px 0 0, 0 4px 0,
+    4px 4px 0, 8px 4px 0;
+    top: 6px
+}
+
+.gg-calendar-dates::after {
+    width: 10px;
+    top: -4px;
+    box-shadow: 0 6px 0 0
 }
