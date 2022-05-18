@@ -2,18 +2,18 @@
 
 namespace Vroom\Router;
 
-use Vroom\Utils\Container;
+use Vroom\Container\Container;
+use Vroom\Container\IContainer;
 
 /**
  *  Router take always the last better
  */
-class Router
+class Router implements IContainer
 {
     /**
      * @var Route[] $routes
      */
     private array $routes = [];
-    const CONTAINER_NAMESPACE = "_router";
 
     public function addRoute(array $data, $controller)
     {
@@ -96,7 +96,7 @@ class Router
 
     public static function getFromPrefix(string $prefix)
     {
-        $routes = Container::get(self::CONTAINER_NAMESPACE)->getRoutes();
+        $routes = self::container()->getRoutes();
 
         foreach ($routes as $method) {
             foreach ($method as $route) {
@@ -108,4 +108,13 @@ class Router
         return null;
     }
 
+    public static function getContainerNamespace(): string
+    {
+        return "_router";
+    }
+
+    public static function container(): static
+    {
+        return Container::get(self::getContainerNamespace());
+    }
 }

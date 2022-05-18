@@ -3,9 +3,11 @@
 namespace Vroom\Orm\Sql;
 
 use PDO;
-use Vroom\Utils\Container;
+use Vroom\Config\Config;
+use Vroom\Container\Container;
+use Vroom\Container\IContainer;
 
-class Sql
+class Sql implements IContainer
 {
     private PDO $con;
 
@@ -21,7 +23,7 @@ class Sql
             /**
              * @var array $db
              */
-            $db = Container::get("_config")->get("db");
+            $db = Config::container()->get("db");
             $this->con = new PDO("mysql:dbname=" . $db["database"] . ";host=" . $db['host'], $db['user'], $db['password']);
         } catch (\PDOException $e) {
             die($e);
@@ -39,5 +41,15 @@ class Sql
     public function query(string $query): bool|\PDOStatement
     {
         return $this->getCon()->query($query);
+    }
+
+    public static function getContainerNamespace(): string
+    {
+        return "_sql";
+    }
+
+    public static function container(): static
+    {
+        return Container::get(self::getContainerNamespace());
     }
 }

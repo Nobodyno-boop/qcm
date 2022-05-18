@@ -2,8 +2,8 @@
 
 namespace Vroom\Router;
 
+use Vroom\Container\Container;
 use Vroom\Orm\Model\Model;
-use Vroom\Utils\Container;
 
 class Response
 {
@@ -23,7 +23,7 @@ class Response
         }
     }
 
-    private function objectToJson($value)
+    private function objectToJson($value): string
     {
         $json = null;
         if (get_parent_class($value) === Model::class) {

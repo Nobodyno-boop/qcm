@@ -363,7 +363,7 @@ a {
 
 /* LOGIN */
 .container .login {
-    margin-top: 20%;
+    margin-top: 5%;
 }
 
 .form > h1 {
@@ -437,6 +437,11 @@ a {
 }
 
 /* QCM DESIGN GO BRBRBRBBR*/
+
+.answer {
+    color: red;
+}
+
 
 .question-selected {
     color: red

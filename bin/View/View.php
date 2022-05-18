@@ -6,9 +6,10 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFunction;
+use Vroom\Config\Config;
+use Vroom\Container\Container;
 use Vroom\Router\Router;
 use Vroom\Security\Token;
-use Vroom\Utils\Container;
 use Vroom\Utils\Form;
 
 class View
@@ -26,7 +27,7 @@ class View
 
     private static function make(): Environment
     {
-        $config = Container::get("_config");
+        $config = Config::container();
         $loader = new FilesystemLoader($config->get('template.dir'));
         $twig = new Environment($loader, ['debug' => true]);
         $twig->addExtension(new \Twig\Extension\DebugExtension());

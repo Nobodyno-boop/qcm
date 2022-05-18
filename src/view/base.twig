@@ -25,7 +25,7 @@
     {% endblock %}
 </div>
 
-{% if app.debug %}
+{% if app.debug and app.user %}
     <div class="debug-bar ">
         <div class="debug-bar-flex">
             <p class="">

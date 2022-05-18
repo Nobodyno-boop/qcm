@@ -3,12 +3,12 @@
 namespace Vroom\Controller;
 
 use Twig\Environment;
+use Vroom\Container\Container;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Repository;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
 use Vroom\Security\Token;
-use Vroom\Utils\Container;
 use Vroom\View\AppContext;
 
 class AbstractController
@@ -78,23 +78,6 @@ class AbstractController
     {
         return !empty($this->getSession("user"));
     }
-
-    /**
-     * Retrieve a new instance of Repository with Model instance
-     * @param $class
-     * @return Repository
-     */
-    protected function repository($class): Repository
-    {
-        if (is_object($class)) {
-            $class = get_class($class);
-        }
-        if (is_string($class)) {
-            return new Repository($class);
-        }
-        throw new \Error("Could not get model class");
-    }
-
     /**
      * Get a new instance of Response
      * @return Response

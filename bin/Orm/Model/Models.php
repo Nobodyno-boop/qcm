@@ -5,11 +5,11 @@ namespace Vroom\Orm\Model;
 use PDO;
 use ReflectionAttribute;
 use ReflectionClass;
+use Vroom\Container\Container;
 use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Decorator\Entity;
 use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Orm\Sql\Sql;
-use Vroom\Utils\Container;
 
 class Models
 {
@@ -75,33 +75,4 @@ class Models
         } else return [];
     }
 
-    public static function findBy($model, array $array): ?object
-    {
-        $models = self::readModel($model);
-        $q = QueryBuilder::newInstance($model);
-        $q->where($array);
-
-        $stmt = self::getSQL()->query($q);
-        $var = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        try {
-            $class = new ReflectionClass($model);
-            $m = $class->newInstance();
-            foreach ($models['properties'] as $k) {
-                $name = $k->getName();
-                if (isset($var[$name])) {
-                    call_user_func_array([$m, 'set' . ucfirst($name)], [$var[$name]]);
-                }
-            }
-            return $m;
-        } catch (\ReflectionException $e) {
-        }
-
-        return null;
-    }
-
-    private static function getSQL(): Sql
-    {
-        return Container::get("_db");
-    }
 }

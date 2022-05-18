@@ -2,6 +2,7 @@
 
 namespace Vroom\Utils;
 
+use Vroom\Container\Container;
 use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Models;

@@ -2,8 +2,12 @@
 
 namespace Vroom\Utils;
 
-class Metrics
+use Vroom\Container\Container;
+use Vroom\Container\IContainer;
+
+class Metrics implements IContainer
 {
+
     private float $start;
     private float $end;
 
@@ -26,4 +30,13 @@ class Metrics
         return ($this->end - $this->start);
     }
 
+    public static function getContainerNamespace(): string
+    {
+        return "_metrics";
+    }
+
+    public static function container(): static
+    {
+        return Container::get(self::getContainerNamespace());
+    }
 }

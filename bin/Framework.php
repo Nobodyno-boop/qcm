@@ -2,13 +2,14 @@
 
 namespace Vroom;
 
+use Spatie\Ignition\Ignition;
 use Vroom\App\AbstractApp;
 use Vroom\Config\Config;
+use Vroom\Container\Container;
 use Vroom\Controller\Controllers;
 use Vroom\Orm\Model\Models;
 use Vroom\Orm\Sql\Sql;
 use Vroom\Router\Router;
-use Vroom\Utils\Container;
 use Vroom\Utils\Metrics;
 use Vroom\View\View;
 
@@ -23,24 +24,27 @@ class Framework
      */
     public function __construct(Config $config, AbstractApp $app)
     {
+        // Session
+        session_name("qcm_id"); // change default cookie name
+        session_start();
+        Ignition::make()->register();
+
+
         $renderPageTime = new Metrics();
         $renderPageTime->start();
-        Container::set("_telemetry_time", $renderPageTime);
+        Container::setObject($renderPageTime);
         $this->config = $config;
         $this->app = $app;
         $router = new Router();
 
-
-        Container::set("_config", $this->config);
-        Container::set("_db", new Sql());
-        Container::set("_router", $router);
+        Container::setObject($this->config);
+        Container::setObject(new Sql());
+        Container::setObject($router);
         Container::set("_twig", View::getTwig());
 
         foreach ($app->models() as $model) {
             Models::readModel($model);
         }
-
-
         $controllers = $app->controller();
 
         foreach ($controllers as $controller) {
@@ -51,7 +55,6 @@ class Framework
                     $router->addRoute($route, $controller);
                 }
             }
-
         }
         $router->handle();
     }
@@ -78,7 +81,7 @@ class Framework
 
     public static function getRouter(): Router
     {
-        return Container::get(Router::CONTAINER_NAMESPACE);
+        return Router::container();
     }
 
 

@@ -2,22 +2,18 @@
 
 namespace Vroom\Orm\Model;
 
-use App\Model\User;
 use JetBrains\PhpStorm\Pure;
 use PDO;
 use ReflectionClass;
+use Vroom\Container\Container;
 use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Sql\QueryBuilder;
 use Vroom\Orm\Sql\Sql;
-use Vroom\Utils\Container;
 
 class Model
 {
     protected bool $isSave = false;
 
-    public function __construct()
-    {
-    }
 
     public function save()
     {

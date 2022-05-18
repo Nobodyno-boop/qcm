@@ -6,8 +6,11 @@ export default class Qcm extends HTMLElement {
         this.dataQuestion = [];
         this.version = "";
         this.wrapper = document.createElement("div");
-
+        this.wrapper.classList.add("questions")
         this.shadow = this.attachShadow({mode: 'open'});
+        let style = document.createElement("style")
+        style.innerHTML = "@import url('/assets/css/styles.css')"
+        this.shadow.append(style)
         this.shadow.append(this.wrapper)
 
     }
@@ -24,7 +27,6 @@ export default class Qcm extends HTMLElement {
 
     createQuestion(json) {
         let element = document.createElement("qcm-question-view");
-
         element.setAttribute("data-question", JSON.stringify(json['question']))
         element.setAttribute("data-id", json['id'])
         element.setAttribute("data-answers", JSON.stringify(json['answers']))

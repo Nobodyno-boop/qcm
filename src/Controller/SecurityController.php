@@ -7,12 +7,14 @@ use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 use Vroom\Router\Request;
 use Vroom\Utils\Form;
+use Vroom\Utils\Session;
 
 class SecurityController extends AbstractController
 {
     #[Route("/login", "app_login", ['GET', 'POST'])]
     public function loginPost(Request $r)
     {
+
         if (!$this->isLogin()) {
             $form = Form::new(option: ['label' => ['display' => false]])
                 ->add("email", Form::TYPE_EMAIL)
@@ -24,10 +26,7 @@ class SecurityController extends AbstractController
                 $email = $form->getReceiveData()->get("email");
                 $password = $form->getReceiveData()->get("password");
                 if ($email && $password) {
-                    /**
-                     * @var User $user
-                     */
-                    $user = $this->repository(User::class)->findBy("email", $email);
+                    $user = User::find(['email' => $email]);
                     if ($user) {
                         if (password_verify($password, $user->getPassword())) {
                             $this->addSession("user", $user);
@@ -37,7 +36,6 @@ class SecurityController extends AbstractController
                 } else $form->addError("Formulaire invalide");
             }
             $this->renderView("security/login.twig", ["form" => $form->toView()]);
-
         } else $this->response()->redirect("app_home");
     }
 
@@ -61,7 +59,7 @@ class SecurityController extends AbstractController
              */
             $user = $form->getData()->get("user");
             if ($user) {
-                $repo = $this->repository(User::class)->findBy("email", $user->getEmail());
+                $repo = User::find(['email' => $user->getEmail()]);
                 if (!$repo) {
                     $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
                     $user->save();

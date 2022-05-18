@@ -4,14 +4,16 @@ export default class Question extends HTMLElement {
         this._id = "";
         this.question = null;
         this.wrapper = document.createElement("div")
+        this.wrapper.classList.add("question")
         this.reponse = [];
         this.answers = [];
         this.type = "single";
         this.shadow = this.attachShadow({mode: 'open'});
-        this.shadow.append(this.wrapper)
         let style = document.createElement("style")
         style.innerHTML = "@import url('/assets/css/styles.css')"
         this.shadow.append(style)
+        this.shadow.append(this.wrapper)
+
     }
 
     connectedCallback() {
@@ -24,18 +26,19 @@ export default class Question extends HTMLElement {
     }
 
 
-    createReponse(str, i) {
+    createResponse(str, i) {
         let element = document.createElement("div")
-        element.setAttribute("data-choice", i)
+        element.classList.add("answer")
+        element.setAttribute("data-choice", -1) // by default is not choice
         element.addEventListener("click", (e) => {
             let choice = e.target.getAttribute("data-choice");
-            if(this.type === "single"){
+            if (this.type === "single") {
                 this.setAttribute("data-choice", choice)
                 this.reponse.filter(x => x.classList.contains("question-selected")).forEach(x => x.classList.remove("question-selected"))
                 e.target.classList.add("question-selected")
-            } else if(this.type === "multi"){
+            } else if (this.type === "multi") {
                 let choices = this.getAttribute("data-choice").split("-");
-                if(choices.includes(choice)){
+                if (choices.includes(choice)) {
                     e.target.classList.remove("question-selected")
                     choices = choices.filter(x => x !== choice)
                 } else {
@@ -44,7 +47,6 @@ export default class Question extends HTMLElement {
                 }
                 // avoid empty string get join like that: "-0-1"
                 choices = choices.filter(x => x !== "")
-
                 this.setAttribute("data-choice", choices.join("-"));
             }
         })
@@ -58,7 +60,7 @@ export default class Question extends HTMLElement {
             // console.log(this.question)
             this.wrapper.innerHTML = `<h4>${this.question}</h4>`;
             this.answers.forEach((x, i) => {
-                this.wrapper.appendChild(this.createReponse(x, i))
+                this.wrapper.appendChild(this.createResponse(x, i))
             })
         }
     }

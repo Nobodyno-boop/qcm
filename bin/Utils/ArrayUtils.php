@@ -95,7 +95,7 @@ class ArrayUtils
      * @param array $array
      * @return ArrayUtils
      */
-    public static function from(array $array): ArrayUtils
+    public static function from(array $array = []): ArrayUtils
     {
         return new ArrayUtils($array);
     }
