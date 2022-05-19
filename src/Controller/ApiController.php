@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\User;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
 
@@ -11,7 +12,8 @@ class ApiController extends AbstractController
     #[Route("/")]
     public function index()
     {
-        echo 'hey';
+        $user = User::find(3);
+        dump($user);
     }
 
     public function qcm()

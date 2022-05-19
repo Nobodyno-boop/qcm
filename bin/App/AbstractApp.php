@@ -14,7 +14,7 @@ abstract class AbstractApp
     public abstract function controller(): array;
 
     /**
-     * Array of Models we gonna use in the project
+     * Array of Models we gonna to use in the project
      * @return array
      */
     public abstract function models(): array;

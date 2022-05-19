@@ -45,7 +45,7 @@ class Sql implements IContainer
 
     public static function getContainerNamespace(): string
     {
-        return "_sql";
+        return "_db";
     }
 
     public static function container(): static

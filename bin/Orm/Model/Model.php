@@ -229,8 +229,15 @@ class Model
     {
         if (is_array($value)) {
             $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
-            $stmt = static::getSQL()->query($q);
+            $stmt = self::getSQL()->query($q);
+            if (!$stmt) {
+                return null;
+            }
+
             $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (!$datas) {
+                return null;
+            }
             $objs = [];
             foreach ($datas as $data) {
                 $obj = self::toModel($data, static::class);
@@ -280,23 +287,47 @@ class Model
         if (is_array($value)) {
             $q = QueryBuilder::fromModel($class)->where($value);
             $stmt = static::getSQL()->query($q);
+            if (!$stmt) {
+                return null;
+            }
+
             $var = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$var) {
+                return null;
+            }
             return self::toModel($var, $class);
         } else {
             if ($value !== null) {
                 $key = "";
                 $model = Models::get($class);
+
+                if (!$model) {
+                    return null;
+                }
+
                 $keys = array_filter($model['properties'], function ($e) {
                     if ($e->getType() == Types::ID) {
                         return $e;
                     }
                 });
-                if (count($keys) == 1) {
-                    $key = $keys[0]->getName();
+                if (!$keys) {
+                    return null;
                 }
+
+                $key = $keys[0]->getName() ?? "";
+                if (!$key) {
+                    return null;
+                }
+
                 $q = QueryBuilder::fromModel($class)->where([$key => $value]);
                 $stmt = static::getSQL()->query($q);
+                if (!$stmt) {
+                    return null;
+                }
                 $var = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (!$var) {
+                    return null;
+                }
                 return self::toModel($var, $class);
             }
         }
