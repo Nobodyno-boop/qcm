@@ -29,7 +29,7 @@ export default class Question extends HTMLElement {
     createResponse(str, i) {
         let element = document.createElement("div")
         element.classList.add("answer")
-        element.setAttribute("data-choice", -1) // by default is not choice
+        element.setAttribute("data-choice", i) // by default is not choice
         element.addEventListener("click", (e) => {
             let choice = e.target.getAttribute("data-choice");
             if (this.type === "single") {
