@@ -18,6 +18,9 @@ export default class Qcm extends HTMLElement {
     connectedCallback() {
         this.dataQuestion = JSON.parse(this.getAttribute("data-questions"));
         this.version = this.getAttribute("data-version")
+        this.qcm_id = this.getAttribute("data-id")
+        this.errorMode = this.getAttribute("data-error") ?? false;
+        this.errors = this.getAttribute("data-errors") ?? []
         this.render()
     }
 
@@ -37,7 +40,6 @@ export default class Qcm extends HTMLElement {
 
     markErrors(errors) {
         for (let error of errors) {
-
             let id = error['id'];
             let correct = error['correct'];
             //filter the question by id
@@ -70,22 +72,26 @@ export default class Qcm extends HTMLElement {
             this.dataQuestion.map(x => this.createQuestion(x))
                 .forEach(x => this.wrapper.appendChild(x))
             let btn = document.createElement("button")
-            btn.innerText = "Send !"
+            let span = document.createElement("span")
+            span.innerText = " Send !"
+            btn.classList.add("button-64")
+            btn.appendChild(span)
             btn.addEventListener("click", (e) => {
                 let qcm = {"version": this.version, questions: []}
                 let missedQuestion = [];
                 this.questions.forEach(x => {
-                        let choice = x.getAttribute("data-choice") ?? null;
-                        let id = x.getAttribute("data-id")
-                        if(choice) {
-                            qcm.questions.push({id: id, answer: choice})
-                        } else missedQuestion.push(x)
+                    let choice = x.getAttribute("data-choice") ?? null;
+                    let id = x.getAttribute("data-id")
+                    if (choice) {
+                        x.setAttribute("locked", true)
+                        qcm.questions.push({id: id, answer: choice})
+                    } else missedQuestion.push(x)
                     })
 
                 if(qcm.questions.length === this.dataQuestion.length){
                     let h = new Headers()
                     h.append("Content-Type", "application/json")
-                    fetch("/qcm/result/2", {
+                    fetch("/qcm/result/" + this.qcm_id, {
                         body: JSON.stringify(qcm),
                         method: "POST",
                         headers: new Headers({'Accept': "application/json"})

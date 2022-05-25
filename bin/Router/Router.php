@@ -46,7 +46,12 @@ class Router implements IContainer
                 $this->callController($r);
             } else {
                 http_response_code(404);
-                throw new \Error("Cannot find route");
+                $page = $this->find404();
+                if (!$page) {
+                    throw new \Error("Cannot find route");
+                }
+
+                $this->callController($page);
             }
         } else {
             // No route so 404
@@ -54,6 +59,17 @@ class Router implements IContainer
 
         }
 
+    }
+
+    private function find404(): ?Route
+    {
+        $page = array_filter($this->getRoutes()['GET'] ?? [], function ($route) {
+            if ($route->getName() === '404') {
+                return $route;
+            }
+        });
+
+        return count($page) ? $page[0] : null;
     }
 
     private function callController(Route $route)

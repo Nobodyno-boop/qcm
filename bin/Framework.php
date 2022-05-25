@@ -45,6 +45,7 @@ class Framework
         foreach ($app->models() as $model) {
             Models::readModel($model);
         }
+
         $controllers = $app->controller();
 
         foreach ($controllers as $controller) {

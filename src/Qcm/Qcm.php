@@ -143,7 +143,7 @@ class Qcm
     public function getQcmAsJson(): array
     {
         $question = array_map(function ($value) {
-            return $value->toJson();
+            return $value->toUserJson();
         }, $this->qcm);
 
         return ["version" => $this->version, "question" => $question];

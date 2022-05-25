@@ -7,10 +7,10 @@ use App\Model\QcmStats;
 use App\Model\User;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
-
+#[Route("qcm", name: "app_qcm_")]
 class QcmController extends AbstractController
 {
-    #[Route("/qcm/view/{see}")]
+    #[Route("/view/{see}", name: "see")]
     public function see($see)
     {
         $see = intval($see);
@@ -20,12 +20,12 @@ class QcmController extends AbstractController
                 $id = $this->getSession("user")['id'];
                 $stats = QcmStats::find(['qcm' => $qcmdata->getId(), 'user' => $id]);
                 $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
-                $this->renderView("qcm/see", ["qcm" => $qcm->getQcmAsJson(), "stats" => $stats->getData()]);
+                $this->renderView("qcm/see", ["qcm_id" => $qcmdata->getId(), "qcm" => $qcm->getQcmAsJson(), "stats" => $stats->getData()]);
             }
         }
     }
 
-    #[Route("/qcm/")]
+    #[Route("/", name: "home")]
     public function qcmlist()
     {
         $maxPerPage = 2;
@@ -51,7 +51,7 @@ class QcmController extends AbstractController
         $this->renderView("qcm/list", ["numberPage" => $numberPage, "currentPage" => $currentPage, "data" => $qcms]);
     }
 
-    #[Route("/qcm/result/{see}", methods: ['POST'])]
+    #[Route("/result/{see}", methods: ['POST'])]
     public function seeResult($see)
     {
         $see = intval($see);

@@ -7,9 +7,12 @@
     {#        {{ stats|json_encode() }} #}
     {#    {% endif %} #}
     <div class="qcm-title">{{ qcm.title }}</div>
-    <qcm-view data-version="{{ qcm.version }}" data-questions="{{ qcm.question|json_encode() }}">
+    <div class="qcm">
+        <qcm-view data-id="{{ qcm_id }}" data-version="{{ qcm.version }}"
+                  data-questions="{{ qcm.question|json_encode() }}">
 
-    </qcm-view>
+        </qcm-view>
+    </div>
 
 
 {% endblock %}
