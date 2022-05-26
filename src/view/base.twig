@@ -19,8 +19,9 @@
     <title>{% block title %} QCM - WEBSITE {% endblock %}</title>
 </head>
 <body>
+{% include 'nav.twig' %}
+
 <div class="container">
-    {% include 'nav.twig' %}
 
     {% block content %}
 

@@ -28,7 +28,7 @@ class QcmController extends AbstractController
     #[Route("/", name: "list")]
     public function qcmlist()
     {
-        $maxPerPage = 2;
+        $maxPerPage = 4;
         $currentPage = $this->request()->get()->getOrDefault("page", 1);
         $count = Qcm::count();
         $numberPage = $count / $maxPerPage;

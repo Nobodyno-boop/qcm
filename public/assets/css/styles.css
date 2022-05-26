@@ -71,14 +71,16 @@ body {
 }
 
 a {
-    color: #333333;
+    color: var(--white);
+    text-decoration: none;
 }
+
 
 /* NAVBAR */
 .nav {
     /*background: #ffd97d;*/
     position: relative;
-
+    font-family: var(--font);
     display: flex;
     justify-content: space-around;
     /*height: 50px;*/
@@ -88,9 +90,14 @@ a {
     /*box-shadow: rgba(0,0,0,0.2) 3px 2px 4px;*/
 }
 
+.la-bars {
+    color: var(--white);
+}
+
 .nav-brand {
     margin-left: 5px;
     font-size: 30px;
+    color: var(--white);
     font-weight: bold;
 }
 
@@ -374,6 +381,10 @@ a {
 .imo .desc {
     margin: 10px 5px;
     text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 155ch;
 }
 
 .imo .infos {
@@ -521,20 +532,38 @@ qcm-question-view {
     flex-flow: column;
 }
 
-/* PAGINATION */
+/* QCM-LIST */
+.qcm-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.qcm-list > * {
+    margin: 0 auto;
+}
+
+/*qcm-list > imo {*/
+/*    max-width: ;*/
+/*}*/
+
+
 .pagination {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
 }
 
 .pagination a {
-    color: black;
+    color: var(--white);
     float: left;
     padding: 8px 16px;
+    margin: 0px 5px;
     text-decoration: none;
 }
 
 .pagination a.active {
-    background: red;
+    background: var(--gr-middle);
 }
 
 /* PAGINATION CARD */
@@ -614,7 +643,7 @@ a.card-button {
     /*MD:ALL*/
     .container {
         margin: 0 auto;
-        max-width: 95%;
+        max-width: 100%;
     }
 
     /* MD:HOME*/
@@ -623,16 +652,17 @@ a.card-button {
         font-size: 3.75rem; /* 60px */
     }
 
-    .imos {
+    .qcms .imos {
         flex-flow: row nowrap;
     }
 
-    .imo {
-        margin: 10px auto;
+    .qcms .imo,
+    .qcm-list .imo {
+        margin: 10px 15px;
         max-width: 215px;
     }
 
-    .imo .infos {
+    .qcms .imo .infos {
         flex-flow: column nowrap;
         margin: 10px 5px;
     }
@@ -641,6 +671,17 @@ a.card-button {
     .form form {
         width: 50%;
     }
+
+
+    /*  MD:QCM-LIST   */
+    .qcm-list {
+        margin-top: 50px;
+    }
+
+    .qcm-list > .imos {
+        flex-flow: row wrap;
+    }
+
 
 }
 
@@ -682,9 +723,17 @@ a.card-button {
         font-size: 3.75rem; /* 60px */
     }
 
-    .imo {
+    .qcms .imo {
         max-width: 300px;
+        margin: 0 auto;
     }
+
+    .qcm-list .imo {
+        max-width: 300px;
+        /*margin: 0 auto;*/
+    }
+
+
 }
 
 
@@ -731,9 +780,9 @@ a.card-button {
     background: none;
 }
 
-@media (min-width: 768px) {
-    .button-64 {
-        font-size: 24px;
-        min-width: 196px;
-    }
-}
+/*@media (min-width: 768px) {*/
+/*    .button-64 {*/
+/*        font-size: 24px;*/
+/*        min-width: 196px;*/
+/*    }*/
+/*}*/
