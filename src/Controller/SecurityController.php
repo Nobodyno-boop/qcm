@@ -27,21 +27,25 @@ class SecurityController extends AbstractController
                 $password = $form->getReceiveData()->get("password");
                 if (!$email && !$password) {
                     $form->addError("Formulaire invalide");
+                    return $this->renderView("security/login.twig", ["form" => $form->toView()]);
                 }
 
                 $user = User::find(['email' => $email]);
                 if (!$user) {
                     $form->addError("L'email ne corresponds à aucune donnée dans notre base.");
+                    return $this->renderView("security/login.twig", ["form" => $form->toView()]);
                 }
 
                 if (!password_verify($password, $user->getPassword())) {
                     $form->addError("Le mot de passe ne corresponde pas");
+                    return $this->renderView("security/login.twig", ["form" => $form->toView()]);
                 }
 
                 $this->addSession("user", $user);
                 $this->response()->redirect("app_home");
             }
-            $this->renderView("security/login.twig", ["form" => $form->toView()]);
+            return $this->renderView("security/login.twig", ["form" => $form->toView()]);
+
         } else $this->response()->redirect("app_home");
     }
 

@@ -14,7 +14,7 @@ class QcmController extends AbstractController
     public function see($see)
     {
         $see = intval($see);
-        if (is_int($see)) {
+        if (is_int($see) && $see >= 1) {
             $qcmdata = Qcm::find($see);
             if ($qcmdata) {
                 $id = $this->getSession("user")['id'];
@@ -22,10 +22,10 @@ class QcmController extends AbstractController
                 $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
                 $this->renderView("qcm/see", ["qcm_id" => $qcmdata->getId(), "qcm" => $qcm->getQcmAsJson(), "stats" => $stats->getData()]);
             }
-        }
+        } else $this->response()->redirect("app_qcm_list");
     }
 
-    #[Route("/", name: "home")]
+    #[Route("/", name: "list")]
     public function qcmlist()
     {
         $maxPerPage = 2;

@@ -90,10 +90,15 @@ class Router implements IContainer
                         default:
                             $name = $parameter->getName();
                             $params[] = $route->getVars()[$name] ?? null;
+                            $params = array_map(function ($data) {
+                                return filter_var($data, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                            }, $params);
                             break;
                     }
                 }
             }
+
+
             $method->invokeArgs($obj, $params);
         } catch (\ReflectionException $e) {
             throw new \Error($e);
