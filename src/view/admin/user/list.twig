@@ -1,0 +1,54 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <style>
+        table,
+        td {
+            border: 1px solid #333;
+        }
+
+        thead,
+        tfoot {
+            background-color: #333;
+            color: #fff;
+        }
+
+    </style>
+
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>username</th>
+            <th>email</th>
+            <th>role</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in data %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td><a href="{{ url("app_admin_user_edit") }}?user={{ user.id }}">edit</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <div class="pagination">
+        <a href="?page={{ 1 }}">&laquo;</a>
+        {% for i in 1..numberPage %}
+            {% if i == currentPage %}
+                <a class="active" href="?page={{ i }}">{{ i }}</a>
+            {% else %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+        <a href="?page={{ numberPage }}">&raquo;</a>
+    </div>
+    <div>
+{% endblock content %}

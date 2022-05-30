@@ -3,9 +3,11 @@
 namespace Vroom\Controller;
 
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Vroom\Container\Container;
 use Vroom\Orm\Model\Model;
-use Vroom\Orm\Repository;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
 use Vroom\Security\Token;
@@ -78,6 +80,15 @@ class AbstractController
     {
         return !empty($this->getSession("user"));
     }
+
+    public function getRole()
+    {
+        if (!$this->isLogin()) {
+            return "";
+        }
+        return $this->getSession("user")['role'] ?? "";
+    }
+
     /**
      * Get a new instance of Response
      * @return Response
@@ -150,9 +161,9 @@ class AbstractController
      * @param string $view
      * @param array $context
      * @return void
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function renderView(string $view, array $context = [])
     {

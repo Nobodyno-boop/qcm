@@ -15,9 +15,13 @@ class Column
     private string $formType;
     private string $join;
 
+
     /**
      * @param string $name
      * @param int $type
+     * @param bool $nullable
+     * @param string $formType
+     * @param string $join
      */
     public function __construct(string $name, int $type, bool $nullable = false, string $formType = Form::TYPE_TEXT, string $join = "")
     {

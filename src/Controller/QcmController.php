@@ -5,8 +5,12 @@ namespace App\Controller;
 use App\Model\Qcm;
 use App\Model\QcmStats;
 use App\Model\User;
+use App\Qcm\Question;
+use App\Utils\Utils;
 use Vroom\Controller\AbstractController;
 use Vroom\Router\Decorator\Route;
+use Vroom\Router\Request;
+
 #[Route("qcm", name: "app_qcm_")]
 class QcmController extends AbstractController
 {
@@ -20,7 +24,7 @@ class QcmController extends AbstractController
                 $id = $this->getSession("user")['id'];
                 $stats = QcmStats::find(['qcm' => $qcmdata->getId(), 'user' => $id]);
                 $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
-                $this->renderView("qcm/see", ["qcm_id" => $qcmdata->getId(), "qcm" => $qcm->getQcmAsJson(), "stats" => $stats->getData()]);
+                $this->renderView("qcm/see", ["qcm_id" => $qcmdata->getId(), "qcm_author" => $qcmdata->getAuthor()->getId(), "qcm" => $qcm->getQcmAsJson(), "stats" => $stats->getData() ?? []]);
             }
         } else $this->response()->redirect("app_qcm_list");
     }
@@ -31,24 +35,9 @@ class QcmController extends AbstractController
         $maxPerPage = 4;
         $currentPage = $this->request()->get()->getOrDefault("page", 1);
         $count = Qcm::count();
-        $numberPage = $count / $maxPerPage;
-
-        if ($numberPage < 0) {
-            $numberPage = 1;
-        } else {
-            if (round($numberPage) < $numberPage) {
-                $numberPage = round($numberPage) + 1;
-            } else { // 3.5 -> 4
-                $numberPage = round($numberPage);
-            }
-        }
-        $numberPage = intval($numberPage);
-        $offset = $maxPerPage * ($currentPage - 1);
-        if ($currentPage == 1) {
-            $offset = 0;
-        }
-        $qcms = Qcm::findAll(limit: $maxPerPage, offset: $offset);
-        $this->renderView("qcm/list", ["numberPage" => $numberPage, "currentPage" => $currentPage, "data" => $qcms]);
+        $paginations = Utils::Pagination($count, $maxPerPage, $currentPage);
+        $qcms = Qcm::findAll(limit: $maxPerPage, offset: $paginations['offset']);
+        $this->renderView("qcm/list", ["numberPage" => $paginations['numberPage'], "currentPage" => $currentPage, "data" => $qcms]);
     }
 
     #[Route("/result/{see}", methods: ['POST'])]
@@ -68,6 +57,55 @@ class QcmController extends AbstractController
         }
     }
 
+    #[Route("/new")]
+    public function write(Request $request)
+    {
+
+        $body = json_decode($request->getBody());
+
+        if ($body) {
+            $q = $this->fromEditor($body);
+        }
+        $this->renderView("qcm/new");
+    }
+
+    #[Route("/edit/{id}")]
+    public function edit($id)
+    {
+
+        $qcm = Qcm::find($id);
+
+        if ($qcm) {
+
+            $this->renderView("qcm/edit", ['qcm' => $qcm->getData()['question']]);
+        } else $this->response()->redirect("app_qcm_list");
+
+    }
+
+
+    #[Route("/save", methods: ['POST'])]
+    public function save(Request $request)
+    {
+        if (!$this->isLogin()) {
+            $this->response()->redirect("app_home");
+        }
+        $body = json_decode($request->getBody(), true);
+        if ($body) {
+            if ($body) {
+                $q = $this->fromEditor($body);
+                $qcm = new \App\Qcm\Qcm($q);
+
+                $data = new Qcm();
+                $data->setTitle("titre");
+                $data->setAuthor(User::find($this->getSession('user')['id']));
+                $data->setData($qcm->getQcmAsJson());
+                $data->save();
+                $this->response()->json(['message' => "ok"]);
+            }
+
+        }
+//        $this->renderView("qcm/new");
+    }
 
 
 //    #[Route("/qcm/result")]
@@ -97,6 +135,26 @@ class QcmController extends AbstractController
             $qcmStats->save();
         }
 //        $this->renderView('qcm/see', ["qcm"=> $qcm->getQcmAsJson()]);
+    }
+
+
+    public function fromEditor($body): array
+    {
+        $q = [];
+        foreach ($body as $question) {
+            $title = $question['question'];
+            $correct = $question['correct'];
+            $answer = [];
+            $id = $question['id'];
+            for ($i = 0; $i < count($question['answers']); $i++) {
+                $value = $question['answers'][$i];
+                $answer[] = $value;
+            }
+            if ($correct !== -1) {
+                $q[] = Question::from($title, $answer, $correct, $id);
+            }
+        }
+        return $q;
     }
 
 }

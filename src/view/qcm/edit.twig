@@ -1,0 +1,17 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <script type="module" src="{{ asset("js/main.js") }}"></script>
+
+    {#    {% if stats %} #}
+    {#        {{ stats|json_encode() }} #}
+    {#    {% endif %} #}
+
+    <div class="container qcm-new">
+        <qcm-edit data-type="edit" data='{{ qcm|json_encode() }}'>
+
+        </qcm-edit>
+    </div>
+
+
+{% endblock %}

@@ -224,6 +224,13 @@ class Model
         return self::getSQL()->query($q)->fetch(PDO::FETCH_COLUMN);
     }
 
+    public function delete(): bool|\PDOStatement
+    {
+        $data = [$this->getModelId()->getName() => $this->getVariable($this->getModelId())];
+        $q = QueryBuilder::fromModel(self::class)->delete()->where($data);
+        return self::getSQL()->query($q)->fetch(PDO::FETCH_COLUMN);
+    }
+
 
     private static function _findAll(mixed $value, $class, $limit = 10, $offset = 0)
     {

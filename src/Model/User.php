@@ -23,6 +23,11 @@ class User extends Model
     ]
     private string $username;
 
+    #[
+        Column('role', Types::VARCHAR),
+    ]
+    private string $role;
+
     #[Column("email", Types::VARCHAR, formType: Form::TYPE_EMAIL)]
     private string $email;
 
@@ -65,6 +70,22 @@ class User extends Model
     public function setUsername(string $username): void
     {
         $this->username = $username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param string $role
+     */
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
     }
 
     /**
@@ -130,4 +151,6 @@ class User extends Model
     {
         $this->createdAt = $createdAt;
     }
+
+
 }

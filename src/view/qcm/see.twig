@@ -3,9 +3,17 @@
 {% block content %}
     <script type="module" src="{{ asset("js/main.js") }}"></script>
 
-    {#    {% if stats %} #}
-    {#        {{ stats|json_encode() }} #}
-    {#    {% endif %} #}
+
+
+    {% if qcm_author == app.user.id %}
+        <div class="qcm-inline-buttons">
+            <button>edit</button>
+
+        </div>
+    {% endif %}
+    {% if stats %}
+        {{ stats|json_encode() }}
+    {% endif %}
     <div class="qcm-title">{{ qcm.title }}</div>
     <div class="qcm">
         <qcm-view data-id="{{ qcm_id }}" data-version="{{ qcm.version }}"

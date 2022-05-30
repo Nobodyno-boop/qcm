@@ -39,6 +39,7 @@ class Form
 
     //custom input
     const TYPE_MODEL = "model";
+    const TYPE_NONE = "none";
 
     /**
      * @var array{name: string, type: string, option: array}
@@ -175,7 +176,7 @@ class Form
                 }
             }
 
-            if ($types != null && $see) {
+            if ($types != null && $see && !in_array($column->getName(), $option['notdisplay'] ?? [])) {
                 $name = $column->getName();
                 $inputs[] = ["name" => $column->getName(), "type" => $types, "option" => ["require" => !$column->isNullable(), "input" => ["attr" => ["value" => $value ?? ""]], ...$option]];
             }
@@ -262,7 +263,7 @@ class Form
             case self::TYPE_CHECKBOX:
             {
                 $choice = $option['choice'];
-                return "<input type='$typeName' $class >";
+                return "<input type='$typeName' >";
             }
         }
     }
