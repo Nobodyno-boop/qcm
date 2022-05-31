@@ -237,7 +237,13 @@ class QcmEdit extends HTMLElement {
                     location.replace(this.url);
                 } else if (x?.message) {
                     if (x.message === "ok") {
-                        window.location.reload();
+                        if (this.type === "edit") {
+                            window.location.reload();
+                        } else {
+                            if (x?.id) {
+                                window.location.replace(this.url + "qcm/view/" + x?.id);
+                            }
+                        }
                     }
                 }
             }).catch(e => console.error(e))

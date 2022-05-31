@@ -86,6 +86,7 @@ class Route
         return rtrim(ltrim(trim($path), '/'), '/');
     }
 
+
     /**
      * @return mixed|string
      */

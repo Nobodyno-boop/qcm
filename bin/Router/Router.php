@@ -5,6 +5,7 @@ namespace Vroom\Router;
 use Vroom\Config\Config;
 use Vroom\Container\Container;
 use Vroom\Container\IContainer;
+use Vroom\Utils\Session;
 
 /**
  *  Router take always the last better
@@ -29,12 +30,6 @@ class Router implements IContainer
         $url = $_GET['url'] ?? $_SERVER['REQUEST_URI'];
         $uri = $_SERVER['REQUEST_URI'];
         $site = Config::container()->getOrDefault("site.url", "");
-//        dd($site);
-
-//        if(!filter_var($uri, FILTER_VALIDATE_URL)){
-//            header('Location: '.$_GET['url']);
-//            return;
-//        }
 
         $r = null;
         $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
@@ -51,7 +46,13 @@ class Router implements IContainer
                 $r = $route;
             }
             if ($r != null) {
+                $last = $_SESSION['currentUrl'] ?? "";
+                if (!is_array($last)) { // when have currentRoute
+                    $_SESSION['lastUrl'] = $last;
+                }
+                $_SESSION['currentUrl'] = $url;
                 Container::set("currentRoute", $r->getPath());
+
                 $this->callController($r);
             } else {
                 http_response_code(404);
@@ -100,7 +101,9 @@ class Router implements IContainer
                             $name = $parameter->getName();
                             $params[] = $route->getVars()[$name] ?? null;
                             $params = array_map(function ($data) {
-                                return filter_var($data, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                                if (!($data instanceof Request)) {
+                                    return filter_var($data, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                                } else return $data;
                             }, $params);
                             break;
                     }
@@ -109,9 +112,20 @@ class Router implements IContainer
 
 
             $method->invokeArgs($obj, $params);
-        } catch (\ReflectionException $e) {
-            throw new \Error($e);
-//            die($e);
+        } catch (\Throwable  $e) {
+
+            $debug = Config::container()->getOrDefault("debug", false);
+            if ($debug) {
+                throw new \Error($e);
+            } else {
+                http_response_code(404);
+                $page = $this->find404();
+                if (!$page) {
+                    throw new \Error("Cannot find route");
+                }
+
+                $this->callController($page);
+            }
         }
     }
 

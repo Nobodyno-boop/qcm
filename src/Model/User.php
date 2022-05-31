@@ -24,7 +24,7 @@ class User extends Model
     private string $username;
 
     #[
-        Column('role', Types::VARCHAR),
+        Column('role', Types::VARCHAR, nullable: true),
     ]
     private string $role;
 

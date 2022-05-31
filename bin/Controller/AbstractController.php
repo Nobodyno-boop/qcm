@@ -164,20 +164,21 @@ class AbstractController
      * @param string $view
      * @param array $context
      * @return void
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function renderView(string $view, array $context = [])
     {
-        if (!str_ends_with($view, ".twig")) {
-            $view = $view . ".twig";
+        try {
+            if (!str_ends_with($view, ".twig")) {
+                $view = $view . ".twig";
+            }
+            $template = $this->twig()->load($view);
+            $appContext = new AppContext($_SESSION, true, [
+                "class" => get_class($this)
+            ]);
+            $template->display(["app" => $appContext, ...$context]);
+        } catch (\Exception $e) {
+            $this->response()->redirect("404");
         }
-        $template = $this->twig()->load($view);
-        $appContext = new AppContext($_SESSION, true, [
-            "class" => get_class($this)
-        ]);
-        $template->display(["app" => $appContext, ...$context]);
     }
 
 

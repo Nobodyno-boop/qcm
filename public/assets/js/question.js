@@ -55,7 +55,7 @@ export default class Question extends HTMLElement {
             }
         })
         let icon = document.createElement("i")
-        icon.classList.add("lar", "la-circle")
+        icon.classList.add("lar", "la-circle", "la-1x")
         element.replaceChildren(icon, str);
         this.reponse.push(element)
         return element;

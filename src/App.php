@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Controller\AdminController;
-use App\Controller\ApiController;
 use App\Controller\ErrorController;
 use App\Controller\HomeController;
 use App\Controller\QcmController;
@@ -25,7 +24,6 @@ class App extends AbstractApp
             UserController::class,
             SecurityController::class,
             QcmController::class,
-            ApiController::class,
             AdminController::class
         ];
     }

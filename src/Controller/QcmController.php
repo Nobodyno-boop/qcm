@@ -24,7 +24,7 @@ class QcmController extends AbstractController
                 $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
 
                 $this->renderView("qcm/see", ["qcmdata" => $qcmdata, "qcm_author" => $qcmdata->getAuthor()->getId(), "qcm" => $qcm->getQcmAsJson()]);
-            }
+            } else $this->response()->redirect("app_qcm_list");
         } else $this->response()->redirect("app_qcm_list");
     }
 
@@ -42,20 +42,24 @@ class QcmController extends AbstractController
     #[Route("/result/{see}")]
     public function seeResult($see)
     {
+        if (!$this->isLogin()) {
+            return $this->response()->redirect("app_login");
+        }
         $see = intval($see);
         if (is_int($see)) {
             $qcmdata = Qcm::find($see);
             $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
-            if (!$qcm) {
 
+            if (!$qcm) {
+                return $this->response()->notFound();
             }
             $v = $qcm->getVersion();
-            $stats = QcmStats::find(["user" => $this->getSession("user")['id'], "`data`->>'$.version' LIKE '$v'"]);
+            $custom = QcmStats::custom()->where(["user" => $this->getSession("user")['id'], "`data`->>'$.version' LIKE '$v'"])->limit(1);
+            $stats = QcmStats::runQuery($custom);
             if (!empty($stats)) {
                 $this->renderView("qcm/see_result", ["qcmdata" => $qcmdata, "qcm_author" => $qcmdata->getAuthor()->getId(), "qcm" => $qcm->getQcmAsJson(), 'stats' => $stats->getData()]);
 
-            } else $this->response()->json(["bite" => 2]);
-
+            } else $this->response()->redirect("qcm/view/" . $see);
         }
     }
 
@@ -76,31 +80,65 @@ class QcmController extends AbstractController
                 $newstats->setUser(User::find($this->getSession("user")['id']));
                 $newstats->setData($stats);
                 $newstats->save();
-                $this->response()->json($stats);
+                $this->response()->json(['message' => 'ok']);
             } else $this->response()->json(["bite" => 2]);
         }
     }
 
     #[Route("/new")]
-    public function write(Request $request)
+    public function new()
     {
-        $body = json_decode($request->getBody());
-        if ($body) {
-            $q = $this->fromEditor($body);
-        }
-        $this->renderView("qcm/new");
+        $token = $this->getToken('qcm/save');
+
+        $this->renderView("qcm/new", ['token' => $token]);
     }
 
     #[Route("/edit/{id}", name: "edit")]
     public function edit($id)
     {
+        if (!$this->isLogin()) {
+            $this->response()->redirect("app_login");
+        }
+        $user = User::find($this->getSession('user')['id']);
+
+        if (!$user) {
+            $this->response()->redirect("app_login");
+        }
 
         $qcm = Qcm::find($id);
 
         if ($qcm) {
+            if (!$this->isAdmin() || $user->getId() !== $qcm->getAuthor()->getId()) {
+                $this->response()->redirect("qcm/view/$id");
+                return;
+            }
             $token = $this->getToken('qcm/edit');
             $this->renderView("qcm/edit", ['qcm_id' => $qcm->getId(), 'qcm_title' => $qcm->getTitle(), 'qcm' => $qcm->getData()['question'], "token" => $token]);
         } else $this->response()->redirect("app_qcm_list");
+    }
+
+    #[Route("/delete/{id}")]
+    public function delete($id)
+    {
+        if (!$this->isLogin()) {
+            $this->response()->redirect("app_login");
+        }
+        $user = User::find($this->getSession('user')['id']);
+
+        if (!$user) {
+            $this->response()->redirect("app_login");
+        }
+
+
+        $qcm = Qcm::find($id);
+        if ($qcm) {
+            if (!$this->isAdmin() || $user->getId() !== $qcm->getAuthor()->getId()) {
+                $this->response()->redirect("qcm/view/$id");
+                return;
+            }
+            $qcm->delete();
+            $this->response()->lastRoute();
+        } else $this->response()->notFound();
     }
 
     /**
@@ -165,14 +203,6 @@ class QcmController extends AbstractController
                 $qcmData->setData($dqa);
                 $qcmData->save();
 
-//                $q = $this->fromEditor($body[]);
-//                $qcm = new \App\Qcm\Qcm($q);
-//
-//                $data = new Qcm();
-//                $data->setTitle("titre");
-//                $data->setAuthor(User::find($this->getSession('user')['id']));
-//                $data->setData($qcm->getQcmAsJson());
-//                $data->save();
                 $this->response()->json(['message' => "ok"]);
             }
 
@@ -187,21 +217,29 @@ class QcmController extends AbstractController
         if (!$this->isLogin()) {
             $this->response()->redirect("app_home");
         }
-
         $body = json_decode($request->getBody(), true);
+
+        if (!isset($body['token'])) {
+            $this->response()->json(['message' => "le token n'est pas présent"]);
+            return;
+        }
+
+        if (!$this->matchToken($body['token'])) {
+            $this->response()->json([]);
+            return;
+        }
+
         if ($body) {
             if ($body) {
-                $this->response()->json($body);
+                $q = $this->fromEditor($body['qcm']);
+                $qcm = new \App\Qcm\Qcm($q);
 
-//                $q = $this->fromEditor($body[]);
-//                $qcm = new \App\Qcm\Qcm($q);
-//
-//                $data = new Qcm();
-//                $data->setTitle("titre");
-//                $data->setAuthor(User::find($this->getSession('user')['id']));
-//                $data->setData($qcm->getQcmAsJson());
-//                $data->save();
-//                $this->response()->json(['message' => "ok"]);
+                $data = new Qcm();
+                $data->setTitle($body['title']);
+                $data->setAuthor(User::find($this->getSession('user')['id']));
+                $data->setData($qcm->getQcmAsJson());
+                $data->save();
+                $this->response()->json(['message' => "ok", "id" => $data->getId()]);
             }
 
         }
@@ -256,6 +294,11 @@ class QcmController extends AbstractController
             }
         }
         return $q;
+    }
+
+    private function isAdmin(): bool
+    {
+        return $this->getRole() === "ADMIN";
     }
 
 }

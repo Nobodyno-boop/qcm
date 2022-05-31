@@ -27,8 +27,6 @@ class Framework
         // Session
         session_name("qcm_id"); // change default cookie name
         session_start();
-        Ignition::make()->register();
-
 
         $renderPageTime = new Metrics();
         $renderPageTime->start();
@@ -36,6 +34,13 @@ class Framework
         $this->config = $config;
         $this->app = $app;
         $router = new Router();
+
+        $isDebug = $config->getOrDefault("debug", false);
+        if ($isDebug) {
+            Ignition::make()->register();
+        } else {
+            error_reporting(0);
+        }
 
         Container::setObject($this->config);
         Container::setObject(new Sql());

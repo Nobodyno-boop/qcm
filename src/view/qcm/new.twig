@@ -8,7 +8,9 @@
     {#    {% endif %} #}
 
     <div class="container qcm-new">
-        <qcm-edit data-type="new" data-url="{{ url("") }}">
+        <qcm-edit data-type="new"
+                  data-token='{{ token }}'
+                  data-url="{{ url("") }}">
 
         </qcm-edit>
     </div>

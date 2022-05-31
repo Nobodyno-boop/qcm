@@ -21,6 +21,8 @@ export default class Qcm extends HTMLElement {
         this.qcm_id = this.getAttribute("data-id")
         this.errorMode = this.getAttribute("data-error") ?? false;
         this.errors = JSON.parse(this.getAttribute("data-errors")) ?? []
+        this.answers = JSON.parse(this.getAttribute("data-answers")) ?? []
+        this.url = this.getAttribute("data-url")
         this.render()
     }
 
@@ -33,39 +35,31 @@ export default class Qcm extends HTMLElement {
         element.setAttribute("data-question", JSON.stringify(json['question']))
         element.setAttribute("data-id", json['id'])
         element.setAttribute("data-answers", JSON.stringify(json['answers']))
-
+        if (this.errorMode) {
+            element.setAttribute("locked", "")
+        }
         this.questions.push(element)
         return element;
     }
 
     markErrors(errors) {
-        console.log(errors)
-        for (let error of errors) {
-            let id = error['id'];
-            let correct = error['correct'];
-            console.log(id)
-            //filter the question by id
-            // Todo revamp that
-            let questions = this.questions.filter(x => x.getAttribute("data-id") === id);
-            if (questions.length >= 1) {
-                questions.forEach(element => {
-                    let wrongs = element.shadowRoot.querySelectorAll(".question-selected");
-                    wrongs.forEach(x => x.classList.add("question-wrong"))
-                    if (Array.isArray(correct)) {
-                        correct.forEach(x => {
-                            let el = element.shadowRoot.querySelector(`[data-choice='${x}']`);
-                            if (el) {
-                                el.classList.add("question-correct")
-                            }
-                        })
-                    } else {
-                        let el = element.shadowRoot.querySelector(`[data-choice='${correct}']`)
-                        if (el) {
-                            el.classList.add("question-correct")
-                        }
-                    }
-                })
+        for (let answer of this.answers) {
+            let error = this.errors.filter(error => error.id === answer.id);
+            let el = this.questions.find(x => (x.getAttribute("data-id") === answer.id))
+            let answers = [...el.reponse];
+            if (error.length === 1) {
+                let correct = error[0]?.correct;
+                let question = answers.find(x => parseInt(x.getAttribute("data-choice")) === correct);
+                question.classList.add("question-wrong")
             }
+
+            let question = answers.find(x => x.getAttribute("data-choice") === answer.answer)
+            if (error.length === 1) {
+                question.classList.add("question-selected")
+            } else {
+                question.classList.add("question-correct")
+            }
+
         }
 
     }
@@ -78,11 +72,10 @@ export default class Qcm extends HTMLElement {
 
                 let btn = document.createElement("button")
                 let span = document.createElement("span")
-                span.innerText = " Send !"
+                span.innerText = "Test !"
                 btn.classList.add("button-cool")
                 btn.appendChild(span)
                 btn.addEventListener("click", (e) => {
-
                     let qcm = {"version": this.version, questions: []}
                     let missedQuestion = [];
                     this.questions.forEach(x => {
@@ -105,7 +98,12 @@ export default class Qcm extends HTMLElement {
                             if (x.ok) {
                                 return x.json()
                             }
-
+                        }).then(x => {
+                            if (x?.message === 'ok') {
+                                window.location.replace(this.url + "qcm/result/" + this.qcm_id)
+                            } else {
+                                // error
+                            }
                         })
                     }
 

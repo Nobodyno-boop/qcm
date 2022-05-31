@@ -20,15 +20,23 @@ class Model
 
         $query = "";
         if ($this->isSave) {
-            $rid = $this->getModelId();
+            $rid = self::getModelId();
             if ($rid) {
                 $id = $this->getVariable($rid);
                 $query = (string)$this->query()->update($this)->where(['id' => $id]);
             }
         } else {
             $query = (string)$this->query()->insert($this);
+            $pdo = self::getSQL()->query($query);
+            if ($pdo) {
+                $id = self::getSQL()->getCon()->lastInsertId();
+                if ($id) {
+                    $modelId = self::getModelId();
+                    call_user_func([$this, 'set' . Model::varName($modelId->getName())], intval($id));
+                }
+            }
         }
-        self::getSQL()->query($query);
+
     }
 
     #[Pure]
@@ -63,6 +71,32 @@ class Model
         return QueryBuilder::fromModel(static::class);
     }
 
+    public static function runQuery(QueryBuilder $q): static|array|null
+    {
+        $stmt = self::getSQL()->query($q);
+        if (!$stmt) {
+            return null;
+        }
+        $var = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!$var) {
+            return null;
+        }
+        $count = $stmt->rowCount();
+        if ($count === 1) {
+            return self::toModel($var[0], static::class);
+        } else if ($count > 1) {
+            $objs = [];
+            foreach ($var as $data) {
+                $obj = self::toModel($data, static::class);
+                if ($obj) {
+                    $objs[] = $obj;
+                }
+            }
+            return $objs;
+        }
+        return null;
+    }
+
 
     private static function getSQL(): Sql
     {
@@ -91,9 +125,9 @@ class Model
         return $json;
     }
 
-    protected function getModelId(): Column|null
+    protected static function getModelId(): Column|null
     {
-        $model = Models::get($this);
+        $model = Models::get(static::class);
         if ($model) {
             $properties = array_values(array_filter($model['properties'], function ($el) {
                 if ($el->getType() === Types::ID) {
@@ -208,19 +242,19 @@ class Model
      * ```php
      * User::find(['email' => "sample@test.com"])
      * ```
-     * Return can be null be carefull
+     * Return can be null be carefully
      * @param mixed $value
      * @return static|null
      * @see Types
      */
-    public static function find(mixed $value): static|null
+    public static function find(mixed $value = null): static|null
     {
         return self::_find($value, static::class);
     }
 
-    public static function findAll(mixed $value = null, $limit = 10, $offset = 0): array|null
+    public static function findAll(mixed $value = null, $limit = 10, $offset = 0, $order = "ASC"): array|null
     {
-        return self::_findAll($value, static::class, $limit, $offset);
+        return self::_findAll($value, static::class, $limit, $offset, $order);
     }
 
     public static function count(): int
@@ -231,16 +265,16 @@ class Model
 
     public function delete(): bool|\PDOStatement
     {
-        $data = [$this->getModelId()->getName() => $this->getVariable($this->getModelId())];
-        $q = QueryBuilder::fromModel(self::class)->delete()->where($data);
+        $data = [self::getModelId()->getName() => $this->getVariable(self::getModelId())];
+        $q = $this->query()->delete()->where($data);
         return self::getSQL()->query($q)->fetch(PDO::FETCH_COLUMN);
     }
 
 
-    private static function _findAll(mixed $value, $class, $limit = 10, $offset = 0)
+    private static function _findAll(mixed $value, $class, $limit = 10, $offset = 0, $order = "ASC")
     {
         if (is_array($value)) {
-            $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
+            $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset)->order($order);
             $stmt = self::getSQL()->query($q);
             if (!$stmt) {
                 return null;
@@ -270,14 +304,13 @@ class Model
                 if (count($keys) == 1) {
                     $key = $keys[0]->getName();
                 }
-                $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);
+                $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset)->order($key, $order);
                 $stmt = static::getSQL()->query($q);
                 $var = $stmt->fetch(PDO::FETCH_ASSOC);
                 return self::toModel($var, $class);
             } else {
-                $q = QueryBuilder::fromModel($class)->limit($limit)->offset($offset);
+                $q = QueryBuilder::fromModel($class)->limit($limit)->offset($offset)->order(self::getModelId()->getName(), $order);
                 $stmt = static::getSQL()->query($q);
-
                 $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 $objs = [];
 
@@ -294,10 +327,10 @@ class Model
     }
 
 
-    private static function _find(mixed $value, $class): object|null
+    private static function _find(mixed $value, $class, $limit = 10, $offset = 0): object|null
     {
         if (is_array($value)) {
-            $q = QueryBuilder::fromModel($class)->where($value);
+            $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset);;
             $stmt = static::getSQL()->query($q);
             if (!$stmt) {
                 return null;
@@ -330,7 +363,7 @@ class Model
                     return null;
                 }
 
-                $q = QueryBuilder::fromModel($class)->where([$key => $value]);
+                $q = QueryBuilder::fromModel($class)->where([$key => $value])->limit($limit)->offset($offset);;
                 $stmt = static::getSQL()->query($q);
                 if (!$stmt) {
                     return null;

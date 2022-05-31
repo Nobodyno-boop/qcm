@@ -15,48 +15,21 @@
                 <p>Les derniers QCM ajoutés</p>
             </div>
             <div class="imos">
-                <div class="imo">
-                    <div class="image">
-                        <img src="https://pipoucolors.clownerie.space/api/v1/250/150/" alt="">
-                    </div>
-                    <div class="title">Title</div>
-                    <div class="desc">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquid autem deleniti distinctio,
-                        doloribus est in
-                    </div>
-                    <div class="infos">
-                        <span><i class="las la-user-circle"></i><span class="bold">RandomUser</span>  </span>
-                        <span><i class="las la-calendar-alt"></i><span class="bold">27/04/2020</span> </span>
-                    </div>
-                </div>
-                <div class="imo">
-                    <div class="image">
-                        <img src="https://pipoucolors.clownerie.space/api/v1/250/150/" alt="">
-                    </div>
-                    <div class="title">Title</div>
-                    <div class="desc">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquid autem deleniti distinctio,
-                        doloribus est in
-                    </div>
-                    <div class="infos">
-                        <span><i class="las la-user-circle"></i><span class="bold">RandomUser</span>  </span>
-                        <span><i class="las la-calendar-alt"></i><span class="bold">27/04/2020</span> </span>
-                    </div>
-                </div>
-                <div class="imo">
-                    <div class="image">
-                        <img src="https://pipoucolors.clownerie.space/api/v1/250/150/" alt="">
-                    </div>
-                    <div class="title">Title</div>
-                    <div class="desc">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquid autem deleniti distinctio,
-                        doloribus est in
-                    </div>
-                    <div class="infos">
-                        <span><i class="las la-user-circle"></i><span class="bold">RandomUser</span>  </span>
-                        <span><i class="las la-calendar-alt"></i><span class="bold">27/04/2020</span> </span>
-                    </div>
-                </div>
+                {% for qcm in data %}
+                    <a href="qcm/view/{{ qcm.id }}">
+                        <div class="imo">
+                            <div class="image">
+                                <img src="https://pipoucolors.clownerie.space/api/v1/250/150/" alt="">
+                            </div>
+                            <div class="title">{{ qcm.title }}</div>
+                            <div class="infos">
+                        <span><i class="las la-user-circle"></i><span
+                                    class="bold">{{ qcm.author.username }}</span> </span>
+                                <span><i class="las la-calendar-alt"></i><span class="bold">27/04/2020</span> </span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
             </div>
         </div>
 

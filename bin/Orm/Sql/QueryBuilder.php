@@ -17,6 +17,7 @@ class QueryBuilder
     private $values = [];
     private $limit = 0;
     private $offset = 0;
+    private $ord = "";
 
     /**
      * @param string|null $model
@@ -65,6 +66,15 @@ class QueryBuilder
                 $this->cond[] = $v;
             }
         }
+        return $this;
+    }
+
+    public function order(string|array $column, $by = "ASC"): QueryBuilder
+    {
+        if (is_array($column)) {
+            $column = implode(" ", $column);
+        }
+        $this->ord = "ORDER BY $column $by";
         return $this;
     }
 
@@ -240,17 +250,17 @@ class QueryBuilder
                         . $w;
                     break;
                 case "delete":
-                    $query = $this->word . " "
+                    $query = $this->word . " FROM "
                         . $table . " "
                         . $w;
                     break;
                 default:
                 case "select":
                     $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
-                    $offset = $this->offset != 0 ? " OFFSET " . $this->offset : "";
-                    $query = "SELECT " . $selector . " FROM "
-                        . $table
-                        . $w . $limit . $offset;
+                $offset = $this->offset != 0 ? " OFFSET " . $this->offset : "";
+                $query = "SELECT " . $selector . " FROM "
+                    . $table
+                    . $w . " " . $this->ord . $limit . $offset;
 
                     break;
             }
