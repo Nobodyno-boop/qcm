@@ -39,6 +39,7 @@ export default class Qcm extends HTMLElement {
     }
 
     markErrors(errors) {
+        console.log(errors)
         for (let error of errors) {
             let id = error['id'];
             let correct = error['correct'];
@@ -71,44 +72,50 @@ export default class Qcm extends HTMLElement {
         if (this.dataQuestion.length >= 1) {
             this.dataQuestion.map(x => this.createQuestion(x))
                 .forEach(x => this.wrapper.appendChild(x))
-            let btn = document.createElement("button")
-            let span = document.createElement("span")
-            span.innerText = " Send !"
-            btn.classList.add("button-64")
-            btn.appendChild(span)
-            btn.addEventListener("click", (e) => {
-                let qcm = {"version": this.version, questions: []}
-                let missedQuestion = [];
-                this.questions.forEach(x => {
-                    let choice = x.getAttribute("data-choice") ?? null;
-                    let id = x.getAttribute("data-id")
-                    if (choice) {
-                        x.setAttribute("locked", true)
-                        qcm.questions.push({id: id, answer: choice})
-                    } else missedQuestion.push(x)
+            if (!this.errorMode) {
+
+                let btn = document.createElement("button")
+                let span = document.createElement("span")
+                span.innerText = " Send !"
+                btn.classList.add("button-cool")
+                btn.appendChild(span)
+                btn.addEventListener("click", (e) => {
+
+                    let qcm = {"version": this.version, questions: []}
+                    let missedQuestion = [];
+                    this.questions.forEach(x => {
+                        let choice = x.getAttribute("data-choice") ?? null;
+                        let id = x.getAttribute("data-id")
+                        if (choice) {
+                            x.setAttribute("locked", true)
+                            qcm.questions.push({id: id, answer: choice})
+                        } else missedQuestion.push(x)
                     })
 
-                if(qcm.questions.length === this.dataQuestion.length){
-                    let h = new Headers()
-                    h.append("Content-Type", "application/json")
-                    fetch("/qcm/result/" + this.qcm_id, {
-                        body: JSON.stringify(qcm),
-                        method: "POST",
-                        headers: new Headers({'Accept': "application/json"})
-                    }).catch(e => console.log(e)).then(x => {
-                        if (x.ok) {
-                            return x.json()
-                        }
+                    if (qcm.questions.length === this.dataQuestion.length) {
+                        let h = new Headers()
+                        h.append("Content-Type", "application/json")
+                        fetch("/qcm/result/" + this.qcm_id, {
+                            body: JSON.stringify(qcm),
+                            method: "POST",
+                            headers: new Headers({'Accept': "application/json"})
+                        }).catch(e => console.log(e)).then(x => {
+                            if (x.ok) {
+                                return x.json()
+                            }
 
-                    }).then(x => {
-                        if (x.errors !== []) {
-                            this.markErrors(x.errors)
-                        }
-                    })
-                }
-            })
+                        }).then(x => {
+                            if (x.errors !== []) {
+                                this.markErrors(x.errors)
+                            }
+                        })
+                    }
 
-            this.wrapper.append(btn)
+                })
+                this.wrapper.append(btn)
+            } else {
+                this.markErrors(this.errors)
+            }
         }
     }
 }

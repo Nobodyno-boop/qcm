@@ -7,16 +7,14 @@
 
     {% if qcm_author == app.user.id %}
         <div class="qcm-inline-buttons">
-            <button>edit</button>
-
+            <a href="{{ url("") }}qcm/edit/{{ qcmdata.id }}">
+                <button class="button-cool"><span>edit</span></button>
+            </a>
         </div>
     {% endif %}
-    {% if stats %}
-        {{ stats|json_encode() }}
-    {% endif %}
-    <div class="qcm-title">{{ qcm.title }}</div>
+    <div class="qcm-title">{{ qcmdata.title }}</div>
     <div class="qcm">
-        <qcm-view data-id="{{ qcm_id }}" data-version="{{ qcm.version }}"
+        <qcm-view data-id="{{ qcmdata.id }}" data-version="{{ qcm.version }}"
                   data-questions="{{ qcm.question|json_encode() }}">
 
         </qcm-view>

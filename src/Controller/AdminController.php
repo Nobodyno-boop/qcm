@@ -24,7 +24,8 @@ class AdminController extends AbstractController
     public function user_list(Request $r)
     {
         $this->isAdmin();
-        $users = User::findAll();
+
+
         $page = $r->get()->getOrDefault("page", 1);
         $count = User::count();
         $maxPerPage = 10;

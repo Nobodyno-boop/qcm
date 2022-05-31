@@ -24,6 +24,14 @@ class Ob {
     }
 }
 
+let a = new Ob("");
+
+a.sub((value) => console.log("je suis la nouvelle valeur %s", value))
+
+setTimeout(() => {
+    a.value = "Yuna"
+}, 1000)
+
 class QcmEdit extends HTMLElement {
     constructor() {
         super();
@@ -40,10 +48,15 @@ class QcmEdit extends HTMLElement {
 
     connectedCallback() {
         this.questions = new Ob([]);
+        this.qcmtitle = "";
+        this.qcmid = -1;
         this.type = this.getAttribute("data-type") ?? "new";
+        this.token = this.getAttribute("data-token")
+        this.url = this.getAttribute("data-url")
         if (this.type === "edit") {
             this.fromJson(this.getAttribute("data"))
-
+            this.qcmid = this.getAttribute("data-id")
+            this.qcmtitle = this.getAttribute("data-title")
         }
         this.questions.sub((value) => {
             this.render();
@@ -183,7 +196,13 @@ class QcmEdit extends HTMLElement {
 
 
     render() {
-        this.wrapper.innerHTML = /*HTML*/"<div class='edit-buttons'><button id='add' class='button-cool'> ajout d'une question </button><button id='save' class='button-cool'> sauvegarder</button></div> <div id='qcm-edit'></div>";
+        this.wrapper.innerHTML = /*HTML*/"<input id='title' placeholder='Le titre'><div class='edit-buttons'><button id='add' class='button-cool'> <span>ajout d'une question</span> </button><button id='save' class='button-cool'> <span>sauvegarder</span></button></div> <div id='qcm-edit'></div>";
+        let title = this.shadow.getElementById("title")
+        title.value = this.qcmtitle;
+
+        title.addEventListener("input", (e) => {
+            this.qcmtitle = title.value
+        })
         let addBtn = this.shadow.getElementById("add")
         let saveBtn = this.shadow.getElementById("save")
         addBtn.addEventListener("click", (e) => {
@@ -199,14 +218,28 @@ class QcmEdit extends HTMLElement {
         })
         saveBtn.addEventListener("click", (e) => {
             let save = this.toJson();
-            console.log(save)
-            fetch("/qcm/save", {
+            let url = this.type === 'edit' ? this.url + "qcm/edit" : this.url + "qcm/save";
+            if (this.qcmtitle === "") {
+                this.qcmtitle = "Votre titre";
+            }
+            fetch(url, {
                 method: "POST",
-                body: JSON.stringify(save)
+                body: JSON.stringify({
+                    title: this.qcmtitle,
+                    qcm: save,
+                    id: this.qcmid,
+                    token: this.token
+                })
             }).then(x => {
                 return x.json()
             }).then(x => {
-                console.log(JSON.stringify(x))
+                if (x === []) {
+                    location.replace(this.url);
+                } else if (x?.message) {
+                    if (x.message === "ok") {
+                        window.location.reload();
+                    }
+                }
             }).catch(e => console.error(e))
         })
 

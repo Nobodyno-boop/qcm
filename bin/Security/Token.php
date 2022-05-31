@@ -87,6 +87,9 @@ class Token
     public static function getToken(int $length = 15, string $url = "")
     {
         $h = null;
+        if (!str_starts_with($url, "/")) {
+            $url = "/" . $url;
+        }
         try {
             $h = bin2hex(random_bytes($length));
         } catch (\Exception $e) {

@@ -10,10 +10,18 @@ use Vroom\Utils\Form;
 
 class UserController extends AbstractController
 {
-    #[Route("/profile/see/{username}", "app_user_profile_username")]
-    public function profileUser(Request $request, $username)
+    #[Route("/profile/see/{id}", "app_user_profile_username")]
+    public function profileUser($id)
     {
-        $this->renderView("user/profile_username", ["username" => $username]);
+        if (intval($id) <= 0) {
+            return $this->response()->redirect("404");
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return $this->response()->redirect("404");
+        }
+        $this->renderView("user/profile_username", ["username" => $id]);
     }
 
     #[Route("/profile/", "app_user_profile")]

@@ -58,6 +58,11 @@ class Model
         return QueryBuilder::fromModel($this);
     }
 
+    public static function custom(): QueryBuilder
+    {
+        return QueryBuilder::fromModel(static::class);
+    }
+
 
     private static function getSQL(): Sql
     {
@@ -86,7 +91,7 @@ class Model
         return $json;
     }
 
-    private function getModelId(): Column|null
+    protected function getModelId(): Column|null
     {
         $model = Models::get($this);
         if ($model) {
@@ -297,7 +302,6 @@ class Model
             if (!$stmt) {
                 return null;
             }
-
             $var = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$var) {
                 return null;

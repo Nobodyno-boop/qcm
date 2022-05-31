@@ -10,13 +10,6 @@
                         <img src="https://pipoucolors.clownerie.space/api/v1/250/150/" alt="">
                     </div>
                     <div class="title">{{ qcm.title }}</div>
-                    <div class="desc">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, assumenda commodi cum
-                        deleniti
-                        enim excepturi fugit ipsum modi molestias voluptate? Accusamus alias eaque facere illo magnam,
-                        nihil
-                        quas recusandae veniam.
-                    </div>
                     <div class="infos">
                         <span><i class="las la-user-circle"></i><span
                                     class="bold">{{ qcm.author.username }}</span> </span>
@@ -46,7 +39,7 @@
     </div>
 
     <div class="pagination">
-        <a href="?page={{ 1 }}">&laquo;</a>
+        <a href="?page=1">&laquo;</a>
         {% for i in 1..numberPage %}
             {% if i == currentPage %}
                 <a class="active" href="?page={{ i }}">{{ i }}</a>

@@ -1,0 +1,29 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <script type="module" src="{{ asset("js/main.js") }}"></script>
+
+
+
+    {% if stats %}
+        {{ stats|json_encode() }}
+        <div class="qcm-report">
+            <div class="qcm-report-error">
+                Votre nombre d'erreurs: <span class="bold">{{ stats.error }}</span>
+            </div>
+            <div class="qcm-report-error">
+                Votre nombre de réponse bonne: <span class="bold color-green">{{ stats.question - stats.error }}</span>
+            </div>
+        </div>
+    {% endif %}
+    <div class="qcm-title">{{ qcm.title }}</div>
+    <div class="qcm">
+        <qcm-view data-id="{{ qcm_id }}" data-error="true" data-errors="{{ stats.errors|json_encode() }}"
+                  data-version="{{ qcm.version }}"
+                  data-questions="{{ qcm.question|json_encode() }}">
+
+        </qcm-view>
+    </div>
+
+
+{% endblock %}

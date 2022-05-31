@@ -57,7 +57,7 @@ class SecurityController extends AbstractController
         }
         $user = new User();
         $form = Form::new(data: ['user' => $user])
-            ->add("user", Form::TYPE_MODEL, ["model" => User::class])
+            ->add("user", Form::TYPE_MODEL, ["model" => User::class, 'notdisplay' => ['role']])
             ->add("reset", Form::TYPE_RESET)
             ->add("register !", Form::TYPE_SUBMIT);
 

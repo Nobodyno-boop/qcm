@@ -124,9 +124,12 @@ class AbstractController
      * The token is putting in the session
      * @return string
      */
-    public function getToken(): string
+    public function getToken($url = ''): string
     {
-        $token = Token::getToken(url: $this->url());
+        if (empty($url)) {
+            $url = $this->url();
+        }
+        $token = Token::getToken(url: $url);
 
         $this->addSession("_crsf", $token);
 

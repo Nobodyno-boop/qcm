@@ -8,7 +8,8 @@
     {#    {% endif %} #}
 
     <div class="container qcm-new">
-        <qcm-edit data-type="edit" data='{{ qcm|json_encode() }}'>
+        <qcm-edit data-type="edit" data-url="{{ url('') }}" data-title="{{ qcm_title }}" data='{{ qcm|json_encode() }}'
+                  data-id='{{ qcm_id }}' data-token='{{ token }}'>
 
         </qcm-edit>
     </div>

@@ -2,6 +2,7 @@
 
 namespace Vroom\Router;
 
+use Vroom\Config\Config;
 use Vroom\Container\Container;
 use Vroom\Container\IContainer;
 
@@ -26,6 +27,15 @@ class Router implements IContainer
     public function handle()
     {
         $url = $_GET['url'] ?? $_SERVER['REQUEST_URI'];
+        $uri = $_SERVER['REQUEST_URI'];
+        $site = Config::container()->getOrDefault("site.url", "");
+//        dd($site);
+
+//        if(!filter_var($uri, FILTER_VALIDATE_URL)){
+//            header('Location: '.$_GET['url']);
+//            return;
+//        }
+
         $r = null;
         $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
         if (!empty($routes)) {
@@ -38,7 +48,6 @@ class Router implements IContainer
                 if (!$route->match($url, $_SERVER['REQUEST_METHOD'])) {
                     continue;
                 }
-
                 $r = $route;
             }
             if ($r != null) {
