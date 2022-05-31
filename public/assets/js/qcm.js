@@ -20,7 +20,7 @@ export default class Qcm extends HTMLElement {
         this.version = this.getAttribute("data-version")
         this.qcm_id = this.getAttribute("data-id")
         this.errorMode = this.getAttribute("data-error") ?? false;
-        this.errors = this.getAttribute("data-errors") ?? []
+        this.errors = JSON.parse(this.getAttribute("data-errors")) ?? []
         this.render()
     }
 
@@ -43,7 +43,9 @@ export default class Qcm extends HTMLElement {
         for (let error of errors) {
             let id = error['id'];
             let correct = error['correct'];
+            console.log(id)
             //filter the question by id
+            // Todo revamp that
             let questions = this.questions.filter(x => x.getAttribute("data-id") === id);
             if (questions.length >= 1) {
                 questions.forEach(element => {
@@ -104,10 +106,6 @@ export default class Qcm extends HTMLElement {
                                 return x.json()
                             }
 
-                        }).then(x => {
-                            if (x.errors !== []) {
-                                this.markErrors(x.errors)
-                            }
                         })
                     }
 
