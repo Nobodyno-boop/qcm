@@ -64,6 +64,9 @@ class QcmController extends AbstractController
         } else {
             $qcms = Qcm::findAll(limit: $maxPerPage, offset: $paginations['offset']);
         }
+        if ($paginations['numberPage'] === 0) {
+            $paginations['numberPage'] = 1;
+        }
         $this->renderView("qcm/list", ["numberPage" => $paginations['numberPage'], "currentPage" => $currentPage, "data" => $qcms, 'user' => $searchUser]);
     }
 

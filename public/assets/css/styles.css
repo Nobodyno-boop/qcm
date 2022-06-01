@@ -1095,12 +1095,9 @@ a.card-button {
     }
 
     .qcm-list > .imos {
-        flex-flow: row wrap;
+        display: flex;
     }
 
-    .qcm-list > .imos > * {
-        width: calc(70% * (1 / 2));
-    }
 
     /* MD:QCM-VIEW   */
     .qcm-info {
@@ -1161,8 +1158,27 @@ a.card-button {
         font-size: 3.75rem; /* 60px */
     }
 
+    /*.qcm-list > .imos {*/
+    /*    flex-flow: row nowrap;*/
+    /*}*/
+    .imos {
+        flex-direction: unset;
+        flex-wrap: wrap;
+    }
+
+    .imo {
+        /*width: calc(70% * (1/2));*/
+
+    }
+
+    .qcm-list > .imos > * {
+        display: flex;
+        margin: 0 10px;
+        width: calc(70% * (1 / 2));
+    }
+
     .qcms .imo {
-        max-width: 300px;
+        max-width: 250px;
     }
 
     .qcm-list .imo {

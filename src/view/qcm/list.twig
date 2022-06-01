@@ -26,34 +26,36 @@
         {% endfor %}
     </div>
 
-    <div class="pagination">
-        {% if user %}
-            <a class="button-cool" href="?page=1&user{{ user }}"><span>&laquo;</span></a>
-        {% else %}
-            <a class="button-cool" href="?page=1"><span>&laquo;</span></a>
-        {% endif %}
-        {% for i in 1..numberPage %}
-            {% if i == currentPage %}
-                {% if user %}
-                    <a class="button-cool active" href="?page={{ i }}&user{{ user }}"><span class="bold">{{ i }}</span></a>
-                {% else %}
-                    <a class="button-cool active" href="?page={{ i }}"><span class="bold">{{ i }}</span></a>
-                {% endif %}
-
+    {% if numberPage >= 1 %}
+        <div class="pagination">
+            {% if user %}
+                <a class="button-cool" href="?page=1&user{{ user }}"><span>&laquo;</span></a>
             {% else %}
-                {% if user %}
-                    <a class="button-cool" href="?page={{ i }}&user{{ user }}"><span>{{ i }}</span></a>
-                {% else %}
-                    <a class="button-cool" href="?page={{ i }}"><span>{{ i }}</span></a>
-                {% endif %}
+                <a class="button-cool" href="?page=1"><span>&laquo;</span></a>
             {% endif %}
-        {% endfor %}
-        {% if user %}
-            <a class="button-cool" href="?page={{ numberPage }}&user{{ user }}"><span>&raquo;</span></a>
-        {% else %}
-            <a class="button-cool" href="?page={{ numberPage }}"><span>&raquo;</span></a>
-        {% endif %}
-    </div>
+            {% for i in 1..numberPage %}
+                {% if i == currentPage %}
+                    {% if user %}
+                        <a class="button-cool active" href="?page={{ i }}&user{{ user }}"><span
+                                    class="bold">{{ i }}</span></a>
+                    {% else %}
+                        <a class="button-cool active" href="?page={{ i }}"><span class="bold">{{ i }}</span></a>
+                    {% endif %}
+                {% else %}
+                    {% if user %}
+                        <a class="button-cool" href="?page={{ i }}&user{{ user }}"><span>{{ i }}</span></a>
+                    {% else %}
+                        <a class="button-cool" href="?page={{ i }}"><span>{{ i }}</span></a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if user %}
+                <a class="button-cool" href="?page={{ numberPage }}&user{{ user }}"><span>&raquo;</span></a>
+            {% else %}
+                <a class="button-cool" href="?page={{ numberPage }}"><span>&raquo;</span></a>
+            {% endif %}
+        </div>
+    {% endif %}
     <div>
 
 {% endblock %}
