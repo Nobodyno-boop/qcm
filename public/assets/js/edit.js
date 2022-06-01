@@ -75,7 +75,7 @@ class QcmEdit extends HTMLElement {
 
         this.wrapper = document.createElement("div")
         this.wrapper.classList.add("qcm-edit-wrapper")
-        this.max = 3;
+        this.max = 30;
     }
 
     connectedCallback() {
