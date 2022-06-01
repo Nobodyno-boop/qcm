@@ -124,17 +124,6 @@ a {
     font-weight: bold;
 }
 
-.nav-logo img {
-    width: 10%;
-    border-radius: 50px;
-}
-
-/*.nav-links {*/
-/*    display: none;*/
-/*    list-style-type: none;*/
-/*    justify-content: center;*/
-/*}*/
-
 .nav-links {
     position: absolute;
     top: 50px;
@@ -168,42 +157,10 @@ a {
     font-weight: 500;
 }
 
+.link a i {
+    margin: 0 5px;
+}
 
-/*.nav-links.nav-center {*/
-
-/*}*/
-
-
-/*.link i {*/
-/*    margin: 0 5px;*/
-/*}*/
-
-/*!*MOBILE NAV*!*/
-/*.nav-menu {*/
-/*    position: absolute;*/
-/*    width: 100%;*/
-/*    background: #F7F5F2;*/
-/*    height: 100%;*/
-/*    top: 0;*/
-/*    left:0;*/
-/*}*/
-/*.nav-menu .nav-links {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    color: #333333;*/
-/*}*/
-
-/*.nav-mobile-close {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    margin: 10px 0;*/
-/*}*/
-
-/*.nav-menu .nav-links .link {*/
-/*    font-size: 20px;*/
-/*    margin: 10px;*/
-/*    text-align: center;*/
-/*}*/
 
 .scale-a {
     animation: scale-up-ver-bottom 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;

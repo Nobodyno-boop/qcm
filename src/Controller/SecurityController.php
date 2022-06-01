@@ -68,6 +68,7 @@ class SecurityController extends AbstractController
              * @var User $user
              */
             $user = $form->getData()->get("user");
+            $user->setRole("USER");
             if ($user) {
                 $repo = User::find(['email' => $user->getEmail()]);
                 if (!$repo) {

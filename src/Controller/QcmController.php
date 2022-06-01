@@ -88,8 +88,11 @@ class QcmController extends AbstractController
     #[Route("/new")]
     public function new()
     {
-        $token = $this->getToken('qcm/save');
+        if (!$this->isLogin()) {
+            $this->response()->redirect("app_login");
+        }
 
+        $token = $this->getToken('qcm/save');
         $this->renderView("qcm/new", ['token' => $token]);
     }
 
@@ -132,12 +135,14 @@ class QcmController extends AbstractController
 
         $qcm = Qcm::find($id);
         if ($qcm) {
-            if (!$this->isAdmin() || $user->getId() !== $qcm->getAuthor()->getId()) {
+            if (($this->isAdmin()) || ($user->getId() === $qcm->getAuthor()->getId())) {
+                $qcm->delete();
+                $this->response()->lastRoute();
+            } else {
                 $this->response()->redirect("qcm/view/$id");
                 return;
             }
-            $qcm->delete();
-            $this->response()->lastRoute();
+
         } else $this->response()->notFound();
     }
 

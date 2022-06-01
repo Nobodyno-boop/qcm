@@ -24,8 +24,6 @@ class AdminController extends AbstractController
     public function user_list(Request $r)
     {
         $this->isAdmin();
-
-
         $page = $r->get()->getOrDefault("page", 1);
         $count = User::count();
         $maxPerPage = 10;
@@ -89,6 +87,12 @@ class AdminController extends AbstractController
         }
 
         $user->delete();
+    }
+
+    #[Route("/", name: "home")]
+    public function adminHome(Request $r)
+    {
+        $this->response()->json(['admin']);
     }
 
 
