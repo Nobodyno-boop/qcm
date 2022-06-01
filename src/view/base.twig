@@ -6,6 +6,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% block assets %}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css">
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
         <link rel="stylesheet"
@@ -13,30 +16,32 @@
     {% endblock %}
     {% block seo %}
         <!-- Primary Meta Tags -->
-        <title>Q-CM — Simple and fast</title>
-        <meta name="title" content="Q-CM — Simple and fast">
+        <title>Q-CM — Simple et rapide</title>
+        <meta name="title" content="Q-CM — Simple et rapide">
         <meta name="description"
-              content="With Meta Tags you can edit and experiment with your content then preview how your webpage will look on Google, Facebook, Twitter and more!">
+              content="Des Q-CMs simple, pour une vie simple.">
+        <link rel="icon" href="{{ asset('img/favicon.png') }}" sizes="32x32"/>
+        <link rel="icon" href="{{ asset('img/favicon.png') }}" sizes="192x192"/>
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ url('') }}">
-        <meta property="og:title" content="Meta Tags — Preview, Edit and Generate">
+        <meta property="og:title" content="Q-CM — Simple et rapide">
         <meta property="og:description"
-              content="With Meta Tags you can edit and experiment with your content then preview how your webpage will look on Google, Facebook, Twitter and more!">
+              content="Des Q-CMs simple, pour une vie simple.">
         <meta property="og:image"
-              content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png">
+              content="https://pipoucolors.clownerie.space/api/v1/800/600/">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:url" content="{{ url('') }}">
-        <meta property="twitter:title" content="Meta Tags — Preview, Edit and Generate">
+        <meta property="twitter:title" content="Q-CM — Simple et rapide">
         <meta property="twitter:description"
-              content="With Meta Tags you can edit and experiment with your content then preview how your webpage will look on Google, Facebook, Twitter and more!">
+              content="Des Q-CMs simple, pour une vie simple.">
         <meta property="twitter:image"
-              content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png">
+              content="https://pipoucolors.clownerie.space/api/v1/800/600/">
     {% endblock %}
-    <title>{% block title %} QCM - WEBSITE {% endblock %}</title>
+    <title>{% block title %} Q-CM - WEBSITE {% endblock %}</title>
 </head>
 <body>
 {% include 'nav.twig' %}
@@ -46,21 +51,6 @@
 
     {% endblock %}
 </div>
-
-{# {% if app.debug and app.user %} #}
-{#    <div class="debug-bar "> #}
-{#        <div class="debug-bar-flex"> #}
-{#            <p class=""> #}
-{#                Load time : {{ app.load | number_format(2) }} #}
-{#            </p> #}
-{#            <p>|</p> #}
-{#            <p> #}
-{#                Controller: {{ app.other.class }} #}
-{#            </p> #}
-{#        </div> #}
-{#    </div> #}
-{# {% endif %} #}
-
 <script src="{{ asset('js/utils.js') }}"></script>
 
 </body>
