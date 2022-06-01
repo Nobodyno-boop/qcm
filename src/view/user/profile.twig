@@ -45,10 +45,10 @@
         <div class="title">Q-CMs</div>
         <div class="content">
             {% if app.user.id == user.id %}
-                <a href="{{ url('app_qcm_list') }}?page=1&user{{ user.id }}" class="button-cool"><i
+                <a href="{{ url('app_qcm_list') }}?page=1&user={{ user.id }}" class="button-cool"><i
                             class="sm md las la-archive"></i> <span class="lg">Vos Q-CMs</span></a>
             {% else %}
-                <a href="{{ url('app_qcm_list') }}?page=1&user{{ user.id }}" class="button-cool"><i
+                <a href="{{ url('app_qcm_list') }}?page=1&user={{ user.id }}" class="button-cool"><i
                             class="sm md las la-archive"></i> <span
                             class="lg">Les Q-CMs de {{ user.username }}</span></a>
             {% endif %}
