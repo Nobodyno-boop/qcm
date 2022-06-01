@@ -42,15 +42,15 @@
             </div>
 
             <div class="pagination">
-                <a class="button-cool" href="?page=1"><span>&laquo;</span></a>
+                <a class="button-cool" href="&page=1"><span>&laquo;</span></a>
                 {% for i in 1..numberPage %}
                     {% if i == currentPage %}
-                        <a class="button-cool active" href="?page={{ i }}"><span class="bold">{{ i }}</span></a>
+                        <a class="button-cool active" href="&page={{ i }}"><span class="bold">{{ i }}</span></a>
                     {% else %}
-                        <a class="button-cool" href="?page={{ i }}"><span>{{ i }}</span></a>
+                        <a class="button-cool" href="&page={{ i }}"><span>{{ i }}</span></a>
                     {% endif %}
                 {% endfor %}
-                <a class="button-cool" href="?page={{ numberPage }}"><span>&raquo;</span></a>
+                <a class="button-cool" href="&page={{ numberPage }}"><span>&raquo;</span></a>
             </div>
         </div>
     </div>

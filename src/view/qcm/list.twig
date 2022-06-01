@@ -3,7 +3,7 @@
 {% block content %}
     <div class="qcm-list">
     <div class="qcm-create">
-        <a href="{{ url }}qcm/new" class="button-cool"><span>Crée votre <span class="bold">Qcm?</span></span></a>
+        <a href="{{ url }}qcm/new" class="button-cool"><span>Crée votre <span class="bold">Qcm&</span></span></a>
 
     </div>
 
@@ -29,30 +29,30 @@
     {% if numberPage >= 1 %}
         <div class="pagination">
             {% if user %}
-                <a class="button-cool" href="?page=1&user{{ user }}"><span>&laquo;</span></a>
+                <a class="button-cool" href="&page=1&user{{ user }}"><span>&laquo;</span></a>
             {% else %}
-                <a class="button-cool" href="?page=1"><span>&laquo;</span></a>
+                <a class="button-cool" href="&page=1"><span>&laquo;</span></a>
             {% endif %}
             {% for i in 1..numberPage %}
                 {% if i == currentPage %}
                     {% if user %}
-                        <a class="button-cool active" href="?page={{ i }}&user{{ user }}"><span
+                        <a class="button-cool active" href="&page={{ i }}&user{{ user }}"><span
                                     class="bold">{{ i }}</span></a>
                     {% else %}
-                        <a class="button-cool active" href="?page={{ i }}"><span class="bold">{{ i }}</span></a>
+                        <a class="button-cool active" href="&page={{ i }}"><span class="bold">{{ i }}</span></a>
                     {% endif %}
                 {% else %}
                     {% if user %}
-                        <a class="button-cool" href="?page={{ i }}&user{{ user }}"><span>{{ i }}</span></a>
+                        <a class="button-cool" href="&page={{ i }}&user{{ user }}"><span>{{ i }}</span></a>
                     {% else %}
-                        <a class="button-cool" href="?page={{ i }}"><span>{{ i }}</span></a>
+                        <a class="button-cool" href="&page={{ i }}"><span>{{ i }}</span></a>
                     {% endif %}
                 {% endif %}
             {% endfor %}
             {% if user %}
-                <a class="button-cool" href="?page={{ numberPage }}&user{{ user }}"><span>&raquo;</span></a>
+                <a class="button-cool" href="&page={{ numberPage }}&user{{ user }}"><span>&raquo;</span></a>
             {% else %}
-                <a class="button-cool" href="?page={{ numberPage }}"><span>&raquo;</span></a>
+                <a class="button-cool" href="&page={{ numberPage }}"><span>&raquo;</span></a>
             {% endif %}
         </div>
     {% endif %}
