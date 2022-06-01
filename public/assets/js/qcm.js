@@ -94,7 +94,7 @@ export default class Qcm extends HTMLElement {
                     if (qcm.questions.length === this.dataQuestion.length) {
                         let h = new Headers()
                         h.append("Content-Type", "application/json")
-                        fetch("/qcm/result/" + this.qcm_id, {
+                        fetch(this.url + "qcm/result/" + this.qcm_id, {
                             body: JSON.stringify(qcm),
                             method: "POST",
                             headers: new Headers({'Accept': "application/json"})
