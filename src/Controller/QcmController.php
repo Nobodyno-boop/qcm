@@ -85,7 +85,7 @@ class QcmController extends AbstractController
                 return $this->response()->notFound();
             }
             $v = $qcm->getVersion();
-            $custom = QcmStats::custom()->where(["user" => $this->getSession("user")['id'], "`data`->>'$.version' LIKE '$v'"])->limit(1);
+            $custom = QcmStats::custom()->where(["user" => $this->getSession("user")['id'], "`data`->>'$.version' LIKE '$v'"])->limit(1)->order("created_at", 'DESC');
             $stats = QcmStats::runQuery($custom);
             if (!empty($stats)) {
                 $this->renderView("qcm/see_result", ["qcmdata" => $qcmdata, "qcm_author" => $qcmdata->getAuthor()->getId(), "qcm" => $qcm->getQcmAsJson(), 'stats' => $stats->getData()]);
@@ -112,7 +112,7 @@ class QcmController extends AbstractController
                 $newstats->setData($stats);
                 $newstats->save();
                 $this->response()->json(['message' => 'ok']);
-            } else $this->response()->json(["bite" => 2]);
+            } else $this->response()->json(["message" => 'invalide']);
         }
     }
 
