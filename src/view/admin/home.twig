@@ -1,0 +1,35 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+    <div class="blocks">
+        <div class="block">
+            <div class="title">Utilisateurs</div>
+            <div class="content">
+                <div>
+                    Nombre d'utilisateur : <span class="bold">{{ user_count }}</span>
+                </div>
+
+                <div>
+                    <a class="button-cool" href="{{ url('') }}admin/user/"><span>Gérér les utilisateurs</span></a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="block">
+            <div class="title">Qcms</div>
+            <div class="content">
+                <div>
+                    Nombre de QCMs : <span class="bold">{{ qcm_count }}</span>
+                </div>
+
+                <div>
+                    <a class="button-cool" href="{{ url('') }}admin/qcm/"><span>Gérér les qcm</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

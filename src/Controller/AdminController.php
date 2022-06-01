@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 
+use App\Model\Qcm;
+use App\Model\QcmStats;
 use App\Model\User;
 use App\Utils\Utils;
 use Vroom\Controller\AbstractController;
@@ -29,7 +31,7 @@ class AdminController extends AbstractController
         $maxPerPage = 10;
         $pagination = Utils::Pagination($count, $maxPerPage, $page);
         $users = User::findAll(limit: $maxPerPage, offset: $pagination['offset']);
-        $this->renderView("admin/user/list", ["numberPage" => $pagination['numberPage'], "currentPage" => $page, "data" => $users]);
+        $this->renderView("admin/user/list", ["numberPage" => $pagination['numberPage'], "currentPage" => $page, "data" => $users, "user_count" => $count]);
     }
 
     #[Route("/user/edit", name: "user_edit", methods: ['GET', 'POST'])]
@@ -73,7 +75,7 @@ class AdminController extends AbstractController
         $this->renderView("admin/user/edit", ["form" => $form, "data" => $user]);
     }
 
-    #[Route("/user/delete", name: "user_edit")]
+    #[Route("/user/delete", name: "user_delete")]
     public function userDelete(Request $r)
     {
         $this->isAdmin();
@@ -87,12 +89,38 @@ class AdminController extends AbstractController
         }
 
         $user->delete();
+        $this->response()->redirect("app_admin_user_list");
     }
 
     #[Route("/", name: "home")]
     public function adminHome(Request $r)
     {
-        $this->response()->json(['admin']);
+        $this->isAdmin();
+
+        $userCount = User::count();
+
+        $qcmCount = Qcm::count();
+
+        $this->renderView('admin/home', ["user_count" => $userCount, 'qcm_count' => $qcmCount]);
+    }
+
+
+    #[Route("/qcm/", name: "qcm_list")]
+    public function qcm_list(Request $r)
+    {
+        $this->isAdmin();
+        $page = $r->get()->getOrDefault("page", 1);
+        $count = \App\Model\Qcm::count();
+        $maxPerPage = 10;
+        $pagination = Utils::Pagination($count, $maxPerPage, $page);
+        $qcms = \App\Model\Qcm::findAll(limit: $maxPerPage, offset: $pagination['offset']);
+
+
+        $qcms = array_map(function ($data) {
+            $d = QcmStats::count(["qcm" => $data->getId()]);
+            return ["data" => $data, 'countStats' => $d === -1 ? 0 : $d];
+        }, $qcms);
+        $this->renderView("admin/qcm/list", ["numberPage" => $pagination['numberPage'], "currentPage" => $page, "data" => $qcms, "qcm_count" => $count]);
     }
 
 

@@ -42,6 +42,7 @@ class Framework
             error_reporting(0);
         }
 
+
         Container::setObject($this->config);
         Container::setObject(new Sql());
         Container::setObject($router);

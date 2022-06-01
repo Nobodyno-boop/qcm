@@ -8,9 +8,12 @@
     {#    {% endif %} #}
 
     <div class="container qcm-new">
+        <div class="block">
+            <a href="{{ url('') }}qcm/view/{{ qcm_id }}" class="button-cool"><i class="sm las la-stream"></i> <span
+                        class="lg md">Voir le qcm</span></a>
+        </div>
         <qcm-edit data-type="edit" data-url="{{ url('') }}" data-title="{{ qcm_title }}" data='{{ qcm|json_encode() }}'
                   data-id='{{ qcm_id }}' data-token='{{ token }}'>
-
         </qcm-edit>
     </div>
 

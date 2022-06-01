@@ -24,6 +24,7 @@ class Model
             if ($rid) {
                 $id = $this->getVariable($rid);
                 $query = (string)$this->query()->update($this)->where(['id' => $id]);
+                self::getSQL()->query($query);
             }
         } else {
             $query = (string)$this->query()->insert($this);
@@ -257,10 +258,18 @@ class Model
         return self::_findAll($value, static::class, $limit, $offset, $order);
     }
 
-    public static function count(): int
+    public static function count(array $where = []): int
     {
         $q = QueryBuilder::fromModel(static::class)->select("COUNT(*)");
-        return self::getSQL()->query($q)->fetch(PDO::FETCH_COLUMN);
+        if (!empty($where)) {
+            $q->where($where);
+        }
+        $query = self::getSQL()->query($q)->fetch(PDO::FETCH_COLUMN);
+        if (is_int($query)) {
+            return $query;
+        } else {
+            return -1;
+        }
     }
 
     public function delete(): bool|\PDOStatement
@@ -274,7 +283,7 @@ class Model
     private static function _findAll(mixed $value, $class, $limit = 10, $offset = 0, $order = "ASC")
     {
         if (is_array($value)) {
-            $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset)->order($order);
+            $q = QueryBuilder::fromModel($class)->where($value)->limit($limit)->offset($offset)->order(self::getModelId()->getName(), $order);
             $stmt = self::getSQL()->query($q);
             if (!$stmt) {
                 return null;

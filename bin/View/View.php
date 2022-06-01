@@ -30,6 +30,7 @@ class View
         $config = Config::container();
         $loader = new FilesystemLoader($config->get('template.dir'));
         $twig = new Environment($loader, ['debug' => true]);
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
         $twig->addExtension(new \Twig\Extension\DebugExtension());
         $url = $config->get("site");
 

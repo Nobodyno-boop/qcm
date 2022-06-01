@@ -17,6 +17,11 @@ class QcmController extends AbstractController
     #[Route("/view/{see}", name: "see")]
     public function see($see)
     {
+        if (!$this->isLogin()) {
+            return $this->response()->redirect("app_login");
+        }
+
+
         $see = intval($see);
         if (is_int($see) && $see >= 1) {
             $qcmdata = Qcm::find($see);
@@ -33,10 +38,33 @@ class QcmController extends AbstractController
     {
         $maxPerPage = 4;
         $currentPage = $this->request()->get()->getOrDefault("page", 1);
-        $count = Qcm::count();
+        $searchUser = $this->request()->get()->getOrDefault("user", null);
+        $count = null;
+
+        if (!is_null($searchUser)) {
+            if (empty($searchUser) || $searchUser === 0) {
+                $this->response()->redirect("app_qcm_list");
+            }
+
+            $user = User::find($searchUser);
+            if ($user) {
+                $count = Qcm::count(['author' => $user->getId()]);
+            } else {
+                $this->response()->redirect("app_qcm_list");
+            }
+        } else {
+            $count = Qcm::count();
+        }
+
+
         $paginations = Utils::Pagination($count, $maxPerPage, $currentPage);
-        $qcms = Qcm::findAll(limit: $maxPerPage, offset: $paginations['offset']);
-        $this->renderView("qcm/list", ["numberPage" => $paginations['numberPage'], "currentPage" => $currentPage, "data" => $qcms]);
+        $qcms = null;
+        if (!is_null($searchUser)) {
+            $qcms = Qcm::findAll(value: ['author' => intval($searchUser)], limit: $maxPerPage, offset: $paginations['offset']);
+        } else {
+            $qcms = Qcm::findAll(limit: $maxPerPage, offset: $paginations['offset']);
+        }
+        $this->renderView("qcm/list", ["numberPage" => $paginations['numberPage'], "currentPage" => $currentPage, "data" => $qcms, 'user' => $searchUser]);
     }
 
     #[Route("/result/{see}")]
@@ -61,6 +89,7 @@ class QcmController extends AbstractController
 
             } else $this->response()->redirect("qcm/view/" . $see);
         }
+
     }
 
     #[Route("/result/{see}", methods: ['POST'])]
@@ -69,7 +98,6 @@ class QcmController extends AbstractController
         $see = intval($see);
         if (is_int($see)) {
             $qcmdata = Qcm::find($see);
-            $user =
             $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
             $body = json_decode($this->request()->getBody(), true);
             $qcm->setResponses($body['questions']);
@@ -111,12 +139,14 @@ class QcmController extends AbstractController
         $qcm = Qcm::find($id);
 
         if ($qcm) {
-            if (!$this->isAdmin() || $user->getId() !== $qcm->getAuthor()->getId()) {
+            if (($this->isAdmin()) || ($user->getId() === $qcm->getAuthor()->getId())) {
+                $token = $this->getToken('qcm/edit');
+                $this->renderView("qcm/edit", ['qcm_id' => $qcm->getId(), 'qcm_title' => $qcm->getTitle(), 'qcm' => $qcm->getData()['question'], "token" => $token]);
+            } else {
                 $this->response()->redirect("qcm/view/$id");
                 return;
             }
-            $token = $this->getToken('qcm/edit');
-            $this->renderView("qcm/edit", ['qcm_id' => $qcm->getId(), 'qcm_title' => $qcm->getTitle(), 'qcm' => $qcm->getData()['question'], "token" => $token]);
+
         } else $this->response()->redirect("app_qcm_list");
     }
 
@@ -207,8 +237,8 @@ class QcmController extends AbstractController
                 $dqa = $qcm->getQcmAsJson();
                 $qcmData->setData($dqa);
                 $qcmData->save();
-
-                $this->response()->json(['message' => "ok"]);
+                $token = $this->getToken('qcm/edit');
+                $this->response()->json(['message' => "ok", "token" => $token]);
             }
 
         }
@@ -238,6 +268,9 @@ class QcmController extends AbstractController
             if ($body) {
                 $q = $this->fromEditor($body['qcm']);
                 $qcm = new \App\Qcm\Qcm($q);
+                if (!$qcm) {
+                    return $this->response()->json(['message' => "Le qcm n'existe pas ou plus"]);
+                }
 
                 $data = new Qcm();
                 $data->setTitle($body['title']);
@@ -248,37 +281,6 @@ class QcmController extends AbstractController
             }
 
         }
-//        $this->renderView("qcm/new");
-    }
-
-
-//    #[Route("/qcm/result")]
-    public function result()
-    {
-        $a = [
-            \App\Qcm\Question::from("Meow", ["Meow? ", "Hello", "Hi"], 1, "936e5b847881b862bdf6a35acb6189"),
-            \App\Qcm\Question::from("lul", ["lol", "swag", "tektonike"], 2, "936e5b847881b862bdf6a35acb6196"),
-            \App\Qcm\Question::from("Enta", ["Amandine ", "A meow", "Chou"], 1, "936e5b847881b875bdf6a35acb6189")
-        ];
-
-        $qcm = new \App\Qcm\Qcm($a);
-
-        $qcm->setResponses([["id" => "936e5b847881b862bdf6a35acb6189", "answer" => 2], ["id" => "936e5b847881b862bdf6a35acb6196", "answer" => 2], ["id" => "936e5b847881b875bdf6a35acb6189", "answer" => 2]]);
-
-        if ($qcm->isValid()) {
-//            $qcmm = new Qcm();
-//            $qcmm->setTitle("Meow");
-//            $qcmm->setData($qcm->getQcmAsJson());
-//            $qcmm->setAuthor(User::find(2));
-//            $qcmm->save();
-
-            $qcmStats = new QcmStats();
-            $qcmStats->setQcm(Qcm::find(3));
-            $qcmStats->setData($qcm->generateStats());
-            $qcmStats->setUser(User::find($_SESSION['user']['id']));
-            $qcmStats->save();
-        }
-//        $this->renderView('qcm/see', ["qcm"=> $qcm->getQcmAsJson()]);
     }
 
 
@@ -286,13 +288,19 @@ class QcmController extends AbstractController
     {
         $q = [];
         foreach ($body as $question) {
-            $title = $question['question'];
+            $title = filter_var($question['question'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            if (!$title) {
+                continue;
+            }
             $correct = $question['correct'];
             $answer = [];
             $id = $question['id'];
             for ($i = 0; $i < count($question['answers']); $i++) {
                 $value = $question['answers'][$i];
-                $answer[] = $value;
+                $sanitize = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                if ($sanitize) {
+                    $answer[] = $sanitize;
+                }
             }
             if ($correct !== -1) {
                 $q[] = Question::from($title, $answer, $correct, $id);

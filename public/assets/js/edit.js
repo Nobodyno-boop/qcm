@@ -22,32 +22,51 @@ class Ob {
     get value() {
         return this._value;
     }
-
-    clone() {
-        return Object.assign([], this.ObToJson(this._value))
-    }
-
-    ObToJson(value) {
-        if (value instanceof Ob) {
-            return this.ObToJson(value._value)
-        }
-        if (value.constructor === Array) {
-            return value.map(v => this.ObToJson(v))
-        }
-
-        if (value.constructor === Object) {
-            for (let key in value) {
-                let kvalue = value[key];
-                if (kvalue instanceof Ob) {
-                    value[key] = this.ObToJson(kvalue)
-                }
-            }
-            return value;
-        }
-
-        return value;
-    }
 }
+
+const obto = (value) => {
+    if (value instanceof Ob) {
+        return value._value;
+    }
+
+    if (value.constructor === Array) {
+        return value.map(x => obto(x))
+    }
+
+    if (value.constructor === Object) {
+        for (let xKey in value) {
+            let vvalue = value[xKey];
+            if (vvalue instanceof Ob) {
+                value[xKey] = obto(vvalue)
+            }
+        }
+    }
+
+    return value;
+}
+
+let msg = new Ob("");
+let a = new Ob([{'message': msg}]);
+
+// a.sub((value) => console.log("je suis la nouvelle valeur %s", value))
+
+
+// setTimeout(() => {
+//     msg.value = "Yuna"
+//     console.log(a)
+//
+//     let clone = JSON.parse(JSON.stringify(a));
+//     console.log(clone)
+//     let ne = clone._value.map(x => {
+//         return obto(x)
+//     })
+//
+//     console.log(ne)
+//     a.value[0]._value = "Allan"
+//     console.log(ne)
+//     console.log(a)
+//
+// }, 1000)
 
 class QcmEdit extends HTMLElement {
     constructor() {
@@ -59,14 +78,24 @@ class QcmEdit extends HTMLElement {
         let style = document.createElement("style")
         style.innerHTML = "@import url('/assets/css/styles.css'); @import url('https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css')"
         this.shadow.append(style)
-        this.shadow.appendChild(this.wrapper)
+        this.errorElement = document.createElement("div")
+        this.errorElement.classList.add("qcm-edit-error")
+        this.shadow.append(this.errorElement, this.wrapper)
         this.max = 3;
     }
 
     connectedCallback() {
         this.questions = new Ob([]);
-
-        this.fromJson(this.getAttribute("data"))
+        this.qcmtitle = "";
+        this.qcmid = -1;
+        this.type = this.getAttribute("data-type") ?? "new";
+        this.token = this.getAttribute("data-token")
+        this.url = this.getAttribute("data-url")
+        if (this.type === "edit") {
+            this.fromJson(this.getAttribute("data"))
+            this.qcmid = this.getAttribute("data-id")
+            this.qcmtitle = this.getAttribute("data-title")
+        }
         this.questions.sub((value) => {
             this.render();
         })
@@ -143,18 +172,20 @@ class QcmEdit extends HTMLElement {
     }
 
     ObToJson(value) {
-        if (value instanceof Ob) {
-            return this.ObToJson(value._value)
-        }
+
         if (value.constructor === Array) {
             return value.map(v => this.ObToJson(v))
         }
 
         if (value.constructor === Object) {
+            if (value?._listeners) {
+                return value._value;
+            }
+
             for (let key in value) {
                 let kvalue = value[key];
-                if (kvalue instanceof Ob) {
-                    value[key] = this.ObToJson(kvalue)
+                if (kvalue?._listeners) {
+                    value[key] = this.ObToJson(kvalue._value)
                 }
             }
             return value;
@@ -163,33 +194,83 @@ class QcmEdit extends HTMLElement {
         return value;
     }
 
+    markError(errors) {
+        console.log(errors)
+        // clear error
+        this.errorElement.style.opacity = 0;
+        let childs = [...this.errorElement.children]
+        childs.forEach(x => x.remove())
+        for (let error of errors) {
+            let div = document.createElement("div")
+            let link = document.createElement("span")
+            if (error?.other?.id) {
+                link.innerText = `${error.message}`;
+                link.href = `#${error?.other?.id}`;
+                link.addEventListener("click", (e) => {
+                    let find = this.shadow.getElementById(error?.other?.id)
+                    console.log(find)
+                    if (typeof find !== "undefined") {
+                        // window.scrollTo()
+                        find.scrollIntoView({behavior: "smooth"});
+                        find.classList.add("target")
+                        setTimeout(x => {
+                            find.classList.remove('target')
+                        }, 2000)
+                    }
+                })
+            } else {
+                link.innerText = `${error.message}`;
+            }
+
+            div.append(link)
+            this.errorElement.appendChild(div)
+        }
+
+        this.errorElement.style.opacity = 1;
+
+    }
+
     toJson() {
-        let clone = this.questions.clone();
-        console.log(clone)
-        console.log(this.questions.value)
-        // let json = this.questions._value.map(qcm => {
-        //     return this.ObToJson(qcm)
-        // }).map(question => {
-        //     let correctIndex = -1;
-        //     question.answers = question.answers.map((x, i) => {
-        //         if(x.correct === 1){
-        //             correctIndex = i;
-        //         }
-        //         return x.message;
-        //     })
-        //     return {...question, correct: correctIndex};
-        // })
-        // console.log(json)
-        return {};
+        //https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy
+        // Make a deep copy to avoid undefined value
+        let clone = JSON.parse(JSON.stringify(this.questions));
+        let errors = [];
+        let json = clone._value.map(qcm => {
+            return this.ObToJson(qcm)
+        }).map(question => {
+            let correctIndex = -1;
+            if (question.answers.length === 1) {
+                errors.push({message: "Vous devez avoir plus d'un réponse !", other: {id: question.id}})
+            }
+            question.answers = question.answers.map((x, i) => {
+                if (x.correct === 1) {
+                    correctIndex = i;
+                }
+                return x.message;
+            })
+            if (correctIndex === -1) {
+                errors.push({message: "Vous devez choisir une bonne réponse !", other: {id: question.id}})
+            }
+            return {...question, correct: correctIndex};
+        })
+
+        if (errors.length === 0) {
+            return json;
+        } else return {error: errors};
     }
 
     fromJson(json) {
         json = JSON.parse(json);
         json.map(x => {
             if (x['answers']) {
-                x['answers'] = x['answers'].map(answer => {
-                    answer['message'] = new Ob(answer['message'])
-                    return answer;
+                x['answers'] = x['answers'].map((answer, i) => {
+                    let json = {}
+
+                    json['message'] = new Ob(answer)
+                    json['correct'] = i === x['correct'] ? 1 : 0;
+                    // fake id
+                    json['id'] = Math.random().toString(36).slice(2, 7)
+                    return json;
                 })
                 let n = new Ob(x['answers']);
                 n.sub(() => this.render())
@@ -204,7 +285,13 @@ class QcmEdit extends HTMLElement {
 
 
     render() {
-        this.wrapper.innerHTML = /*HTML*/"<div class='edit-buttons'><button id='add' class='button-cool'> ajout d'une question </button><button id='save' class='button-cool'> sauvegarder</button></div> <div id='qcm-edit'></div>";
+        this.wrapper.innerHTML = /*HTML*/"<input id='title' placeholder='Le titre'><div class='edit-buttons'><button id='add' class='button-cool'><i class='sm md las la-plus-circle'></i> <span class='lg'>ajout d'une question</span> </button><button id='save' class='button-cool'> <i class='sm md las la-save'></i> <span class='lg'>sauvegarder</span></button></div> <div id='qcm-edit'></div>";
+        let title = this.shadow.getElementById("title")
+        title.value = this.qcmtitle;
+
+        title.addEventListener("input", (e) => {
+            this.qcmtitle = title.value
+        })
         let addBtn = this.shadow.getElementById("add")
         let saveBtn = this.shadow.getElementById("save")
         addBtn.addEventListener("click", (e) => {
@@ -219,14 +306,41 @@ class QcmEdit extends HTMLElement {
             }
         })
         saveBtn.addEventListener("click", (e) => {
+            if (this.questions.value.length === 0) {
+                return this.markError([{message: "Vous devez ajouter une question", other: {}}]);
+            }
             let save = this.toJson();
-            fetch("/qcm/save", {
+            if (save?.error) {
+                return this.markError(save?.error)
+            }
+            let url = this.type === 'edit' ? this.url + "qcm/edit" : this.url + "qcm/save";
+            if (this.qcmtitle === "") {
+                this.qcmtitle = "Votre titre";
+                return this.markError([{message: "Vous devez remplir le titre du QCM", other: {}}]);
+            }
+            fetch(url, {
                 method: "POST",
-                body: JSON.stringify(save)
+                body: JSON.stringify({
+                    title: this.qcmtitle,
+                    qcm: save,
+                    id: this.qcmid,
+                    token: this.token
+                })
             }).then(x => {
                 return x.json()
             }).then(x => {
-                console.log(x)
+                if (x === []) {
+                    location.replace(this.url);
+                } else if (x?.message) {
+                    if (x.message === "ok") {
+                        if (this.type === "edit") {
+                            this.token = x?.token;
+                        } else if (this.type === "new" && x?.id) {
+                            window.location.replace(this.url + "qcm/view/" + x?.id)
+                        }
+
+                    }
+                }
             }).catch(e => console.error(e))
         })
 
@@ -234,6 +348,8 @@ class QcmEdit extends HTMLElement {
         this.questions.value.forEach(question => {
             let wrapper = document.createElement("div")
             wrapper.classList.add("edit-question")
+            wrapper.id = question.id;
+            wrapper.setAttribute("data-question-id", question.id)
             let add = document.createElement("button")
             add.classList.add("button-cool")
             let iconAdd = document.createElement("i")
@@ -251,8 +367,26 @@ class QcmEdit extends HTMLElement {
 
             add.append(iconAdd)
 
+
+            let deleteIcon = document.createElement("i")
+            deleteIcon.classList.add("las", "la-trash")
+            let deleteBtn = document.createElement("button")
+            deleteBtn.classList.add("button-cool")
+            deleteBtn.append(deleteIcon)
+
+            deleteBtn.addEventListener("click", (e) => {
+                this.questions.value = this.questions.value.map(q => {
+                    if (q.id !== question.id) {
+                        return q;
+                    }
+                }).filter(x => !!x)
+            })
+
             let title = document.createElement("input")
             title.placeholder = "Votre question.."
+            let div = document.createElement("div")
+            div.classList.add("edit-input-question")
+            div.append(title, deleteBtn)
             this.setEdit(question.question, title)
 
             let list = document.createElement("ul")
@@ -262,7 +396,7 @@ class QcmEdit extends HTMLElement {
                 list.appendChild(answer)
             })
 
-            wrapper.replaceChildren(title, add, list)
+            wrapper.replaceChildren(div, add, list)
             edit.appendChild(wrapper)
         })
     }

@@ -2,10 +2,10 @@
 
 {% block content %}
     <div class="block">
-        <div class="title">Listes des utilisateurs</div>
+        <div class="title">Listes des Qcms</div>
 
         <div class="content">
-            <div>Nombre d'utilisateurs: <span class="bold">{{ user_count }}</span></div>
+            <div>Nombre d'utilisateurs: <span class="bold">{{ qcm_count }}</span></div>
             <div class="back"><a href="{{ url('app_admin_home') }}" class="button-cool"><i
                             class="sm md las la-arrow-left"></i><span class="lg">Retourner en arrière</span></a></div>
             <div class="table">
@@ -13,26 +13,25 @@
                     <thead>
                     <tr>
                         <th><span class="bold">#</span></th>
-                        <th>username</th>
-                        <th>email</th>
-                        <th>role</th>
+                        <th>auteur</th>
+                        <th>testes</th>
                         <th>actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for user in data %}
+                    {% for qcm in data %}
+
                         <tr>
-                            <td><a href="{{ url('') }}/profile/see/{{ user.id }}"><span
-                                            class="bold">{{ user.id }}</span></a></td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.role }}</td>
+                            <td><a href="{{ url('') }}qcm/view/{{ qcm.data.id }}"><span
+                                            class="bold">{{ qcm.data.id }}</span></a></td>
+                            <td><a href="{{ url('') }}qcm/view/{{ qcm.data.author.id }}"><span
+                                            class="bold">{{ qcm.data.author.username }}</span></a></td>
+                            <td>{{ qcm.countStats }}</td>
                             <td>
                                 <div class="multi"><a class="button-cool"
-                                                      href="{{ url("app_admin_user_edit") }}?user={{ user.id }}"><i
+                                                      href="{{ url("") }}qcm/edit/{{ qcm.data.id }}"><i
                                                 class="sm md las la-edit"></i> <span class="lg">edit</span></a><a
-                                            class="button-cool"
-                                            href="{{ url("app_admin_user_delete") }}?user={{ user.id }}"><i
+                                            class="button-cool" href="{{ url('') }}qcm/delete/{{ qcm.data.id }}"><i
                                                 class="sm md las la-trash"></i> <span class="lg">delete</span></a></div>
                             </td>
                         </tr>
