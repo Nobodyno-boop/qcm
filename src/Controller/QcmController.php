@@ -77,8 +77,11 @@ class QcmController extends AbstractController
             return $this->response()->redirect("app_login");
         }
         $see = intval($see);
-        if (is_int($see)) {
+        if (is_int($see) && $see >= 1) {
             $qcmdata = Qcm::find($see);
+            if (!$qcmdata) {
+                return $this->response()->notFound();
+            }
             $qcm = \App\Qcm\Qcm::from($qcmdata->getData());
 
             if (!$qcm) {

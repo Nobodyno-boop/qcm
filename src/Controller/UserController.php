@@ -14,12 +14,12 @@ class UserController extends AbstractController
     public function profileUser($id)
     {
         if (intval($id) <= 0) {
-            return $this->response()->redirect("404");
+            return $this->response()->notFound();
         }
 
         $user = User::find($id);
         if (!$user) {
-            return $this->response()->redirect("404");
+            return $this->response()->notFound();
         }
         $this->renderView("user/profile", ["user" => $user]);
     }
