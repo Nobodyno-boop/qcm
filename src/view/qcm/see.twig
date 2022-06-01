@@ -39,8 +39,11 @@
     </div>
     <div class="qcm-title">{{ qcmdata.title }}</div>
     <div class="qcm">
-        <qcm-view data-id="{{ qcmdata.id }}" data-version="{{ qcm.version }}"
-                  data-questions="{{ qcm.question|json_encode() }}" data-url="{{ url('') }}">
+        <qcm-view data-id="{{ qcmdata.id }}"
+                  data-version="{{ qcm.version }}"
+                  data-questions="{{ qcm.question|json_encode() }}"
+                  data-url="{{ url('') }}"
+                  data-asset="{{ asset('') }}">
 
         </qcm-view>
     </div>

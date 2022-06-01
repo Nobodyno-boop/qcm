@@ -1,4 +1,4 @@
-/*Reset all margin,padding, box*/
+@import url('https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css');
 :root {
     --font: 'Karla', sans-serif;
     --black: #001220 /*#17181f*/;
@@ -36,6 +36,10 @@
 
 .md {
     display: none;
+}
+
+.sm.md {
+    display: initial;
 }
 
 .lg {

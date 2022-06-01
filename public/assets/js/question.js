@@ -9,17 +9,20 @@ export default class Question extends HTMLElement {
         this.answers = [];
         this.type = "single";
         this.shadow = this.attachShadow({mode: 'open'});
-        let style = document.createElement("style")
-        style.innerHTML = "@import url('/assets/css/styles.css'); @import url('https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css')"
-        this.shadow.append(style)
-        this.shadow.append(this.wrapper)
+
     }
 
     connectedCallback() {
         this.question = JSON.parse(this.getAttribute("data-question"))
         this.answers = JSON.parse(this.getAttribute("data-answers"))
+        this.assets = this.getAttribute("data-asset")
+
         this.type = this.getAttribute("data-type") ?? "single"
         this.setAttribute("data-choice", "")
+        let style = document.createElement("style")
+        style.innerHTML = `@import url('${this.assets}css/styles.css');`;
+        this.shadow.append(style)
+        this.shadow.append(this.wrapper)
         this.render();
     }
 

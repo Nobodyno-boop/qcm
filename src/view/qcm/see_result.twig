@@ -54,7 +54,9 @@
                   data-errors="{{ stats.errors|json_encode() }}"
                   data-answers="{{ stats.answers|json_encode() }}"
                   data-version="{{ qcm.version }}"
-                  data-questions="{{ qcm.question|json_encode() }}">
+                  data-questions="{{ qcm.question|json_encode() }}"
+                  data-asset="{{ asset('') }}"
+        >
 
         </qcm-view>
     </div>

@@ -75,12 +75,6 @@ class QcmEdit extends HTMLElement {
 
         this.wrapper = document.createElement("div")
         this.wrapper.classList.add("qcm-edit-wrapper")
-        let style = document.createElement("style")
-        style.innerHTML = "@import url('/assets/css/styles.css'); @import url('https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css')"
-        this.shadow.append(style)
-        this.errorElement = document.createElement("div")
-        this.errorElement.classList.add("qcm-edit-error")
-        this.shadow.append(this.errorElement, this.wrapper)
         this.max = 3;
     }
 
@@ -91,6 +85,7 @@ class QcmEdit extends HTMLElement {
         this.type = this.getAttribute("data-type") ?? "new";
         this.token = this.getAttribute("data-token")
         this.url = this.getAttribute("data-url")
+        this.assets = this.getAttribute("data-asset")
         if (this.type === "edit") {
             this.fromJson(this.getAttribute("data"))
             this.qcmid = this.getAttribute("data-id")
@@ -99,6 +94,13 @@ class QcmEdit extends HTMLElement {
         this.questions.sub((value) => {
             this.render();
         })
+        let style = document.createElement("style")
+        style.innerHTML = `@import url('${this.assets}css/styles.css');`
+        this.shadow.append(style)
+        this.errorElement = document.createElement("div")
+        this.errorElement.classList.add("qcm-edit-error")
+        this.shadow.append(this.errorElement, this.wrapper)
+
         this.render();
 
     }

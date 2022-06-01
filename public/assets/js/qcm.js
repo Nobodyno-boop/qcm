@@ -8,10 +8,7 @@ export default class Qcm extends HTMLElement {
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("questions")
         this.shadow = this.attachShadow({mode: 'open'});
-        let style = document.createElement("style")
-        style.innerHTML = "@import url('/assets/css/styles.css')"
-        this.shadow.append(style)
-        this.shadow.append(this.wrapper)
+
 
     }
 
@@ -23,6 +20,12 @@ export default class Qcm extends HTMLElement {
         this.errors = JSON.parse(this.getAttribute("data-errors")) ?? []
         this.answers = JSON.parse(this.getAttribute("data-answers")) ?? []
         this.url = this.getAttribute("data-url")
+        this.assets = this.getAttribute("data-asset")
+        let style = document.createElement("style")
+        style.innerHTML = `@import url('${this.assets}css/styles.css');`
+        this.shadow.append(style)
+        this.shadow.append(this.wrapper)
+
         this.render()
     }
 
@@ -35,6 +38,7 @@ export default class Qcm extends HTMLElement {
         element.setAttribute("data-question", JSON.stringify(json['question']))
         element.setAttribute("data-id", json['id'])
         element.setAttribute("data-answers", JSON.stringify(json['answers']))
+        element.setAttribute("data-asset", this.assets)
         if (this.errorMode) {
             element.setAttribute("locked", "")
         }
