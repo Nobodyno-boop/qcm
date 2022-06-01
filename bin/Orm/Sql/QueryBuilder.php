@@ -2,6 +2,7 @@
 
 namespace Vroom\Orm\Sql;
 
+use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Models;
 use Vroom\Orm\Model\Types;
@@ -16,6 +17,7 @@ class QueryBuilder
     private $values = [];
     private $limit = 0;
     private $offset = 0;
+    private $ord = "";
 
     /**
      * @param string|null $model
@@ -58,8 +60,21 @@ class QueryBuilder
     public function where(array $where): QueryBuilder
     {
         foreach ($where as $k => $v) {
-            $this->cond[] = $k . " = '" . $v . "'";
+            if (!is_int($k)) {
+                $this->cond[] = $k . " = '" . $v . "'";
+            } else {
+                $this->cond[] = $v;
+            }
         }
+        return $this;
+    }
+
+    public function order(string|array $column, $by = "ASC"): QueryBuilder
+    {
+        if (is_array($column)) {
+            $column = implode(" ", $column);
+        }
+        $this->ord = "ORDER BY $column $by";
         return $this;
     }
 
@@ -110,6 +125,11 @@ class QueryBuilder
                     } else {
                         $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
                     }
+                    $value = match ($item->getType()) {
+                        Types::JSON => json_encode($value),
+                        Types::MANY_TO_ONE => $this->manyToOneUpdate($value),
+                        default => $value
+                    };
 
                     if ($value) {
                         $this->fields[] = $item->getName() . " = '" . $value . "'";
@@ -176,7 +196,7 @@ class QueryBuilder
     }
 
 
-    private function getModelId($model)
+    private function getModelId($model): Column|null
     {
         $model = Models::get(get_class($model));
 
@@ -187,6 +207,23 @@ class QueryBuilder
         }));
 
         return (empty($find) === true) ? null : $find[0];
+    }
+
+    private function getModelData($model, string $name): mixed
+    {
+        $value = call_user_func(array($model, 'get' . Model::varName($name)));
+        return $value === false ? null : $value;
+    }
+
+    private function manyToOneUpdate(mixed $value)
+    {
+        $col = $this->getModelId($value);
+        if (!$col) return null;
+
+        $data = $this->getModelData($value, $col->getName());
+        if (!$data) return null;
+
+        return $data;
     }
 
     public function __toString(): string
@@ -213,22 +250,24 @@ class QueryBuilder
                         . $w;
                     break;
                 case "delete":
-                    $query = $this->word . " "
+                    $query = $this->word . " FROM "
                         . $table . " "
                         . $w;
                     break;
                 default:
                 case "select":
-                $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
+                    $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
                 $offset = $this->offset != 0 ? " OFFSET " . $this->offset : "";
                 $query = "SELECT " . $selector . " FROM "
                     . $table
-                    . $w . $limit . $offset;
+                    . $w . " " . $this->ord . $limit . $offset;
 
-                break;
+                    break;
             }
         }
 
         return $query;
     }
+
+
 }

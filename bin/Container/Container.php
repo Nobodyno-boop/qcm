@@ -1,11 +1,23 @@
 <?php
 
-namespace Vroom\Utils;
+namespace Vroom\Container;
 
 class Container
 {
     private static array $containers = [];
 
+
+    public static function setObject($obj)
+    {
+        if (is_object($obj)) {
+            $interfaces = class_implements($obj);
+            if ($interfaces) {
+                if (in_array(IContainer::class, $interfaces)) {
+                    self::set(call_user_func_array([$obj, 'getContainerNamespace'], []), $obj);
+                }
+            }
+        }
+    }
 
     public static function set(string $name, mixed $value): void
     {

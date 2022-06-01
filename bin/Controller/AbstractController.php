@@ -3,12 +3,14 @@
 namespace Vroom\Controller;
 
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Vroom\Container\Container;
 use Vroom\Orm\Model\Model;
-use Vroom\Orm\Repository;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
 use Vroom\Security\Token;
-use Vroom\Utils\Container;
 use Vroom\View\AppContext;
 
 class AbstractController
@@ -79,20 +81,12 @@ class AbstractController
         return !empty($this->getSession("user"));
     }
 
-    /**
-     * Retrieve a new instance of Repository with Model instance
-     * @param $class
-     * @return Repository
-     */
-    protected function repository($class): Repository
+    public function getRole()
     {
-        if (is_object($class)) {
-            $class = get_class($class);
+        if (!$this->isLogin()) {
+            return "";
         }
-        if (is_string($class)) {
-            return new Repository($class);
-        }
-        throw new \Error("Could not get model class");
+        return $this->getSession("user")['role'] ?? "";
     }
 
     /**
@@ -130,9 +124,12 @@ class AbstractController
      * The token is putting in the session
      * @return string
      */
-    public function getToken(): string
+    public function getToken($url = ''): string
     {
-        $token = Token::getToken(url: $this->url());
+        if (empty($url)) {
+            $url = $this->url();
+        }
+        $token = Token::getToken(url: $url);
 
         $this->addSession("_crsf", $token);
 
@@ -167,20 +164,21 @@ class AbstractController
      * @param string $view
      * @param array $context
      * @return void
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
      */
     public function renderView(string $view, array $context = [])
     {
-        if (!str_ends_with($view, ".twig")) {
-            $view = $view . ".twig";
+        try {
+            if (!str_ends_with($view, ".twig")) {
+                $view = $view . ".twig";
+            }
+            $template = $this->twig()->load($view);
+            $appContext = new AppContext($_SESSION, true, [
+                "class" => get_class($this)
+            ]);
+            $template->display(["app" => $appContext, ...$context]);
+        } catch (\Exception $e) {
+            $this->response()->redirect("404");
         }
-        $template = $this->twig()->load($view);
-        $appContext = new AppContext($_SESSION, true, [
-            "class" => get_class($this)
-        ]);
-        $template->display(["app" => $appContext, ...$context]);
     }
 
 

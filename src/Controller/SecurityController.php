@@ -13,6 +13,7 @@ class SecurityController extends AbstractController
     #[Route("/login", "app_login", ['GET', 'POST'])]
     public function loginPost(Request $r)
     {
+
         if (!$this->isLogin()) {
             $form = Form::new(option: ['label' => ['display' => false]])
                 ->add("email", Form::TYPE_EMAIL)
@@ -23,20 +24,26 @@ class SecurityController extends AbstractController
             if ($form->isSent() && $form->isValid()) {
                 $email = $form->getReceiveData()->get("email");
                 $password = $form->getReceiveData()->get("password");
-                if ($email && $password) {
-                    /**
-                     * @var User $user
-                     */
-                    $user = $this->repository(User::class)->findBy("email", $email);
-                    if ($user) {
-                        if (password_verify($password, $user->getPassword())) {
-                            $this->addSession("user", $user);
-                            $this->response()->redirect("app_home");
-                        } else $form->addError("Le mot de passe ne corresponde pas");
-                    } else $form->addError("L'email ne corresponds à aucune donnée dans notre base.");
-                } else $form->addError("Formulaire invalide");
+                if (!$email && !$password) {
+                    $form->addError("Formulaire invalide");
+                    return $this->renderView("security/login.twig", ["form" => $form->toView()]);
+                }
+
+                $user = User::find(['email' => $email]);
+                if (!$user) {
+                    $form->addError("L'email ne corresponds à aucune donnée dans notre base.");
+                    return $this->renderView("security/login.twig", ["form" => $form->toView()]);
+                }
+
+                if (!password_verify($password, $user->getPassword())) {
+                    $form->addError("Le mot de passe ne corresponde pas");
+                    return $this->renderView("security/login.twig", ["form" => $form->toView()]);
+                }
+
+                $this->addSession("user", $user);
+                $this->response()->redirect("app_home");
             }
-            $this->renderView("security/login.twig", ["form" => $form->toView()]);
+            return $this->renderView("security/login.twig", ["form" => $form->toView()]);
 
         } else $this->response()->redirect("app_home");
     }
@@ -49,7 +56,7 @@ class SecurityController extends AbstractController
         }
         $user = new User();
         $form = Form::new(data: ['user' => $user])
-            ->add("user", Form::TYPE_MODEL, ["model" => User::class])
+            ->add("user", Form::TYPE_MODEL, ["model" => User::class, 'notdisplay' => ['role']])
             ->add("reset", Form::TYPE_RESET)
             ->add("register !", Form::TYPE_SUBMIT);
 
@@ -60,8 +67,9 @@ class SecurityController extends AbstractController
              * @var User $user
              */
             $user = $form->getData()->get("user");
+            $user->setRole("USER");
             if ($user) {
-                $repo = $this->repository(User::class)->findBy("email", $user->getEmail());
+                $repo = User::find(['email' => $user->getEmail()]);
                 if (!$repo) {
                     $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
                     $user->save();

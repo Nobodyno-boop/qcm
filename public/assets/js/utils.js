@@ -5,11 +5,11 @@
         // Ajoute un event on click
         x.addEventListener("click", (e) => {
             // recupere le data-toggle-element
-            let query = e.target.getAttribute("data-toggle-element");
+            let query = x.getAttribute("data-toggle-element");
             // recupere le data-toggle-class, SI il est null alors par défault il prend la class CSS "hidden"
-            let style = e.target.getAttribute("data-toggle-class") || "hidden";
+            let style = x.getAttribute("data-toggle-class") || "hidden";
 
-            let afterDelay = e.target.getAttribute("data-toggle-after-delay") || null;
+            let afterDelay = x.getAttribute("data-toggle-after-delay") || null;
 
             let fun;
             if(afterDelay){

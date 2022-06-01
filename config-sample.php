@@ -14,7 +14,5 @@ return [
     "template" => [
         "dir" => ""
     ],
-    "debug" => [
-        "checkModels" => "true"
-    ]
+    "debug" => true
 ];

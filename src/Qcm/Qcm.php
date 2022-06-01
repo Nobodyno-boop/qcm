@@ -149,6 +149,18 @@ class Qcm
         return ["version" => $this->version, "question" => $question];
     }
 
+    /**
+     * @return array
+     */
+    public function getQcmAsUserJson(): array
+    {
+        $question = array_map(function ($value) {
+            return $value->toUserJson();
+        }, $this->qcm);
+
+        return ["version" => $this->version, "question" => $question];
+    }
+
     public static function from(array $data): Qcm
     {
 

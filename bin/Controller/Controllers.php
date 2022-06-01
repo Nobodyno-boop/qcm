@@ -2,8 +2,8 @@
 
 namespace Vroom\Controller;
 
+use Vroom\Container\Container;
 use Vroom\Router\Decorator\Route;
-use Vroom\Utils\Container;
 
 class Controllers
 {

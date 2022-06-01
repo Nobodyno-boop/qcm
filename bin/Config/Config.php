@@ -2,38 +2,29 @@
 
 namespace Vroom\Config;
 
+use Vroom\Container\Container;
+use Vroom\Container\IContainer;
 use Vroom\Utils\ArrayUtils;
 
-class Config
+class Config extends ArrayUtils implements IContainer
 {
-    private $config;
 
     /**
      * @param array $config
      */
     public function __construct(array $config)
     {
-        $this->config = $config;
-    }
-
-    /**
-     * Return the config as array
-     * @return mixed
-     */
-    public function getConfigArray(): mixed
-    {
-        return $this->config;
+        parent::__construct($config);
     }
 
 
-    /**
-     * Use the ArrayUtils class and get
-     * Return null is the path ins't valid.
-     * @param string $path
-     * @return mixed
-     */
-    public function get(string $path): mixed
+    public static function getContainerNamespace(): string
     {
-        return ArrayUtils::from($this->config)->get($path);
+        return "_config";
+    }
+
+    public static function container(): static
+    {
+        return Container::get(self::getContainerNamespace());
     }
 }

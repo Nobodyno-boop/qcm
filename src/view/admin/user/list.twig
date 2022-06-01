@@ -1,0 +1,57 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <div class="block">
+        <div class="title">Listes des utilisateurs</div>
+
+        <div class="content">
+            <div>Nombre d'utilisateurs: <span class="bold">{{ user_count }}</span></div>
+            <div class="back"><a href="{{ url('app_admin_home') }}" class="button-cool"><i
+                            class="sm md las la-arrow-left"></i><span class="lg">Retourner en arrière</span></a></div>
+            <div class="table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th><span class="bold">#</span></th>
+                        <th>username</th>
+                        <th>email</th>
+                        <th>role</th>
+                        <th>actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in data %}
+                        <tr>
+                            <td><a href="{{ url('') }}/profile/see/{{ user.id }}"><span
+                                            class="bold">{{ user.id }}</span></a></td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <div class="multi"><a class="button-cool"
+                                                      href="{{ url("app_admin_user_edit") }}?user={{ user.id }}"><i
+                                                class="sm md las la-edit"></i> <span class="lg">edit</span></a><a
+                                            class="button-cool"
+                                            href="{{ url("app_admin_user_delete") }}?user={{ user.id }}"><i
+                                                class="sm md las la-trash"></i> <span class="lg">delete</span></a></div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <a class="button-cool" href="?page=1"><span>&laquo;</span></a>
+                {% for i in 1..numberPage %}
+                    {% if i == currentPage %}
+                        <a class="button-cool active" href="?page={{ i }}"><span class="bold">{{ i }}</span></a>
+                    {% else %}
+                        <a class="button-cool" href="?page={{ i }}"><span>{{ i }}</span></a>
+                    {% endif %}
+                {% endfor %}
+                <a class="button-cool" href="?page={{ numberPage }}"><span>&raquo;</span></a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

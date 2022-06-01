@@ -2,18 +2,20 @@
 
 namespace Vroom\Router;
 
-use Vroom\Utils\Container;
+use Vroom\Config\Config;
+use Vroom\Container\Container;
+use Vroom\Container\IContainer;
+use Vroom\Utils\Session;
 
 /**
  *  Router take always the last better
  */
-class Router
+class Router implements IContainer
 {
     /**
      * @var Route[] $routes
      */
     private array $routes = [];
-    const CONTAINER_NAMESPACE = "_router";
 
     public function addRoute(array $data, $controller)
     {
@@ -26,6 +28,9 @@ class Router
     public function handle()
     {
         $url = $_GET['url'] ?? $_SERVER['REQUEST_URI'];
+        $uri = $_SERVER['REQUEST_URI'];
+        $site = Config::container()->getOrDefault("site.url", "");
+
         $r = null;
         $routes = $this->routes[$_SERVER['REQUEST_METHOD']] ?? [];
         if (!empty($routes)) {
@@ -38,15 +43,25 @@ class Router
                 if (!$route->match($url, $_SERVER['REQUEST_METHOD'])) {
                     continue;
                 }
-
                 $r = $route;
             }
             if ($r != null) {
+                $last = $_SESSION['currentUrl'] ?? "";
+                if (!is_array($last)) { // when have currentRoute
+                    $_SESSION['lastUrl'] = $last;
+                }
+                $_SESSION['currentUrl'] = $url;
                 Container::set("currentRoute", $r->getPath());
+
                 $this->callController($r);
             } else {
                 http_response_code(404);
-                throw new \Error("Cannot find route");
+                $page = $this->find404();
+                if (!$page) {
+                    throw new \Error("Cannot find route");
+                }
+
+                $this->callController($page);
             }
         } else {
             // No route so 404
@@ -54,6 +69,17 @@ class Router
 
         }
 
+    }
+
+    private function find404(): ?Route
+    {
+        $page = array_filter($this->getRoutes()['GET'] ?? [], function ($route) {
+            if ($route->getName() === '404') {
+                return $route;
+            }
+        });
+
+        return count($page) ? $page[0] : null;
     }
 
     private function callController(Route $route)
@@ -74,14 +100,32 @@ class Router
                         default:
                             $name = $parameter->getName();
                             $params[] = $route->getVars()[$name] ?? null;
+                            $params = array_map(function ($data) {
+                                if (!($data instanceof Request)) {
+                                    return filter_var($data, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                                } else return $data;
+                            }, $params);
                             break;
                     }
                 }
             }
+
+
             $method->invokeArgs($obj, $params);
-        } catch (\ReflectionException $e) {
-            throw new \Error($e);
-//            die($e);
+        } catch (\Throwable  $e) {
+
+            $debug = Config::container()->getOrDefault("debug", false);
+            if ($debug) {
+                throw new \Error($e);
+            } else {
+                http_response_code(404);
+                $page = $this->find404();
+                if (!$page) {
+                    throw new \Error("Cannot find route");
+                }
+
+                $this->callController($page);
+            }
         }
     }
 
@@ -96,7 +140,7 @@ class Router
 
     public static function getFromPrefix(string $prefix)
     {
-        $routes = Container::get(self::CONTAINER_NAMESPACE)->getRoutes();
+        $routes = self::container()->getRoutes();
 
         foreach ($routes as $method) {
             foreach ($method as $route) {
@@ -108,4 +152,13 @@ class Router
         return null;
     }
 
+    public static function getContainerNamespace(): string
+    {
+        return "_router";
+    }
+
+    public static function container(): static
+    {
+        return Container::get(self::getContainerNamespace());
+    }
 }

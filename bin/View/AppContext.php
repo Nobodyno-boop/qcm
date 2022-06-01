@@ -2,7 +2,8 @@
 
 namespace Vroom\View;
 
-use Vroom\Utils\Container;
+use Vroom\Container\Container;
+use Vroom\Utils\Metrics;
 
 /**
  * Just a class used in the twig context
@@ -22,7 +23,7 @@ class AppContext
      */
     public function __construct(array $session, bool $debug, array $other = [])
     {
-        $loadOb = Container::get("_telemetry_time");
+        $loadOb = Metrics::container();
         $loadOb->stop();
         $this->load = $loadOb->getTime();
 
