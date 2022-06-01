@@ -52,7 +52,6 @@ class AdminController extends AbstractController
             ->add("update", Form::TYPE_SUBMIT);
 
         $form->handleRequest($this->request());
-
         if ($form->isSent() && $form->isValid()) {
             /**
              * @var User $user
@@ -64,10 +63,10 @@ class AdminController extends AbstractController
                 if ($repo) {
                     if ($repo->getEmail() === $user->getEmail() && $id !== $repo->getId()) {
                         $form->addError("Vous ne pouvez pas renseigné une adresse mail qui est déjà dans la base de donnée");
+                    } else {
+                        $user->save();
+                        $this->response()->redirect("app_admin_user_list");
                     }
-                } else {
-                    $user->save();
-                    $this->response()->redirect("app_admin_user_list");
                 }
             }
 

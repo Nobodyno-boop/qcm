@@ -3,7 +3,7 @@
 {% block content %}
     <div class="profile">
         {% if app.user.id == user.id %}
-            <div class="title">Votre profile</div>
+            <div class="title">Votre profil</div>
         {% else %}
             <div class="title">{{ user.username }}</div>
 
@@ -20,7 +20,7 @@
                     Crée le <span class="bold">{{ user.createdAt|date("H:i m/d/Y") }}</span>
                 </div>
                 <div>
-                    Mis à jours le <span class="bold">{{ user.updatedAt|date("H:i m/d/Y") }}</span>
+                    Mis à jour le <span class="bold">{{ user.updatedAt|date("H:i m/d/Y") }}</span>
                 </div>
             {% else %}
                 <div>
@@ -36,21 +36,21 @@
             <div class="title">Actions</div>
             <div class="buttons">
                 <a href="{{ url('') }}profile/edit" class="button-cool"><i class="sm md las la-edit"></i> <span
-                            class="lg">édité son compte</span></a>
+                            class="lg">éditer son compte</span></a>
 
                 <a href="{{ url('') }}profile/delete" class="button-cool"><i class="sm md las la-trash"></i> <span
-                            class="lg">supprimé son compte</span></a>
+                            class="lg">supprimer son compte</span></a>
             </div>
         {% endif %}
-        <div class="title">Qcms</div>
+        <div class="title">Q-CMs</div>
         <div class="content">
             {% if app.user.id == user.id %}
                 <a href="{{ url('app_qcm_list') }}?page=1&user{{ user.id }}" class="button-cool"><i
-                            class="sm md las la-archive"></i> <span class="lg">Vos qcms</span></a>
+                            class="sm md las la-archive"></i> <span class="lg">Vos Q-CMs</span></a>
             {% else %}
                 <a href="{{ url('app_qcm_list') }}?page=1&user{{ user.id }}" class="button-cool"><i
                             class="sm md las la-archive"></i> <span
-                            class="lg">Les qcms de {{ user.username }}</span></a>
+                            class="lg">Les Q-CMs de {{ user.username }}</span></a>
             {% endif %}
         </div>
 

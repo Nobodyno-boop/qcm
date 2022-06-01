@@ -13,12 +13,11 @@ class SecurityController extends AbstractController
     #[Route("/login", "app_login", ['GET', 'POST'])]
     public function loginPost(Request $r)
     {
-
         if (!$this->isLogin()) {
             $form = Form::new(option: ['label' => ['display' => false]])
                 ->add("email", Form::TYPE_EMAIL)
                 ->add("password", Form::TYPE_PASSWORD)
-                ->add("Se connecter !", Form::TYPE_SUBMIT, ["input" => ["class" => "btn"]]);
+                ->add("Connexion", Form::TYPE_SUBMIT, ["input" => ["class" => "btn"]]);
 
             $form->handleRequest($r);
             if ($form->isSent() && $form->isValid()) {
