@@ -59,7 +59,9 @@ export default class Question extends HTMLElement {
         })
         let icon = document.createElement("i")
         icon.classList.add("lar", "la-circle", "la-1x")
-        element.replaceChildren(icon, str);
+        let span = document.createElement("span")
+        span.innerHTML = str;
+        element.replaceChildren(icon, span);
         this.reponse.push(element)
         return element;
     }
