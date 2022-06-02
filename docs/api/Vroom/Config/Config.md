@@ -6,14 +6,6 @@ title: Config
 
 Class \Vroom\Config\Config
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _config_ <code>array</code> 
-
-
+: _config_ <code>array</code>
 
 ### get()
 
@@ -44,18 +29,13 @@ public get (
  ): mixed
 ```
 
-
-Use the ArrayUtils class and get
-Return null is the path ins't valid.
-
-
+Use the ArrayUtils class and get Return null is the path ins't valid.
 
 **Parameters**
-: _path_ <code>string</code> 
+: _path_ <code>string</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getConfigArray()
 
@@ -64,11 +44,7 @@ Return null is the path ins't valid.
 public getConfigArray (  ): mixed
 ```
 
-
 Return the config as array
-
-
-
 
 **Returns**
 : <code>mixed</code> 

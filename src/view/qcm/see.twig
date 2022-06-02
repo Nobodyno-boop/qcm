@@ -1,0 +1,54 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <script type="module" src="{{ asset("js/main.js") }}"></script>
+
+
+
+
+    <div class="qcm-other">
+        <div class="qcm-info">
+            {% if qcm_author == app.user.id %}
+                <div class="qcm-inline-buttons">
+                    <a href="{{ url("") }}qcm/delete/{{ qcmdata.id }}">
+                        <button class="button-cool"><i class="sm md las la-trash"></i><span class="lg"><i
+                                        class="las la-trash"></i> supprimer</span></button>
+                    </a>
+                    <a href="{{ url("") }}qcm/edit/{{ qcmdata.id }}">
+                        <button class="button-cool"><i class="sm md las la-edit"></i><span class="lg"><i
+                                        class="las la-edit"></i> éditer</span></button>
+                    </a>
+                </div>
+            {% endif %}
+            <div class="qcm-info-bar">
+                informations
+            </div>
+            <div class="qcm-info-user">
+                <div class="qcm-info-date">
+                    <div>
+                        Mise à jour à <span class="bold">{{ qcmdata.updatedAt|date("d/m/y H:i") }}</span>
+                    </div>
+                    <div>
+                        Crée à <span class="bold">{{ qcmdata.createdAt|date("d/m/y H:i") }}</span>
+                    </div>
+                </div>
+                <div>
+                    Utilisateur: <a href="{{ url('') }}profile/see/{{ qcmdata.author.id }}"><span
+                                class="bold">{{ qcmdata.author.username }}</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="qcm-title">{{ qcmdata.title }}</div>
+    <div class="qcm">
+        <qcm-view data-id="{{ qcmdata.id }}"
+                  data-version="{{ qcm.version }}"
+                  data-questions="{{ qcm.question|json_encode() }}"
+                  data-url="{{ url('') }}"
+                  data-asset="{{ asset('') }}">
+
+        </qcm-view>
+    </div>
+
+
+{% endblock %}

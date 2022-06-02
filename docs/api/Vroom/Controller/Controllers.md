@@ -6,12 +6,6 @@ title: Controllers
 
 Class \Vroom\Controller\Controllers
 
-
-
-
-
-
-
 ## Constants
 
 ### CONTAINER_NAMESPACE
@@ -21,12 +15,6 @@ Class \Vroom\Controller\Controllers
 public CONTAINER_NAMESPACE = "_controllers"
 
 ```
-
-
-
-
-
-
 
 ## Methods
 
@@ -39,17 +27,11 @@ public static get (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
+: _name_ <code>string</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### read()
 
@@ -60,13 +42,8 @@ public static read (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _controller_ <code>string|object</code> 
+: _controller_ <code>string|object</code>
 
 **Returns**
 : <code>mixed</code> 

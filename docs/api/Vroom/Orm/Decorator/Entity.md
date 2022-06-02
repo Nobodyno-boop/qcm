@@ -6,14 +6,6 @@ title: Entity
 
 Class \Vroom\Orm\Decorator\Entity
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
-
-
+: _name_ <code>string</code>
 
 ### getName()
 
@@ -41,12 +26,6 @@ public __construct (
 
 public getName (  ): string
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>string</code> 

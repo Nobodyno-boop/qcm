@@ -1,0 +1,57 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <div class="block">
+        <div class="title">Listes des Qcms</div>
+
+        <div class="content">
+            <div>Nombre d'utilisateurs: <span class="bold">{{ qcm_count }}</span></div>
+            <div class="back"><a href="{{ url('app_admin_home') }}" class="button-cool"><i
+                            class="sm md las la-arrow-left"></i><span class="lg">Retourner en arrière</span></a></div>
+            <div class="table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th><span class="bold">#</span></th>
+                        <th>auteur</th>
+                        <th>testes</th>
+                        <th>actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for qcm in data %}
+
+                        <tr>
+                            <td><a href="{{ url('') }}qcm/view/{{ qcm.data.id }}"><span
+                                            class="bold">{{ qcm.data.id }}</span></a></td>
+                            <td><a href="{{ url('') }}qcm/view/{{ qcm.data.author.id }}"><span
+                                            class="bold">{{ qcm.data.author.username }}</span></a></td>
+                            <td>{{ qcm.countStats }}</td>
+                            <td>
+                                <div class="multi"><a class="button-cool"
+                                                      href="{{ url("") }}qcm/edit/{{ qcm.data.id }}"><i
+                                                class="sm md las la-edit"></i> <span class="lg">éditer</span></a><a
+                                            class="button-cool" href="{{ url('') }}qcm/delete/{{ qcm.data.id }}"><i
+                                                class="sm md las la-trash"></i> <span class="lg">supprimer</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <a class="button-cool" href="&page=1"><span>&laquo;</span></a>
+                {% for i in 1..numberPage %}
+                    {% if i == currentPage %}
+                        <a class="button-cool active" href="&page={{ i }}"><span class="bold">{{ i }}</span></a>
+                    {% else %}
+                        <a class="button-cool" href="&page={{ i }}"><span>{{ i }}</span></a>
+                    {% endif %}
+                {% endfor %}
+                <a class="button-cool" href="&page={{ numberPage }}"><span>&raquo;</span></a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -3,16 +3,21 @@
 namespace Vroom\Controller;
 
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Vroom\Container\Container;
 use Vroom\Orm\Model\Model;
-use Vroom\Orm\Repository;
 use Vroom\Router\Request;
 use Vroom\Router\Response;
 use Vroom\Security\Token;
-use Vroom\Utils\Container;
 use Vroom\View\AppContext;
 
 class AbstractController
 {
+    /**
+     * @var Request the current request
+     */
     private Request $request;
 
     /**
@@ -24,9 +29,10 @@ class AbstractController
     }
 
     /**
+     * Get the current request
      * @return Request
      */
-    protected function getRequest(): Request
+    protected function request(): Request
     {
         return $this->request;
     }
@@ -38,8 +44,8 @@ class AbstractController
      */
     protected function getSession(string $key = null): mixed
     {
-        if($key){
-            if(!isset($_SESSION[$key])){
+        if ($key) {
+            if (!isset($_SESSION[$key])) {
                 return null;
             }
             return $_SESSION[$key];
@@ -48,10 +54,17 @@ class AbstractController
         return $_SESSION;
     }
 
+    /**
+     * Store object in the session with key => value
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     protected function addSession(string $key, mixed $value)
     {
         if (is_object($value)) {
-            if(get_parent_class($value) === Model::class){
+            if (get_parent_class($value) === Model::class) {
                 $value = $value->serialize();
             } else $value = serialize($value);
 
@@ -59,35 +72,49 @@ class AbstractController
         $_SESSION[$key] = $value;
     }
 
+    /**
+     * Check if the user is Login by checking the session
+     * @return bool
+     */
     protected function isLogin(): bool
     {
         return !empty($this->getSession("user"));
     }
 
-    protected function repository($class): Repository
+    public function getRole()
     {
-        if (is_object($class)) {
-            $class = get_class($class);
+        if (!$this->isLogin()) {
+            return "";
         }
-        if (is_string($class)) {
-            return new Repository($class);
-        }
-        throw new \Error("Could not get model class");
+        return $this->getSession("user")['role'] ?? "";
     }
 
+    /**
+     * Get a new instance of Response
+     * @return Response
+     * @see Response
+     */
     public function response(): Response
     {
         return new Response();
     }
 
-    public function twig(): Environment
+    /**
+     * Get the twig environment
+     * @return Environment
+     */
+    protected function twig(): Environment
     {
         return Container::get("_twig");
     }
 
+    /**
+     * Get the url of the current request
+     * @return string
+     */
     public function url(): string
     {
-        return $this->getRequest()->getRoute()->getPath();
+        return $this->request()->getRoute()->getPath();
     }
 
 
@@ -97,25 +124,31 @@ class AbstractController
      * The token is putting in the session
      * @return string
      */
-    public function getToken(): string
+    public function getToken($url = ''): string
     {
-        $token = Token::getToken(url: $this->url());
+        if (empty($url)) {
+            $url = $this->url();
+        }
+        $token = Token::getToken(url: $url);
 
         $this->addSession("_crsf", $token);
 
         return $token->token;
     }
 
-
+    /**
+     * Check if the Token is good
+     *
+     * @param string $token
+     * @return bool
+     * @see Token
+     */
     public function matchToken(string $token): bool
     {
         $sessionToken = unserialize($this->getSession("_crsf"));
         if (get_class($sessionToken) === Token::class) {
             $url = $this->url();
-            if(!str_starts_with($url, "/")){
-                $url = "/".$url;
-            }
-            if($sessionToken->match($token, $url)){
+            if ($sessionToken->match($token, $url)) {
                 $this->getToken();
                 return true;
             }
@@ -125,16 +158,27 @@ class AbstractController
         return false;
     }
 
+    /**
+     * Render the view of twig file
+     *
+     * @param string $view
+     * @param array $context
+     * @return void
+     */
     public function renderView(string $view, array $context = [])
     {
-        if(!str_ends_with($view, ".twig")){
-            $view = $view.".twig";
+        try {
+            if (!str_ends_with($view, ".twig")) {
+                $view = $view . ".twig";
+            }
+            $template = $this->twig()->load($view);
+            $appContext = new AppContext($_SESSION, true, [
+                "class" => get_class($this)
+            ]);
+            $template->display(["app" => $appContext, ...$context]);
+        } catch (\Exception $e) {
+            $this->response()->redirect("404");
         }
-        $template = $this->twig()->load($view);
-        $appContext = new AppContext($_SESSION, true, [
-            "class" => get_class($this)
-        ]);
-        $template->display(["app" => $appContext, ...$context]);
     }
 
 

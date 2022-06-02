@@ -2,8 +2,12 @@
 
 namespace Vroom\Utils;
 
-class Metrics
+use Vroom\Container\Container;
+use Vroom\Container\IContainer;
+
+class Metrics implements IContainer
 {
+
     private float $start;
     private float $end;
 
@@ -19,11 +23,20 @@ class Metrics
 
     public function getTime(): float
     {
-        if(!isset($this->start, $this->end)){
+        if (!isset($this->start, $this->end)) {
             return -1.0;
         }
 
         return ($this->end - $this->start);
     }
 
+    public static function getContainerNamespace(): string
+    {
+        return "_metrics";
+    }
+
+    public static function container(): static
+    {
+        return Container::get(self::getContainerNamespace());
+    }
 }

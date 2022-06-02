@@ -6,14 +6,6 @@ title: Sql
 
 Class \Vroom\Orm\Sql\Sql
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -23,14 +15,6 @@ Class \Vroom\Orm\Sql\Sql
 public __construct (  ): 
 ```
 
-
-
-
-
-
-
-
-
 ### connect()
 
 ```php
@@ -38,15 +22,8 @@ public __construct (  ):
 public connect (  ): mixed
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getCon()
 
@@ -55,15 +32,8 @@ public connect (  ): mixed
 public getCon (  ): \PDO
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>\PDO</code> 
-
+: <code>\PDO</code>
 
 ### query()
 
@@ -74,13 +44,8 @@ public query (
  ): bool|\PDOStatement
 ```
 
-
-
-
-
-
 **Parameters**
-: _query_ <code>string</code> 
+: _query_ <code>string</code>
 
 **Returns**
 : <code>bool|\PDOStatement</code> 

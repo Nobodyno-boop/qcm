@@ -6,42 +6,25 @@ title: Token
 
 Class \Vroom\Security\Token
 
-
 Example usage:
+
 ```php
 $freshToken = Token::(15, "mysuperurl");
 ```
-
-
-
-
 
 ## Properties
 
 ### token
 
-
 ```php
  public string token
 ```
 
-
-
-
-
-
 ### url
-
 
 ```php
  public string url
 ```
-
-
-
-
-
-
 
 ## Methods
 
@@ -55,16 +38,9 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _token_ <code>string</code> 
-: _url_ <code>string</code> 
-
-
+: _token_ <code>string</code>
+: _url_ <code>string</code>
 
 ### __serialize()
 
@@ -73,15 +49,8 @@ public __construct (
 public __serialize (  ): array
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>array</code> 
-
+: <code>array</code>
 
 ### __unserialize()
 
@@ -92,42 +61,34 @@ public __unserialize (
  ): void
 ```
 
-
-
-
-
-
 **Parameters**
-: _data_ <code>array</code> 
-
-
+: _data_ <code>array</code>
 
 ### getToken()
 
 ```php
 
 public static getToken ( 
-    int $length = 15, 
+    INT $length = 15, 
     string $url = ""
  ): void|\Vroom\Security\Token
 ```
 
-
 Generate a new instance of token with a random token.
 
 Example:
+
 ```php
 $freshToken = Token::(url: "myUrl");
 $MyLongToken = Token::(30, "my");
 ```
 
 **Parameters**
-: _length_ <code>int</code> 
-: _url_ <code>string</code> 
+: _length_ <code>INT</code>
+: _url_ <code>string</code>
 
 **Returns**
-: <code>void|[\Vroom\Security\Token](./Token.md)</code> 
-
+: <code>void|[\Vroom\Security\Token](./Token.md)</code>
 
 ### match()
 
@@ -139,10 +100,10 @@ public match (
  ): bool
 ```
 
-
 Verify if the token and url is the same.
 
 Example:
+
 ```php
 // request on /user/login
 $token = "blalba";
@@ -154,8 +115,8 @@ if(token->match($token, "/user/login") {
 ```
 
 **Parameters**
-: _token_ <code>string</code> 
-: _url_ <code>string</code> 
+: _token_ <code>string</code>
+: _url_ <code>string</code>
 
 **Returns**
 : <code>bool</code> 

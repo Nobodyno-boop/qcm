@@ -7,31 +7,37 @@ use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Decorator\Entity;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Types;
+use Vroom\Utils\Form;
 
 #[Entity('User')]
 class User extends Model
 {
 
     #[
-        Column('id', Types::id),
+        Column('id', Types::ID),
     ]
     private int $id;
 
     #[
-        Column('username', Types::varchar),
+        Column('username', Types::VARCHAR),
     ]
     private string $username;
 
-    #[Column("email", Types::varchar)]
+    #[
+        Column('role', Types::VARCHAR),
+    ]
+    private string $role;
+
+    #[Column("email", Types::VARCHAR, formType: Form::TYPE_EMAIL)]
     private string $email;
 
-    #[Column("password", Types::varchar)]
+    #[Column("password", Types::VARCHAR, formType: Form::TYPE_PASSWORD)]
     private string $password;
 
-    #[Column("updated_at", Types::datetime, nullable: true)]
+    #[Column("updated_at", Types::DATETIME, nullable: true)]
     private string $updated_at;
 
-    #[Column("created_at", Types::datetime, nullable: true)]
+    #[Column("created_at", Types::DATETIME, nullable: true)]
     private string $createdAt;
 
     /**
@@ -64,6 +70,22 @@ class User extends Model
     public function setUsername(string $username): void
     {
         $this->username = $username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param string $role
+     */
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
     }
 
     /**
@@ -129,4 +151,6 @@ class User extends Model
     {
         $this->createdAt = $createdAt;
     }
+
+
 }

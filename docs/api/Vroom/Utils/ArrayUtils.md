@@ -6,14 +6,6 @@ title: ArrayUtils
 
 Class \Vroom\Utils\ArrayUtils
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _array_ <code>array</code> 
-
-
+: _array_ <code>array</code>
 
 ### from()
 
@@ -44,17 +29,13 @@ public static from (
  ): \Vroom\Utils\ArrayUtils
 ```
 
-
 Return a new instance of ArrayUtils
 
-
-
 **Parameters**
-: _array_ <code>array</code> 
+: _array_ <code>array</code>
 
 **Returns**
-: <code>[\Vroom\Utils\ArrayUtils](./ArrayUtils.md)</code> 
-
+: <code>[\Vroom\Utils\ArrayUtils](./ArrayUtils.md)</code>
 
 ### get()
 
@@ -65,7 +46,6 @@ public get (
  ): mixed
 ```
 
-
 Return search in the array with a path
 
 ```php
@@ -73,7 +53,7 @@ ArrayUtils::from([...])->get('user.id');
 ```
 
 **Parameters**
-: _path_ <code>string</code> 
+: _path_ <code>string</code>
 
 **Returns**
 : <code>mixed</code> 

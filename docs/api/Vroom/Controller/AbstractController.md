@@ -6,14 +6,6 @@ title: AbstractController
 
 Class \Vroom\Controller\AbstractController
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _request_ <code>[\Vroom\Router\Request](../Router/Request.md)</code> 
-
-
+: _request_ <code>[\Vroom\Router\Request](../Router/Request.md)</code>
 
 ### getToken()
 
@@ -42,15 +27,12 @@ public __construct (
 public getToken (  ): string
 ```
 
-
 Make a fresh CRSF Token and return it
 
 The token is putting in the session
 
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### matchToken()
 
@@ -61,17 +43,11 @@ public matchToken (
  ): bool
 ```
 
-
-
-
-
-
 **Parameters**
-: _token_ <code>string</code> 
+: _token_ <code>string</code>
 
 **Returns**
-: <code>bool</code> 
-
+: <code>bool</code>
 
 ### renderView()
 
@@ -83,18 +59,12 @@ public renderView (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _view_ <code>string</code> 
-: _context_ <code>array</code> 
+: _view_ <code>string</code>
+: _context_ <code>array</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### response()
 
@@ -103,15 +73,8 @@ public renderView (
 public response (  ): \Vroom\Router\Response
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Router\Response](../Router/Response.md)</code> 
-
+: <code>[\Vroom\Router\Response](../Router/Response.md)</code>
 
 ### twig()
 
@@ -120,15 +83,8 @@ public response (  ): \Vroom\Router\Response
 public twig (  ): \Twig\Environment
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>\Twig\Environment</code> 
-
+: <code>\Twig\Environment</code>
 
 ### url()
 
@@ -136,12 +92,6 @@ public twig (  ): \Twig\Environment
 
 public url (  ): string
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>string</code> 

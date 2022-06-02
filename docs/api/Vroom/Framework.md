@@ -6,14 +6,6 @@ title: Framework
 
 Class \Vroom\Framework
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -26,16 +18,9 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _config_ <code>[\Vroom\Config\Config](Config/Config.md)</code> 
-: _app_ <code>[\Vroom\App\AbstractApp](App/AbstractApp.md)</code> 
-
-
+: _config_ <code>[\Vroom\Config\Config](Config/Config.md)</code>
+: _app_ <code>[\Vroom\App\AbstractApp](App/AbstractApp.md)</code>
 
 ### getConfig()
 
@@ -44,15 +29,8 @@ public __construct (
 public getConfig (  ): \Vroom\Config\Config
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Config\Config](Config/Config.md)</code> 
-
+: <code>[\Vroom\Config\Config](Config/Config.md)</code>
 
 ### getRouter()
 
@@ -61,15 +39,8 @@ public getConfig (  ): \Vroom\Config\Config
 public static getRouter (  ): \Vroom\Router\Router
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Router\Router](Router/Router.md)</code> 
-
+: <code>[\Vroom\Router\Router](Router/Router.md)</code>
 
 ### newInstance()
 
@@ -81,14 +52,9 @@ public static newInstance (
  ): \Vroom\Framework
 ```
 
-
-
-
-
-
 **Parameters**
-: _configPath_ <code>string</code> 
-: _app_ <code>[\Vroom\App\AbstractApp](App/AbstractApp.md)</code> 
+: _configPath_ <code>string</code>
+: _app_ <code>[\Vroom\App\AbstractApp](App/AbstractApp.md)</code>
 
 **Returns**
 : <code>[\Vroom\Framework](./Framework.md)</code> 

@@ -6,11 +6,7 @@ title: Router
 
 Class \Vroom\Router\Router
 
-
 Router take always the last better
-
-
-
 
 ## Constants
 
@@ -21,12 +17,6 @@ Router take always the last better
 public CONTAINER_NAMESPACE = "_router"
 
 ```
-
-
-
-
-
-
 
 ## Methods
 
@@ -40,18 +30,12 @@ public addRoute (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _data_ <code>array</code> 
-: _controller_ <code>mixed</code> 
+: _data_ <code>array</code>
+: _controller_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getFromPrefix()
 
@@ -62,17 +46,11 @@ public static getFromPrefix (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _prefix_ <code>string</code> 
+: _prefix_ <code>string</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getRoutes()
 
@@ -81,15 +59,8 @@ public static getFromPrefix (
 public getRoutes (  ): \Vroom\Router\Route[]
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>[\Vroom\Router\Route](./Route.md)[]</code> 
-
+: <code>[\Vroom\Router\Route](./Route.md)[]</code>
 
 ### handle()
 
@@ -97,12 +68,6 @@ public getRoutes (  ): \Vroom\Router\Route[]
 
 public handle (  ): mixed
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>mixed</code> 

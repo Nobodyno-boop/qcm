@@ -2,8 +2,8 @@
 
 namespace Vroom\Controller;
 
+use Vroom\Container\Container;
 use Vroom\Router\Decorator\Route;
-use Vroom\Utils\Container;
 
 class Controllers
 {
@@ -17,9 +17,18 @@ class Controllers
             }
             $class = new \ReflectionClass($controller);
             if (!$class->isSubclassOf(AbstractController::class)) {
-                throw new \Error("Cannot init a controller without extends AbAbstractController");
+                throw new \Error("Cannot init a controller without extends AbstractController");
             }
             $results = [];
+            $classAttribute = $class->getAttributes(Route::class, \ReflectionAttribute::IS_INSTANCEOF);
+            $classUrl = "";
+            $classPrefix = "";
+            if (!empty($classAttribute)) {
+                $classRoute = $classAttribute[0]->newInstance();
+                $classUrl = $classRoute->getUrl() ?? "";
+                $classPrefix = $classRoute->getName() ?? "";
+
+            }
             foreach ($class->getMethods() as $method) {
                 $routes = $method->getAttributes(Route::class, \ReflectionAttribute::IS_INSTANCEOF);
                 if (!empty($routes)) {
@@ -28,8 +37,8 @@ class Controllers
                      */
                     $route = $routes[0]->newInstance();
                     $result["name"] = $method->getName();
-                    $result['url'] = $route->getUrl();
-                    $result['prefix'] = $route->getName();
+                    $result['url'] = $classUrl . $route->getUrl();
+                    $result['prefix'] = $classPrefix . $route->getName();
                     $result['methods'] = $route->getMethods();
                     $results[] = $result;
                 }

@@ -1,0 +1,27 @@
+<div class="nav">
+    <div class="mobile-menu" data-toggle-element="#mobile" data-toggle-class="open">
+        <i class="las la-bars"></i>
+    </div>
+    <div class="nav-logo">
+        {#            <img src="{{ asset("img/logo.png") }}" alt="QCM Logo"> #}
+        <a href="{{ url("app_home") }}">
+            <div class="nav-brand">Q-CM</div>
+        </a>
+    </div>
+
+    <ul class="nav-links " id="mobile">
+        <li class="link"><a href="{{ url("app_home") }}">Accueil</a></li>
+        <li class="link"><a href="{{ url("app_qcm_list") }}">QCM</a></li>
+        {% if app.user %}
+            {% if app.user.role == "ADMIN" %}
+                <li class="link"><a href="{{ url("app_admin_home") }}">Admin <i class="las la-user-cog"></i></a></li>
+            {% endif %}
+
+            <li class="link"><a href="{{ url("app_user_profile") }}">Profil <i class="las la-user"></i></a></li>
+
+            <li class="link"><a href="{{ url("app_logout") }}"><i class="las la-sign-out-alt"></i></a></li>
+        {% else %}
+            <li class="link"><a href="{{ url("app_login") }}">Connexion</a></li>
+        {% endif %}
+    </ul>
+</div>

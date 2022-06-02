@@ -2,9 +2,8 @@
 
 namespace Vroom\Router;
 
-use Vroom\Config\Config;
+use Vroom\Container\Container;
 use Vroom\Orm\Model\Model;
-use Vroom\Utils\Container;
 
 class Response
 {
@@ -24,13 +23,13 @@ class Response
         }
     }
 
-    private function objectToJson($value)
+    private function objectToJson($value): string
     {
         $json = null;
         if (get_parent_class($value) === Model::class) {
             $json = json_encode($value->serialize());
         }
-        if($json){
+        if ($json) {
             return $json;
         } else return "";
     }
@@ -43,14 +42,34 @@ class Response
     {
         $url = Router::getFromPrefix($url) ?? $url;
         $site = Container::get("_config")->get("site.url");
-        if(is_object($url)){
+        if (is_object($url)) {
             $url = $url->getPath();
         }
 
-        if(!str_starts_with($url, "/")){
-            $url = "/".$url;
+        if (!str_starts_with($url, "/")) {
+            $url = "/" . $url;
         }
-        header("Location: ".$site.$url);
+        header("Location: " . $site . $url);
         exit();
+    }
+
+    public function lastRoute()
+    {
+        $last = $_SESSION['lastUrl'] ?? "";
+        if (empty($last)) {
+            return $this->notFound();
+        }
+
+        return $this->redirect($last);
+    }
+
+    /**
+     * Return a 404 not found
+     * @return void
+     */
+    public function notFound(): void
+    {
+        http_response_code(404);
+        $this->redirect("404");
     }
 }

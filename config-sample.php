@@ -8,13 +8,11 @@ return [
         "database" => "qcm"
     ],
     "site" => [
-      "url" => "https://cul-cm.dev",
-        "assets"=> "/assets"
+        "url" => "https://cul-cm.dev",
+        "assets" => "/assets"
     ],
     "template" => [
         "dir" => ""
     ],
-    "debug" => [
-        "checkModels" => "true"
-    ]
+    "debug" => true
 ];

@@ -6,14 +6,6 @@ title: Repository
 
 Class \Vroom\Orm\Repository
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -25,15 +17,8 @@ public __construct (
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _model_ <code>string</code> 
-
-
+: _model_ <code>string</code>
 
 ### findBy()
 
@@ -45,18 +30,12 @@ public findBy (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _key_ <code>string</code> 
-: _value_ <code>mixed</code> 
+: _key_ <code>string</code>
+: _value_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### get()
 
@@ -68,39 +47,27 @@ public get (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _value_ <code>mixed</code> 
-: _key_ <code>mixed</code> 
+: _value_ <code>mixed</code>
+: _key_ <code>mixed</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### getAll()
 
 ```php
 
 public getAll ( 
-    int $limit = 10
+    INT $limit = 10
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _limit_ <code>int</code> 
+: _limit_ <code>INT</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### toModel()
 
@@ -111,13 +78,8 @@ public toModel (
  ): ?object
 ```
 
-
-
-
-
-
 **Parameters**
-: _var_ <code>mixed</code> 
+: _var_ <code>mixed</code>
 
 **Returns**
 : <code>?object</code> 

@@ -9,7 +9,6 @@ class Request
     private Route $route;
     private mixed $_body;
     private array|false $header;
-    private string $method;
 
     /**
      * @param Route $route
@@ -25,7 +24,12 @@ class Request
     private function getBodyByHeader()
     {
         $input = file_get_contents("php://input");
-        return match ($this->header['Content-Type'] ?? "") {
+        $h = $this->header['Content-Type'] ?? null;
+        if (!$h) {
+            $h = $this->header['content-type'] ?? null;
+        }
+
+        return match ($h ?? "") {
             "application/json" => json_decode($input),
             default => $input
         };
@@ -40,16 +44,16 @@ class Request
         return $this->_body;
     }
 
-    public function get($path)
+    public function get(): ArrayUtils
     {
-        return ArrayUtils::from($_GET)->get($path);
+        return ArrayUtils::from($_GET);
     }
 
-    public function post($path)
+    public function post(): ArrayUtils
     {
-        return ArrayUtils::from($_POST)->get($path);
+        return ArrayUtils::from($_POST);
     }
-    
+
     public function query(string $key = ""): mixed
     {
         $parse = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);

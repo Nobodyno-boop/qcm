@@ -2,6 +2,7 @@
 
 namespace Vroom\Orm\Sql;
 
+use Vroom\Orm\Decorator\Column;
 use Vroom\Orm\Model\Model;
 use Vroom\Orm\Model\Models;
 use Vroom\Orm\Model\Types;
@@ -15,6 +16,8 @@ class QueryBuilder
     private $word = "";
     private $values = [];
     private $limit = 0;
+    private $offset = 0;
+    private $ord = "";
 
     /**
      * @param string|null $model
@@ -34,9 +37,11 @@ class QueryBuilder
         return new QueryBuilder($model);
     }
 
-    public static function fromModel(Model $model): QueryBuilder
+    public static function fromModel(Model|string $model): QueryBuilder
     {
-        return new QueryBuilder(get_class($model));
+        if (is_object($model)) {
+            return new QueryBuilder(get_class($model));
+        } else return new QueryBuilder($model);
     }
 
     public function select(string ...$select): QueryBuilder
@@ -55,8 +60,21 @@ class QueryBuilder
     public function where(array $where): QueryBuilder
     {
         foreach ($where as $k => $v) {
-            $this->cond[] = $k . " = '" . $v . "'";
+            if (!is_int($k)) {
+                $this->cond[] = $k . " = '" . $v . "'";
+            } else {
+                $this->cond[] = $v;
+            }
         }
+        return $this;
+    }
+
+    public function order(string|array $column, $by = "ASC"): QueryBuilder
+    {
+        if (is_array($column)) {
+            $column = implode(" ", $column);
+        }
+        $this->ord = "ORDER BY $column $by";
         return $this;
     }
 
@@ -80,6 +98,12 @@ class QueryBuilder
         return $this;
     }
 
+    public function offset($offset): QueryBuilder
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
 
     public function update(array|Model $update): QueryBuilder
     {
@@ -92,17 +116,22 @@ class QueryBuilder
         } else { // when is the object
             $vars = $update->_getvars();
             foreach ($this->model['properties'] as $item) {
-                if (!($item->getType() == Types::id)) {
+                if (!($item->getType() == Types::ID)) {
                     $value = null;
-                    if($item->isNullable()){
-                        if(isset($vars[Model::varName($item->getName())])) {
+                    if ($item->isNullable()) {
+                        if (isset($vars[Model::varName($item->getName())])) {
                             $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
                         }
-                    }else {
+                    } else {
                         $value = call_user_func(array($update, 'get' . Model::varName($item->getName())));
                     }
+                    $value = match ($item->getType()) {
+                        Types::JSON => json_encode($value),
+                        Types::MANY_TO_ONE => $this->manyToOneUpdate($value),
+                        default => $value
+                    };
 
-                    if($value){
+                    if ($value) {
                         $this->fields[] = $item->getName() . " = '" . $value . "'";
                     }
                 }
@@ -115,7 +144,6 @@ class QueryBuilder
     public function limit(int $limit = 1): QueryBuilder
     {
         $this->limit = $limit;
-
         return $this;
     }
 
@@ -130,23 +158,72 @@ class QueryBuilder
         } else { //model
             $vars = $insert->_getvars();
             foreach ($this->model['properties'] as $item) {
-                if (!($item->getType() === Types::id) ) {
+                if (!($item->getType() === Types::ID)) {
                     $value = null;
-                    if($item->isNullable()){
-                        if(isset($vars[Model::varName($item->getName())])) {
+                    if ($item->isNullable()) {
+                        if (isset($vars[Model::varName($item->getName())])) {
                             $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
                         }
-                    }else {
+                    } else {
                         $value = call_user_func(array($insert, 'get' . Model::varName($item->getName())));
                     }
-                    if($value){
-                        $this->values['keys'][] = $item->getName();
-                        $this->values['values'][] = "'" . $value . "'";
+                    if ($value) {
+                        $value = match ($item->getType()) {
+                            Types::JSON => json_encode($value),
+                            default => $value
+                        };
+
+                        if ($item->getType() === Types::ONE_TO_ONE || $item->getType() === Types::ONE_TO_MANY || $item->getType() === Types::MANY_TO_ONE || $item->getType() === Types::MANY_TO_MANY) {
+                            if (is_object($value)) {
+                                $type = $this->getModelId($value);
+                                if ($type) {
+                                    $value = call_user_func([$value, 'get' . Model::varName($type->getName())]);
+
+                                    $this->values['keys'][] = $item->getName();
+                                    $this->values['values'][] = "'" . $value . "'";
+                                } // error you must specify a type ID
+                            }
+                        } else {
+                            $this->values['keys'][] = $item->getName();
+                            $this->values['values'][] = "'" . $value . "'";
+                        }
+
                     }
                 }
             }
         }
         return $this;
+    }
+
+
+    private function getModelId($model): Column|null
+    {
+        $model = Models::get(get_class($model));
+
+        $find = array_values(array_filter($model['properties'], function ($el) {
+            if ($el->getType() === Types::ID) {
+                return $el;
+            }
+        }));
+
+        return (empty($find) === true) ? null : $find[0];
+    }
+
+    private function getModelData($model, string $name): mixed
+    {
+        $value = call_user_func(array($model, 'get' . Model::varName($name)));
+        return $value === false ? null : $value;
+    }
+
+    private function manyToOneUpdate(mixed $value)
+    {
+        $col = $this->getModelId($value);
+        if (!$col) return null;
+
+        $data = $this->getModelData($value, $col->getName());
+        if (!$data) return null;
+
+        return $data;
     }
 
     public function __toString(): string
@@ -165,6 +242,7 @@ class QueryBuilder
                     $query = "INSERT INTO " . $table . " "
                         . $keys . " VALUES" .
                         $values;
+
                     break;
                 case "update":
                     $query = $this->word . " " . $table .
@@ -172,23 +250,24 @@ class QueryBuilder
                         . $w;
                     break;
                 case "delete":
-                    $query = $this->word . " "
+                    $query = $this->word . " FROM "
                         . $table . " "
                         . $w;
                     break;
                 default:
                 case "select":
                     $limit = $this->limit != 0 ? " LIMIT " . $this->limit : "";
-
-                    $query = "SELECT" . $selector . " FROM "
-                        . $table
-                        . $w . $limit;
+                $offset = $this->offset != 0 ? " OFFSET " . $this->offset : "";
+                $query = "SELECT " . $selector . " FROM "
+                    . $table
+                    . $w . " " . $this->ord . $limit . $offset;
 
                     break;
             }
         }
 
-
         return $query;
     }
+
+
 }

@@ -6,14 +6,6 @@ title: Container
 
 Class \Vroom\Utils\Container
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### get()
@@ -25,17 +17,11 @@ public static get (
  ): mixed
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
+: _name_ <code>string</code>
 
 **Returns**
-: <code>mixed</code> 
-
+: <code>mixed</code>
 
 ### isEmpty()
 
@@ -46,17 +32,11 @@ public static isEmpty (
  ): bool
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
+: _name_ <code>string</code>
 
 **Returns**
-: <code>bool</code> 
-
+: <code>bool</code>
 
 ### set()
 
@@ -68,13 +48,8 @@ public static set (
  ): void
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
+: _name_ <code>string</code>
 : _value_ <code>mixed</code> 
 
 

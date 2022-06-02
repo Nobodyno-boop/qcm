@@ -2,37 +2,54 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% block assets %}
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css">
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        <link rel="stylesheet"
+              href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     {% endblock %}
     {% block seo %}
-    <meta property="og:title" content="I am prout"/>
+        <!-- Primary Meta Tags -->
+        <title>Q-CM — Simple et rapide</title>
+        <meta name="title" content="Q-CM — Simple et rapide">
+        <meta name="description"
+              content="Des Q-CMs simple, pour une vie simple.">
+        <link rel="icon" href="{{ asset('img/favicon.png') }}" sizes="32x32"/>
+        <link rel="icon" href="{{ asset('img/favicon.png') }}" sizes="192x192"/>
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url('') }}">
+        <meta property="og:title" content="Q-CM — Simple et rapide">
+        <meta property="og:description"
+              content="Des Q-CMs simple, pour une vie simple.">
+        <meta property="og:image"
+              content="https://pipoucolors.clownerie.space/api/v1/800/600/">
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ url('') }}">
+        <meta property="twitter:title" content="Q-CM — Simple et rapide">
+        <meta property="twitter:description"
+              content="Des Q-CMs simple, pour une vie simple.">
+        <meta property="twitter:image"
+              content="https://pipoucolors.clownerie.space/api/v1/800/600/">
     {% endblock %}
-    <title>{% block title %} Cursed website {% endblock %}</title>
 </head>
-<body class="h-screen flex flex-col">
-    <div class="flex-grow">
-        {% block content %}
+<body>
+{% include 'nav.twig' %}
 
-        {% endblock %}
-    </div>
+<div class="container">
+    {% block content %}
 
-    {% if app.debug %}
-        <div class="bg-emerald-800 h-10 p-2">
-            <div class="inline-flex text-white">
-                <p class="mr-1">
-                    Load time : {{ app.load | number_format(2) }}
-                </p>
-                <p class="mr-1">|</p>
-                <p>
-                    Controller: {{ app.other.class }}
-                </p>
-            </div>
-        </div>
-    {% endif %}
+    {% endblock %}
+</div>
+<script src="{{ asset('js/utils.js') }}"></script>
+
 </body>
 </html>

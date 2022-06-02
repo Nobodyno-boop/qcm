@@ -6,14 +6,6 @@ title: Column
 
 Class \Vroom\Orm\Decorator\Column
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### __construct()
@@ -22,22 +14,15 @@ Class \Vroom\Orm\Decorator\Column
 
 public __construct ( 
     string $name, 
-    int $type, 
+    INT $type, 
     bool $nullable = false
  ): 
 ```
 
-
-
-
-
-
 **Parameters**
-: _name_ <code>string</code> 
-: _type_ <code>int</code> 
-: _nullable_ <code>bool</code> 
-
-
+: _name_ <code>string</code>
+: _type_ <code>INT</code>
+: _nullable_ <code>bool</code>
 
 ### getName()
 
@@ -46,32 +31,18 @@ public __construct (
 public getName (  ): string
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>string</code> 
-
+: <code>string</code>
 
 ### getType()
 
 ```php
 
-public getType (  ): int
+public getType (  ): INT
 ```
 
-
-
-
-
-
-
 **Returns**
-: <code>int</code> 
-
+: <code>INT</code>
 
 ### isNullable()
 
@@ -79,12 +50,6 @@ public getType (  ): int
 
 public isNullable (  ): bool
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>bool</code> 

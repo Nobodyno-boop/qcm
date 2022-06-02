@@ -1,0 +1,59 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+    <div class="profile">
+        {% if app.user.id == user.id %}
+            <div class="title">Votre profil</div>
+        {% else %}
+            <div class="title">{{ user.username }}</div>
+
+        {% endif %}
+        <div class="content">
+            {% if app.user.id == user.id %}
+                <div>
+                    Votre email: <span class="bold">{{ user.email }}</span>
+                </div>
+                <div>
+                    Votre username: <span class="bold">{{ user.username }}</span>
+                </div>
+                <div>
+                    Crée le <span class="bold">{{ user.createdAt|date("H:i m/d/Y") }}</span>
+                </div>
+                <div>
+                    Mis à jour le <span class="bold">{{ user.updatedAt|date("H:i m/d/Y") }}</span>
+                </div>
+            {% else %}
+                <div>
+                    Username: <span class="bold">{{ user.username }}</span>
+                </div>
+                <div>
+                    Crée le <span class="bold">{{ user.createdAt|date("H:i m/d/Y") }}</span>
+                </div>
+            {% endif %}
+
+        </div>
+        {% if app.user.id == user.id %}
+            <div class="title">Actions</div>
+            <div class="buttons">
+                <a href="{{ url('') }}profile/edit" class="button-cool"><i class="sm md las la-edit"></i> <span
+                            class="lg">éditer son compte</span></a>
+
+                <a href="{{ url('') }}profile/delete" class="button-cool"><i class="sm md las la-trash"></i> <span
+                            class="lg">supprimer son compte</span></a>
+            </div>
+        {% endif %}
+        <div class="title">Q-CMs</div>
+        <div class="content">
+            {% if app.user.id == user.id %}
+                <a href="{{ url('app_qcm_list') }}&page=1&user={{ user.id }}" class="button-cool"><i
+                            class="sm md las la-archive"></i> <span class="lg">Vos Q-CMs</span></a>
+            {% else %}
+                <a href="{{ url('app_qcm_list') }}&page=1&user={{ user.id }}" class="button-cool"><i
+                            class="sm md las la-archive"></i> <span
+                            class="lg">Les Q-CMs de {{ user.username }}</span></a>
+            {% endif %}
+        </div>
+
+    </div>
+
+{% endblock %}

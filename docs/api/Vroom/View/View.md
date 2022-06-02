@@ -6,14 +6,6 @@ title: View
 
 Class \Vroom\View\View
 
-
-
-
-
-
-
-
-
 ## Methods
 
 ### getTwig()
@@ -22,12 +14,6 @@ Class \Vroom\View\View
 
 public static getTwig (  ): \Twig\Environment
 ```
-
-
-
-
-
-
 
 **Returns**
 : <code>\Twig\Environment</code> 
